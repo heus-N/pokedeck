@@ -22,7 +22,7 @@ export default function PokemonCard({pokemon, onClick }: Props) {
     <Card >
       <div>
         <Typography variant="h1" color="text.secondary">
-          {pokemon.name}
+          {/* {pokemon.name} */}
         </Typography>
       </div>
     </Card>

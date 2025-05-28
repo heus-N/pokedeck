@@ -2,12 +2,13 @@
 
 import PokemonCard from '@/components/PokemonCard';
 import { Pokemon } from '@/types/pokemon';
-import { Typography, Container } from '@mui/material';
+import { Box } from '@mui/material';
 import styled from 'styled-components';
 
-const StyledContainer = styled(Container)`
-  display: flex;
-  border: '1px solid red';
+const StyledContainer = styled(Box)`
+  margin: 0;
+  height: 100%;
+  border: 1px solid red;
 `
 
 const mockPokemon: Pokemon = {

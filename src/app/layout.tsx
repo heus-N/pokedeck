@@ -1,4 +1,5 @@
 // src/app/layout.tsx
+import "../styles/globals.css"; // ajuste o caminho se necessário
 import type { Metadata } from "next";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "../theme/theme"; // ajuste o caminho se necessário
