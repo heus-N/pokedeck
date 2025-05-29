@@ -5,8 +5,8 @@ import { Pokemon } from "../types/pokemon"
 import { Typography } from "@mui/material";
 
 const Card = styled.div`
-  width: 350px;
-  height: 500px;
+  width: 300px;
+  height: 400px;
   background-color: #f0f0f0;
   border-radius: 10px;
   cursor: pointer;
