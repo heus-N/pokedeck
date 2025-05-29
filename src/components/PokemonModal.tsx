@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 interface PropsModal {
   open: boolean;
   handleClose: () => void;
-  pokemon: Pokemon | null;
+  pokemon?: Pokemon | null;
 }
 
 export default function PokemonModal({ open, handleClose, pokemon }: PropsModal) {

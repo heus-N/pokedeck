@@ -2,6 +2,7 @@
 
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
+import { usePokemon } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Box, Grid } from '@mui/material';
 import { useState } from 'react';
@@ -29,31 +30,18 @@ const StyledCardContainer = styled(Box)`
   overflow: hidden;
 `
 
-const mockPokemon: Pokemon = {
-  id: 1,
-  name: 'Pikachu',
-  type: 'Elétrico',
-  image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
-};
-
-
-const mockPokemons: Pokemon[] = Array.from({ length: 11 }, (_, index) => ({
-  ...mockPokemon,
-  id: index,
-  name: `Pokemon ${index + 1}`,
-}));
-
-
 export default function Home() {
   
   const [open, setOpen] = useState(false)
-  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const [ pokemon, setPokemon] = useState<Pokemon[] | null>(null);
+  const [ currentPage, setCurrentPage ] = useState();
+  const [ nextPage, setNextPage ] = useState();
+  const [ previousPage, setPreviousPage ] = useState();
 
-  console.log(open)
 
   return (
     <StyledContainer>
-      <PokemonModal open={open} handleClose={() => setOpen(false)} pokemon={selectedPokemon}/>
+      <PokemonModal open={open} handleClose={() => setOpen(false)} />
       <StyledCardContainer>
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}
           sx={{
@@ -66,11 +54,11 @@ export default function Home() {
             alignItems: 'flex-start',
           }}
         >
-          {mockPokemons.map((pokemon) => (
-            <Grid key={pokemon.id}>
+          {pokemon?.map((pokemon) => (
+            <Grid key={pokemon.name}>
               <PokemonCard
                 pokemon={pokemon}
-                onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
+                onClick={() => {setOpen(true)}}
               />
             </Grid>
           ))}
