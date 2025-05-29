@@ -1,8 +1,10 @@
 'use client'
 
 import PokemonCard from '@/components/PokemonCard';
+import PokemonModal from '@/components/PokemonModal';
 import { Pokemon } from '@/types/pokemon';
 import { Box, Grid } from '@mui/material';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const StyledContainer = styled.section`
@@ -42,33 +44,18 @@ const mockPokemons: Pokemon[] = Array.from({ length: 11 }, (_, index) => ({
 }));
 
 
-
 export default function Home() {
+  
+  const [open, setOpen] = useState(false)
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+
+  console.log(open)
+
   return (
     <StyledContainer>
+      <PokemonModal open={open} handleClose={() => setOpen(false)} pokemon={selectedPokemon}/>
       <StyledCardContainer>
-        {/* <Grid
-          container
-          spacing={3}
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            maxHeight: '100%',
-            overflowY: 'auto',
-            p: 2,
-            border: '1px solid red',
-          }}
-        >
-          {mockPokemons.map((pokemon) => (
-            <Grid size={3} key={pokemon.id}>
-              <PokemonCard
-                pokemon={pokemon}
-                onClick={() => console.log('Clicou em:', pokemon.name)}
-              />
-            </Grid>
-          ))}
-        </Grid> */}
-        <Grid container spacing={2}
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}
           sx={{
             flexGrow: 1,
             maxHeight: '100%',
@@ -80,10 +67,10 @@ export default function Home() {
           }}
         >
           {mockPokemons.map((pokemon) => (
-            <Grid size={3} key={pokemon.id}>
+            <Grid key={pokemon.id}>
               <PokemonCard
                 pokemon={pokemon}
-                onClick={() => console.log('Clicou em:', pokemon.name)}
+                onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
               />
             </Grid>
           ))}
