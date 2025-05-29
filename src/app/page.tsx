@@ -19,7 +19,12 @@ const StyledContainer = styled.section`
 const StyledCardContainer = styled(Box)`
   border: 1px solid blue;
   width: 80%;
+  height: 100%;
   max-height: 90%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
 `
 
 const mockPokemon: Pokemon = {
@@ -30,7 +35,7 @@ const mockPokemon: Pokemon = {
 };
 
 
-const mockPokemons: Pokemon[] = Array.from({ length: 10 }, (_, index) => ({
+const mockPokemons: Pokemon[] = Array.from({ length: 11 }, (_, index) => ({
   ...mockPokemon,
   id: index,
   name: `Pokemon ${index + 1}`,
@@ -42,19 +47,40 @@ export default function Home() {
   return (
     <StyledContainer>
       <StyledCardContainer>
-        <Grid
+        {/* <Grid
           container
-          spacing={2}
+          spacing={3}
           justifyContent="center"
           alignItems="center"
           sx={{
-            display: 'flex',
+            maxHeight: '100%',
             overflowY: 'auto',
             p: 2,
+            border: '1px solid red',
           }}
         >
           {mockPokemons.map((pokemon) => (
-            <Grid item xs={6} key={pokemon.id}>
+            <Grid size={3} key={pokemon.id}>
+              <PokemonCard
+                pokemon={pokemon}
+                onClick={() => console.log('Clicou em:', pokemon.name)}
+              />
+            </Grid>
+          ))}
+        </Grid> */}
+        <Grid container spacing={2}
+          sx={{
+            flexGrow: 1,
+            maxHeight: '100%',
+            overflowY: 'auto',
+            padding: '1rem',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+          }}
+        >
+          {mockPokemons.map((pokemon) => (
+            <Grid size={3} key={pokemon.id}>
               <PokemonCard
                 pokemon={pokemon}
                 onClick={() => console.log('Clicou em:', pokemon.name)}
