@@ -40,19 +40,18 @@ interface StyledCardGridProps {
 }
 
 const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   transform: scale(${({ isHovered }) => (isHovered ? 1 : 0.975)});
   opacity: ${({ isHovered }) => (isHovered ? 1 : 0.75)};
 `;
 
 export default function Home() {
   
-  const [open, setOpen] = useState(false)
+  const [ open, setOpen ] = useState(false)
   const { pokemonList, isLoading, isError, nextPage, previousPage } = usePokemonList();
-  const [ selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [ selectedPokemon, setSelectedPokemon ] = useState<Pokemon | null>(null);
+  const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
 
-  console.log(pokemonList)
 
   return (
     <StyledContainer>
