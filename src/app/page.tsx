@@ -2,14 +2,13 @@
 
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
-import { usePokemon } from '@/hooks/usePokemonList';
+import { usePokemonList } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Box, Grid } from '@mui/material';
 import { useState } from 'react';
 import styled from 'styled-components';
 
 const StyledContainer = styled.section`
-  padding: 1rem 2rem;
   margin: 0;
   height: 100%;
   width: 100%;
@@ -17,11 +16,16 @@ const StyledContainer = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px 20px;
+
+  @media (min-width: 960px){
+    padding: 1rem 2rem;
+  }
 `
 
 const StyledCardContainer = styled(Box)`
   border: 1px solid blue;
-  width: 80%;
+  width: 95%;
   height: 100%;
   max-height: 90%;
   display: flex;
@@ -33,15 +37,14 @@ const StyledCardContainer = styled(Box)`
 export default function Home() {
   
   const [open, setOpen] = useState(false)
-  const [ pokemon, setPokemon] = useState<Pokemon[] | null>(null);
-  const [ currentPage, setCurrentPage ] = useState();
-  const [ nextPage, setNextPage ] = useState();
-  const [ previousPage, setPreviousPage ] = useState();
+  const { pokemonList, isLoading, isError, nextPage, previousPage } = usePokemonList();
+  const [ selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
 
+  console.log(pokemonList)
 
   return (
     <StyledContainer>
-      <PokemonModal open={open} handleClose={() => setOpen(false)} />
+      <PokemonModal open={open} handleClose={() => setOpen(false)} pokemon={selectedPokemon} />
       <StyledCardContainer>
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}
           sx={{
@@ -54,11 +57,11 @@ export default function Home() {
             alignItems: 'flex-start',
           }}
         >
-          {pokemon?.map((pokemon) => (
+          {pokemonList?.map((pokemon) => (
             <Grid key={pokemon.name}>
               <PokemonCard
                 pokemon={pokemon}
-                onClick={() => {setOpen(true)}}
+                onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
               />
             </Grid>
           ))}
