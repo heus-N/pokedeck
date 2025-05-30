@@ -21,7 +21,7 @@ const Card = styled.div`
     padding: 1rem 2rem;
     width: 300px;
     height: 450px;
-  }
+  };
 `
 
 interface Props {

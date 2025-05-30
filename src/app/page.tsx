@@ -34,11 +34,23 @@ const StyledCardContainer = styled(Box)`
   overflow: hidden;
 `
 
+
+interface StyledCardGridProps {
+  isHovered: boolean;
+}
+
+const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
+  transition: all 0.3s ease;
+  transform: scale(${({ isHovered }) => (isHovered ? 1 : 0.975)});
+  opacity: ${({ isHovered }) => (isHovered ? 1 : 0.75)};
+`;
+
 export default function Home() {
   
   const [open, setOpen] = useState(false)
   const { pokemonList, isLoading, isError, nextPage, previousPage } = usePokemonList();
   const [ selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   console.log(pokemonList)
 
@@ -57,13 +69,16 @@ export default function Home() {
             alignItems: 'flex-start',
           }}
         >
-          {pokemonList?.map((pokemon) => (
-            <Grid key={pokemon.name}>
+          {pokemonList?.map((pokemon, index) => (
+            <StyledCardGrid key={pokemon.name} 
+              isHovered={hoveredIndex === null || hoveredIndex === index}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}>
               <PokemonCard
                 pokemon={pokemon}
                 onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
               />
-            </Grid>
+            </StyledCardGrid>
           ))}
         </Grid>
       </StyledCardContainer>
