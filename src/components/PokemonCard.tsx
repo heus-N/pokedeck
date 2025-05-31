@@ -27,12 +27,13 @@ const Card = styled.div`
 interface Props {
   pokemon: Pokemon;
   onClick: () => void;
+  className?: string;
 }
 
-export default function PokemonCard({pokemon, onClick }: Props) {
+export default function PokemonCard({pokemon, onClick, className } : Props) {
 
   return (
-    <Card onClick={onClick}>
+    <Card onClick={onClick} className={className}>
       <div>
         <Typography variant="h1" color="text.secondary">
           {pokemon.name}

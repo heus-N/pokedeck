@@ -9,14 +9,13 @@ interface PokemonListResponse {
   results: { name: string; url: string }[];
 }
 
-export function usePokemonList() {
-  const { data, error, isLoading } = useSWR<PokemonListResponse>(`/pokemon`, axiosFetcher);
+export function usePokemonList(offset : number) {
+  const { data, error, isLoading } = useSWR<PokemonListResponse>(`/pokemon/?offset=${offset}&limit=20`, axiosFetcher);
 
   return {
-    pokemonList: data?.results || [],
+    data: data?.results || [],
     isLoading,
     isError: error,
-    nextPage: data?.next,
-    previousPage: data?.previous,
+    count: data?.count,
   };
 }

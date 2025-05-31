@@ -1,9 +1,9 @@
 import { Pokemon } from '@/types/pokemon';
 import { Button, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import styled from 'styled-components';
+
 
 const StyledDialogContent = styled(DialogContent)`
   width: 300px;
