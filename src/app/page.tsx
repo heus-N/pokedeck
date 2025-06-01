@@ -2,7 +2,7 @@
 
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
-import { usePokemonList } from '@/hooks/usePokemonList';
+import { usePokemonById, usePokemonList } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Box, Button, Grid, IconButton, Skeleton, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -60,12 +60,10 @@ export default function Home() {
   const [ page, setPage ] = useState(1)
   const lastPage = count && Math.floor(count / 20) + 1
 
-  console.log('data', data)
-  console.log('pokemonList', pokemonList)
-
   useEffect(() => {
     if(data){
       setPokemonList(data)
+
     }
   }, [data])
 
@@ -111,16 +109,17 @@ export default function Home() {
           }}
         >
           {pokemonList?.map((pokemon, index) => (
-              <StyledCardGrid key={pokemon?.name} 
-                $isHovered={hoveredIndex === null || hoveredIndex === index}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}>
-                <PokemonCard
-                  pokemon={pokemon}
-                  onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
-                />
-              </StyledCardGrid>
-            ))}
+            <StyledCardGrid key={pokemon?.name} 
+              $isHovered={hoveredIndex === null || hoveredIndex === index}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}>
+              <PokemonCard
+                url={pokemon?.url}
+                pokemon={pokemon}
+                onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
+              />
+            </StyledCardGrid>
+          ))}
         </Grid>
       </StyledCardContainer>
       <Box display="flex" alignItems="center" justifyContent="center" gap={2} mt={2}>

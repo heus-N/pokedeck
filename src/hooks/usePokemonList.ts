@@ -1,11 +1,10 @@
 // usePokemonList.ts
 import useSWR from 'swr';
 import { axiosFetcher } from '@/services/swrFetch';
+import { Pokemon } from '@/types/pokemon';
 
 interface PokemonListResponse {
   count: number;
-  next: string | null;
-  previous: string | null;
   results: { name: string; url: string }[];
 }
 
@@ -17,5 +16,15 @@ export function usePokemonList(offset : number) {
     isLoading,
     isError: error,
     count: data?.count,
+  };
+}
+
+export function usePokemonById(id : string) {
+  const { data, error, isLoading } = useSWR<Pokemon>(`/pokemon/${id}`, axiosFetcher);
+
+  return {
+    data: data,
+    isLoading,
+    isError: error,
   };
 }

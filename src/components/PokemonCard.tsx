@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { Pokemon } from "../types/pokemon"
 import { Typography } from "@mui/material";
 import { useState } from "react";
+import { usePokemonById } from "@/hooks/usePokemonList";
 
 const Card = styled.div`
   width: 270px;
@@ -28,13 +29,21 @@ interface Props {
   pokemon: Pokemon;
   onClick: () => void;
   className?: string;
+  url: string;
 }
 
-export default function PokemonCard({pokemon, onClick, className } : Props) {
+export default function PokemonCard({pokemon, onClick, className, url } : Props) {
+
+  const pokemonId = url.split("pokemon/")[1]
+
+  const { data } = usePokemonById(pokemonId);
+
+  console.log(data) 
 
   return (
     <Card onClick={onClick} className={className}>
       <div>
+        <img src={data?.sprites?.front_default} alt={`image_${pokemon.name}`} />
         <Typography variant="h1" color="text.secondary">
           {pokemon.name}
         </Typography>
