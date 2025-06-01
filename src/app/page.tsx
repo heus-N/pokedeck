@@ -4,7 +4,7 @@ import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
 import { usePokemonById, usePokemonList } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
-import { Box, Button, Grid, IconButton, Skeleton, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, Pagination, Skeleton, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
@@ -16,7 +16,6 @@ const StyledContainer = styled.section`
   margin: 0;
   height: 100%;
   width: 100%;
-  border: 1px solid red;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,7 +28,6 @@ const StyledContainer = styled.section`
 `
 
 const StyledCardContainer = styled(Box)`
-  border: 1px solid blue;
   width: 95%;
   height: 100%;
   max-height: 90%;
@@ -50,48 +48,23 @@ const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
 `;
 
 export default function Home() {
-  
   const [ open, setOpen ] = useState(false)
-  const [ offsetPage, setOffsetPage ] = useState(0)
-  const { data, isLoading, isError, count } = usePokemonList(offsetPage);
-  const [ pokemonList, setPokemonList ] = useState<{ name: string; url: string }[]>()
+  const [ page, setPage ] = useState(1)
+  const offset = (page - 1) * 20;
+  const { data: pokemonList, isLoading, isError, count } = usePokemonList(offset);
   const [ selectedPokemon, setSelectedPokemon ] = useState<Pokemon | null>(null);
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
-  const [ page, setPage ] = useState(1)
   const lastPage = count && Math.floor(count / 20) + 1
+  const [flipped, setFlipped] = useState(false);
 
   useEffect(() => {
-    if(data){
-      setPokemonList(data)
-
+    if (pokemonList) {
+      const timer = setTimeout(() => {
+        setFlipped(false); // gira de volta para frente com o novo conteúdo
+      }, 500); // depois que os novos dados chegaram
+      return () => clearTimeout(timer);
     }
-  }, [data])
-
-  const handleNextPage = () => {
-    if (lastPage && page < lastPage) {
-      setPage(prev => prev + 1);
-      setOffsetPage((page + 1 - 1) * 20); // equivalente a (page) * 20
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (page > 1) {
-      setPage(prev => prev - 1);
-      setOffsetPage((page - 1 - 1) * 20);
-    }
-  };
-
-  const handleFirstPage = () => {
-    setPage(1);
-    setOffsetPage(0);
-  };
-
-  const handleLastPage = () => {
-    if (lastPage) {
-      setPage(lastPage);
-      setOffsetPage((lastPage - 1) * 20);
-    }
-  };
+  }, [page]);
 
   return (
     <StyledContainer>
@@ -102,7 +75,7 @@ export default function Home() {
             flexGrow: 1,
             maxHeight: '100%',
             overflowY: 'auto',
-            padding: '1rem',
+            padding: '3.5rem 0',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'flex-start',
@@ -113,29 +86,25 @@ export default function Home() {
               $isHovered={hoveredIndex === null || hoveredIndex === index}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}>
-              <PokemonCard
-                url={pokemon?.url}
-                pokemon={pokemon}
-                onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
-              />
+                <PokemonCard
+                  flipped={flipped}
+                  url={pokemon?.url}
+                  pokemon={pokemon}
+                  onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
+                />
             </StyledCardGrid>
           ))}
         </Grid>
       </StyledCardContainer>
       <Box display="flex" alignItems="center" justifyContent="center" gap={2} mt={2}>
-        <IconButton onClick={handleFirstPage} disabled={page <= 1}>
-          <FirstPageIcon />
-        </IconButton>
-        <IconButton onClick={handlePreviousPage} disabled={page <= 1}>
-          <NavigateBeforeIcon />
-        </IconButton>
-        <Typography>{page < 10 ? `0${page}` : page} / {lastPage}</Typography>
-        <IconButton onClick={handleNextPage} disabled={page === lastPage}>
-          <NavigateNextIcon />
-        </IconButton>
-        <IconButton onClick={handleLastPage} disabled={page === lastPage}>
-          <LastPageIcon />
-        </IconButton>
+        <Pagination 
+          count={lastPage}
+          page={page}
+          onChange={(event, value) => {
+            setFlipped(true)
+            setPage(value)
+          }}
+        />
       </Box>
 
     </StyledContainer>
