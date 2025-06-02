@@ -64,7 +64,7 @@ export default function Home() {
       }, 500); // depois que os novos dados chegaram
       return () => clearTimeout(timer);
     }
-  }, [page]);
+  }, [pokemonList]);
 
   return (
     <StyledContainer>

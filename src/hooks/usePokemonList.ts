@@ -28,3 +28,19 @@ export function usePokemonById(id : string) {
     isError: error,
   };
 }
+
+interface PokemonTypeResponse {
+  count: number;
+  results: { name: string; url: string }[];
+}
+
+export function usePokemonType() {
+  const { data, error, isLoading } = useSWR<PokemonTypeResponse>(`/type`, axiosFetcher);
+
+  return {
+    data: data?.results || [],
+    isLoading,
+    isError: error,
+    count: data?.count,
+  };
+}

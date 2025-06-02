@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import { Pokemon } from "../types/pokemon";
 import { Typography } from "@mui/material";
-import { usePokemonById } from "@/hooks/usePokemonList";
+import { usePokemonById, usePokemonType } from "@/hooks/usePokemonList";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 
@@ -30,7 +30,6 @@ const CardWrapper = styled.div<WrapperProps>`
 `;
 
 
-
 const Card = styled(motion.div)`
   width: 100%;
   height: 100%;
@@ -49,11 +48,37 @@ const Face = styled.div`
   border-radius: 12px;
 `;
 
-const FrontFace = styled(Face)`
+interface TypeProps {
+  $type: string
+}
+
+const FrontFace = styled(Face)<TypeProps>`
   z-index: 2;
   cursor: pointer;
+  border: 10px solid ${({ $type }) =>
+    $type === 'normal'     ? '#A8A77A' : // Bege claro
+    $type === 'fire'       ? '#F5AC78' : // Vermelho pastel
+    $type === 'water'      ? '#9DB7F5' : // Azul pastel
+    $type === 'electric'   ? '#FAE078' : // Amarelo claro
+    $type === 'grass'      ? '#A7DB8D' : // Verde claro
+    $type === 'ice'        ? '#BCE6E6' : // Ciano claro
+    $type === 'fighting'   ? '#D67873' : // Vermelho queimado
+    $type === 'poison'     ? '#C183C1' : // Roxo claro
+    $type === 'ground'     ? '#EBD69D' : // Areia
+    $type === 'flying'     ? '#C6B7F5' : // Lilás suave
+    $type === 'psychic'    ? '#FA92B2' : // Rosa suave
+    $type === 'bug'        ? '#C6D16E' : // Verde oliva claro
+    $type === 'rock'       ? '#D1C17D' : // Marrom claro
+    $type === 'ghost'      ? '#A292BC' : // Lavanda
+    $type === 'dragon'     ? '#A27DFA' : // Roxo suave
+    $type === 'dark'       ? '#A29288' : // Cinza escuro
+    $type === 'steel'      ? '#D1D1E0' : // Cinza claro azulado
+    $type === 'fairy'      ? '#F4BDC9' : // Rosa bebê
+    $type === 'stellar'    ? '#D6C6F0' : // Roxo azulado claro (tipo especial)
+    $type === 'unknown'    ? '#CCCCCC' : // Neutro claro
+    '#A0A0A0'               // fallback cinza suave
+  };
 `;
-
 
 
 const BackFace = styled(Face)`
@@ -78,15 +103,18 @@ interface Props {
 export default function PokemonCard({ pokemon, onClick, className, url, flipped }: Props) {
   const pokemonId = url.split("pokemon/")[1];
   const { data, isLoading } = usePokemonById(pokemonId);
+  const { data: pokemonType } = usePokemonType();
+
+  const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped}>
       <Card
         animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.25 }}
       >
         {!flipped &&
-        <FrontFace>
+        <FrontFace $type={primaryType}>
           {data?.sprites?.front_default && !isLoading && (
             <img src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
           )}

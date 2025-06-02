@@ -1,3 +1,11 @@
+export interface PokemonType {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+}
+
 export interface Pokemon {
   id?: number;
   name: string;
@@ -5,4 +13,5 @@ export interface Pokemon {
     front_default: string;
     [key: string]: any;
   };
+  types?: PokemonType[];
 }
