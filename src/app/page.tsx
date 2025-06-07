@@ -56,6 +56,7 @@ export default function Home() {
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
   const lastPage = count && Math.floor(count / 20) + 1
   const [flipped, setFlipped] = useState(false);
+  const [flipDirection, setFlipDirection] = useState<'forward' | 'backward'>('forward');
 
   useEffect(() => {
     if (pokemonList) {
@@ -65,6 +66,8 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [pokemonList]);
+
+  console.log('isLoading',isLoading)
 
   return (
     <StyledContainer>
@@ -91,6 +94,7 @@ export default function Home() {
                   url={pokemon?.url}
                   pokemon={pokemon}
                   onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
+                  flipDirection={flipDirection}
                 />
             </StyledCardGrid>
           ))}
@@ -101,8 +105,9 @@ export default function Home() {
           count={lastPage}
           page={page}
           onChange={(event, value) => {
-            setFlipped(true)
-            setPage(value)
+            setFlipDirection(value > page ? 'forward' : 'backward');
+            setFlipped(true);
+            setPage(value);
           }}
         />
       </Box>

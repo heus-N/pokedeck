@@ -36,8 +36,11 @@ const Card = styled(motion.div)`
   position: relative;
   border-radius: 12px;
   transform-style: preserve-3d;
-  background-color: #fff;
   border-radius: 12px;
+  background-image: url('/utils/back-card.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const Face = styled.div`
@@ -46,6 +49,7 @@ const Face = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 12px;
+  background-color: #fff;
 `;
 
 interface TypeProps {
@@ -89,6 +93,10 @@ const BackFace = styled(Face)`
   border-radius: 10px;
   border: 10px solid #222285;
   overflow: hidden;
+  background-image: url('/utils/back-card.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 
@@ -98,19 +106,22 @@ interface Props {
   className?: string;
   url: string;
   flipped: boolean; // controle externo da rotação
+  flipDirection: string;
 }
 
-export default function PokemonCard({ pokemon, onClick, className, url, flipped }: Props) {
+export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection }: Props) {
   const pokemonId = url.split("pokemon/")[1];
   const { data, isLoading } = usePokemonById(pokemonId);
   const { data: pokemonType } = usePokemonType();
+  const rotation = flipped ? (flipDirection === 'forward' ? 180 : -180) : 0
 
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
+
 
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped}>
       <Card
-        animate={{ rotateY: flipped ? 180 : 0 }}
+        animate={{ rotateY: rotation }}
         transition={{ duration: 0.25 }}
       >
         {!flipped &&
@@ -122,9 +133,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped 
             {pokemon.name}
           </Typography>
         </FrontFace> }
-        <BackFace>
-          <img src="/utils/back-card.jpg" alt="image_back_card" width="100%" />
-        </BackFace>
+        <BackFace />
       </Card>
     </CardWrapper>
   );
