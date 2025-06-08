@@ -57,35 +57,51 @@ const Face = styled.div`
 `;
 
 interface TypeProps {
-  $type: string
+  $type: string,
 }
+
+const typeColors: Record<string, string> = {
+  normal: '#A8A77A',
+  fire: '#F5AC78',
+  water: '#9DB7F5',
+  electric: '#FAE078',
+  grass: '#A7DB8D',
+  ice: '#BCE6E6',
+  fighting: '#D67873',
+  poison: '#C183C1',
+  ground: '#EBD69D',
+  flying: '#C6B7F5',
+  psychic: '#FA92B2',
+  bug: '#C6D16E',
+  rock: '#D1C17D',
+  ghost: '#A292BC',
+  dragon: '#A27DFA',
+  dark: '#A29288',
+  steel: '#D1D1E0',
+  fairy: '#F4BDC9',
+  stellar: '#D6C6F0',
+  unknown: '#CCCCCC',
+  default: '#A0A0A0',
+};
+
 
 const FrontFace = styled(Face)<TypeProps>`
   z-index: 2;
   cursor: pointer;
-  border: 10px solid ${({ $type }) =>
-    $type === 'normal'     ? '#A8A77A' : // Bege claro
-    $type === 'fire'       ? '#F5AC78' : // Vermelho pastel
-    $type === 'water'      ? '#9DB7F5' : // Azul pastel
-    $type === 'electric'   ? '#FAE078' : // Amarelo claro
-    $type === 'grass'      ? '#A7DB8D' : // Verde claro
-    $type === 'ice'        ? '#BCE6E6' : // Ciano claro
-    $type === 'fighting'   ? '#D67873' : // Vermelho queimado
-    $type === 'poison'     ? '#C183C1' : // Roxo claro
-    $type === 'ground'     ? '#EBD69D' : // Areia
-    $type === 'flying'     ? '#C6B7F5' : // Lilás suave
-    $type === 'psychic'    ? '#FA92B2' : // Rosa suave
-    $type === 'bug'        ? '#C6D16E' : // Verde oliva claro
-    $type === 'rock'       ? '#D1C17D' : // Marrom claro
-    $type === 'ghost'      ? '#A292BC' : // Lavanda
-    $type === 'dragon'     ? '#A27DFA' : // Roxo suave
-    $type === 'dark'       ? '#A29288' : // Cinza escuro
-    $type === 'steel'      ? '#D1D1E0' : // Cinza claro azulado
-    $type === 'fairy'      ? '#F4BDC9' : // Rosa bebê
-    $type === 'stellar'    ? '#D6C6F0' : // Roxo azulado claro (tipo especial)
-    $type === 'unknown'    ? '#CCCCCC' : // Neutro claro
-    '#A0A0A0'               // fallback cinza suave
-  };
+  border: 10px solid ${({ $type }) => typeColors[$type] || typeColors.default};
+  transition: all 1s ease;
+  
+  img {
+    transition: all 1s ease;
+  }
+
+  &:hover img {
+    filter: drop-shadow(0px 0px 10px ${({ $type }) => typeColors[$type] || typeColors.default});
+  }
+
+  &:hover {
+    box-shadow: 0px 0px 10px ${({ $type }) => typeColors[$type] || typeColors.default};
+  }
 `;
 
 

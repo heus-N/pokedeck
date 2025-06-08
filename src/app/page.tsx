@@ -22,14 +22,10 @@ const StyledContainer = styled.section`
   align-items: center;
   // padding: 10px 20px;
   flex-direction: column;
-
-  @media (min-width: 960px){
-    padding: 2rem 3rem;
-  }
 `
 
 const StyledCardContainer = styled(Box)`
-  width: 95%;
+  width: 100%;
   height: 100%;
   max-height: 100%;
   display: flex;
@@ -47,6 +43,22 @@ const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
   transform: scale(${({ $isHovered }) => ($isHovered ? 1 : 0.975)});
   opacity: ${({ $isHovered }) => ($isHovered ? 1 : 0.75)};
 `;
+
+const StyledFooter = styled(Box)`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 16px;
+  background-color: rgba(34, 34, 133, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+`;
+
 
 export default function Home() {
   const [ open, setOpen ] = useState(false)
@@ -75,9 +87,9 @@ export default function Home() {
 
   setTimeout(() => {
     setShouldDisplay(true)
-  }, 4500)
 
-  console.log('isLoading',isLoading)
+    //VOLTAR DELAY PARA 4500 MS
+  }, 100)
 
   return (
     <StyledContainer>
@@ -90,18 +102,15 @@ export default function Home() {
           columns={{ xs: 4, sm: 8, md: 12 }}
           sx={{
             flexGrow: 1,
-            maxHeight: '100%',
             overflowY: 'auto',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'flex-start',
             height: '100%',
-            paddingBottom: '40px'
+            padding: '4rem 3rem',
           }}
         >
-        {/* <div style={{height: 'calc(100% + 40px)', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}> */}
-          <PokeballAnimation />
-        {/* </div> */}
+        {/* <PokeballAnimation /> */}
         {shouldDisplay && pokemonList?.map((pokemon, index) => (
           <StyledCardGrid key={pokemon?.name} 
             $isHovered={hoveredIndex === null || hoveredIndex === index}
@@ -118,19 +127,27 @@ export default function Home() {
         ))}
         </Grid>
       </StyledCardContainer>
-      {shouldDisplay && <Fade in={!isLoading}>
-        <Box position='absolute' bottom='0' pb='20px' gap={2} >
-          <Pagination 
-            count={lastPage}
-            page={page}
-            onChange={(event, value) => {
-              setFlipDirection(value > page ? 'forward' : 'backward');
-              setFlipped(true);
-              setPage(value);
-            }}
-          />
-        </Box>
-      </Fade>}
+      {shouldDisplay && 
+        <Fade in={!isLoading}>
+          <StyledFooter>
+            <Pagination
+              sx={{
+                color: '#111',
+                '& .MuiPaginationItem-root': {
+                  color: '#111',
+                },
+              }}
+              count={lastPage}
+              page={page}
+              onChange={(event, value) => {
+                if (value === page) return;
+                setFlipDirection(value > page ? 'forward' : 'backward');
+                setFlipped(true);
+                setPage(value);
+              }}
+            />
+          </StyledFooter>
+        </Fade>}
     </StyledContainer>
   );
 }
