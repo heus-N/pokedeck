@@ -4,8 +4,12 @@ import styled from "styled-components";
 import { Pokemon } from "../types/pokemon";
 import { Typography } from "@mui/material";
 import { usePokemonById, usePokemonType } from "@/hooks/usePokemonList";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from 'framer-motion';
+
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
 interface WrapperProps {
   $flipped: boolean
@@ -109,6 +113,8 @@ interface Props {
   flipDirection: string;
 }
 
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+
 export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection }: Props) {
   const pokemonId = url.split("pokemon/")[1];
   const { data, isLoading } = usePokemonById(pokemonId);
@@ -117,7 +123,6 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
 
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
-
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped}>
       <Card
@@ -125,7 +130,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
         transition={{ duration: 0.25 }}
       >
         {!flipped &&
-        <FrontFace $type={primaryType}>
+        <FrontFace $type={primaryType} className="card">
           {data?.sprites?.front_default && !isLoading && (
             <img src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
           )}

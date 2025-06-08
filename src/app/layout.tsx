@@ -6,7 +6,7 @@ import theme from "../theme/theme"; // ajuste o caminho se necessário
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Pokedex",
+  title: "Pokedeck",
   description: "A pack of Pokemon cards",
 };
 
