@@ -1,6 +1,6 @@
 'use client';
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Pokemon } from "../types/pokemon";
 import { Typography } from "@mui/material";
 import { usePokemonById, usePokemonType } from "@/hooks/usePokemonList";
@@ -11,8 +11,22 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
+
+const fadeInFromRight = keyframes`
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
+
 interface WrapperProps {
-  $flipped: boolean
+  $flipped: boolean,
+  $delay: number,
+  $page: number
 }
 
 const CardWrapper = styled.div<WrapperProps>`
@@ -31,6 +45,9 @@ const CardWrapper = styled.div<WrapperProps>`
     height: 420px;
   }
   pointer-events: ${({$flipped}) => $flipped ? 'none' : null};
+
+  transition: all 0.3s ease;
+  animation: ${fadeInFromRight} ${({$delay, $page}) => ($page === 1) && $delay ? `${$delay * 0.15}s` : '0.2s ease forwards'};
 `;
 
 
@@ -127,11 +144,11 @@ interface Props {
   url: string;
   flipped: boolean; // controle externo da rotação
   flipDirection: string;
+  index: number;
+  page: number;
 }
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection }: Props) {
+export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection, index, page }: Props) {
   const pokemonId = url.split("pokemon/")[1];
   const { data, isLoading } = usePokemonById(pokemonId);
   const { data: pokemonType } = usePokemonType();
@@ -140,7 +157,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
   return (
-    <CardWrapper className={className} onClick={onClick} $flipped={flipped}>
+    <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
       <Card
         animate={{ rotateY: rotation }}
         transition={{ duration: 0.25 }}

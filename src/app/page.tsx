@@ -5,13 +5,11 @@ import PokemonModal from '@/components/PokemonModal';
 import { usePokemonList } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Box, Grid, Pagination } from '@mui/material';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
-import { useGSAP } from '@gsap/react';
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PokeballAnimation from '@/components/PokeballAnimation';
+import PokeballSvg from '../../public/utils/pokeballSvg';
 
 const StyledContainer = styled.section`
   margin: 0;
@@ -36,12 +34,13 @@ const StyledCardContainer = styled(Box)`
 
 interface StyledCardGridProps {
   $isHovered: boolean;
+  $shouldDisplay: boolean;
 }
 
 const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
   transition: all 0.5s ease;
   transform: scale(${({ $isHovered }) => ($isHovered ? 1 : 0.975)});
-  opacity: ${({ $isHovered }) => ($isHovered ? 1 : 0.75)};
+  opacity: ${({ $isHovered, $shouldDisplay }) => !$shouldDisplay ? 0 : ($isHovered ? 1 : 0.85)};
 `;
 
 const StyledFooter = styled(Box)`
@@ -70,11 +69,7 @@ export default function Home() {
   const lastPage = count && Math.floor(count / 20) + 1
   const [flipped, setFlipped] = useState(false);
   const [flipDirection, setFlipDirection] = useState<'forward' | 'backward'>('forward');
-  const pokeballRef = useRef<HTMLImageElement | null>(null);
   const [shouldDisplay, setShouldDisplay] = useState(false)
-
-  gsap.registerPlugin(ScrollTrigger)
-  const gridRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (pokemonList) {
@@ -85,54 +80,71 @@ export default function Home() {
     }
   }, [pokemonList]);
 
-  setTimeout(() => {
-    setShouldDisplay(true)
-
-    //VOLTAR DELAY PARA 4500 MS
-  }, 100)
+  useEffect(() => {
+    //VOLTAR O TIMEOUT PARA 4500
+    const timer = setTimeout(() => setShouldDisplay(true), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+;
 
   return (
     <StyledContainer>
-      <PokemonModal open={open} handleClose={() => setOpen(false)} pokemon={selectedPokemon} />
-      <StyledCardContainer>
-        <Grid 
-          ref={gridRef}
-          container 
-          spacing={{ xs: 2, md: 3 }} 
-          columns={{ xs: 4, sm: 8, md: 12 }}
-          sx={{
-            flexGrow: 1,
-            overflowY: 'auto',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'flex-start',
+      {shouldDisplay &&
+        <div
+         style={{
+            position: 'absolute',
+            overflow: 'hidden',
+            width: '100%',
             height: '100%',
-            padding: '4rem 3rem',
+            zIndex: -1
           }}
         >
-        {/* <PokeballAnimation /> */}
-        {shouldDisplay && pokemonList?.map((pokemon, index) => (
-          <StyledCardGrid key={pokemon?.name} 
-            $isHovered={hoveredIndex === null || hoveredIndex === index}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}>
-              <PokemonCard
-                flipped={flipped}
-                url={pokemon?.url}
-                pokemon={pokemon}
-                onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
-                flipDirection={flipDirection}
-              />
-          </StyledCardGrid>
-        ))}
-        </Grid>
-      </StyledCardContainer>
+          <PokeballSvg shouldDisplay={shouldDisplay}/>
+        </div>
+      }
+      <PokemonModal open={open} handleClose={() => setOpen(false)} pokemon={selectedPokemon} />
+        <StyledCardContainer>
+          <Grid 
+            container 
+            spacing={{ xs: 2, md: 3 }} 
+            columns={{ xs: 4, sm: 8, md: 12 }}
+            sx={{
+              flexGrow: 1,
+              overflowY: 'auto',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              height: '100%',
+              padding: '4rem 3rem',
+            }}
+          >
+          <PokeballAnimation />
+          {shouldDisplay && pokemonList?.map((pokemon, index) => (
+            <StyledCardGrid 
+              $shouldDisplay={shouldDisplay}
+              key={pokemon?.name}
+              className="poke-card"
+              $isHovered={hoveredIndex === null || hoveredIndex === index}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}>
+                <PokemonCard
+                  page={page}
+                  index={index}
+                  flipped={flipped}
+                  url={pokemon?.url}
+                  pokemon={pokemon}
+                  onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
+                  flipDirection={flipDirection}
+                />
+            </StyledCardGrid>
+          ))}
+          </Grid>
+        </StyledCardContainer>
       {shouldDisplay && 
         <Fade in={!isLoading}>
           <StyledFooter>
             <Pagination
               sx={{
-                color: '#111',
                 '& .MuiPaginationItem-root': {
                   color: '#111',
                 },
