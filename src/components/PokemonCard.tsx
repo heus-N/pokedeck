@@ -4,12 +4,8 @@ import styled, { keyframes } from "styled-components";
 import { Pokemon } from "../types/pokemon";
 import { Typography } from "@mui/material";
 import { usePokemonById, usePokemonType } from "@/hooks/usePokemonList";
-import { useEffect, useState, useRef } from "react";
 import { motion } from 'framer-motion';
-
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import Tooltip from '@mui/material/Tooltip';
 
 const fadeInFromRight = keyframes`
   from {
@@ -149,6 +145,12 @@ const TypeContainer = styled.span`
     padding: 2px;
     width: 25px;
     height: 25px;
+    position: relative;
+    z-index: 5;
+
+    &:hover {
+      
+    }
   }
 `
 
@@ -205,7 +207,9 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
               <>
                 <TypeContainer key={data?.id}>
                   {data?.types?.map(t => (
-                    <img src={`/utils/types/${t.type.name}.png`} alt="pokemon_type" />
+                    <Tooltip title={t.type.name}>
+                      <img src={`/utils/types/${t.type.name}.png`} alt="pokemon_type" />
+                    </Tooltip>
                   ))}
                 </TypeContainer>
                 <PokemonBgContainer>
