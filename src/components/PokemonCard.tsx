@@ -11,7 +11,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-
 const fadeInFromRight = keyframes`
   from {
     transform: translateX(50px);
@@ -57,7 +56,6 @@ const Card = styled(motion.div)`
   position: relative;
   border-radius: 12px;
   transform-style: preserve-3d;
-  border-radius: 12px;
   background-image: url('/utils/back-card.jpg');
   background-size: cover;
   background-position: center;
@@ -70,7 +68,6 @@ const Face = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 12px;
-  background-color: #fff;
 `;
 
 interface TypeProps {
@@ -101,24 +98,32 @@ const typeColors: Record<string, string> = {
   default: '#A0A0A0',
 };
 
-
 const FrontFace = styled(Face)<TypeProps>`
+  transition: all 0.5s ease;
+  background-image: ${({ $type }) => $type ? `url(/utils/${$type}.jpg)` : `url(/utils/default.jpg)`};
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   z-index: 2;
   cursor: pointer;
-  border: 10px solid ${({ $type }) => typeColors[$type] || typeColors.default};
-  transition: all 1s ease;
-  
+
   img {
-    transition: all 1s ease;
+    transition: all 0.5s ease;
   }
 
   &:hover img {
     filter: drop-shadow(0px 0px 10px ${({ $type }) => typeColors[$type] || typeColors.default});
-  }
+  };
 
   &:hover {
     box-shadow: 0px 0px 10px ${({ $type }) => typeColors[$type] || typeColors.default};
-  }
+  };
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
 `;
 
 
@@ -128,13 +133,24 @@ const BackFace = styled(Face)`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  border: 10px solid #222285;
+  border: 12px solid #222285;
   overflow: hidden;
   background-image: url('/utils/back-card.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 `;
+
+const PokemonBgContainer = styled.div`
+  width: 100%;
+  height: 80%;
+  background-color: #ffffff;
+
+`
+
+const PokemonInfoContainer = styled.div`
+  height: 20%;
+`
 
 
 interface Props {
@@ -163,14 +179,18 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
         transition={{ duration: 0.25 }}
       >
         {!flipped &&
-        <FrontFace $type={primaryType} className="card">
-          {data?.sprites?.front_default && !isLoading && (
-            <img src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
-          )}
-          <Typography variant="h6" color="text.secondary" align="center">
-            {pokemon.name}
-          </Typography>
-        </FrontFace> }
+          <FrontFace $type={primaryType} className="card">
+            {data?.sprites?.front_default && !isLoading && (
+              <PokemonBgContainer>
+                <img src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
+              </PokemonBgContainer>
+            )}
+            <PokemonInfoContainer>
+              <Typography variant="h6" color="text.secondary" align="center">
+                {pokemon.name}
+              </Typography>
+            </PokemonInfoContainer>
+          </FrontFace>}
         <BackFace />
       </Card>
     </CardWrapper>
