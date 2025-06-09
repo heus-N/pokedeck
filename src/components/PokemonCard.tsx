@@ -100,11 +100,10 @@ const typeColors: Record<string, string> = {
 
 const FrontFace = styled(Face)<TypeProps>`
   transition: all 0.5s ease;
-  background-image: ${({ $type }) => $type ? `url(/utils/${$type}.jpg)` : `url(/utils/default.jpg)`};
+  background-image: ${({ $type }) => $type ? `url(/utils/card_colors/${$type}.jpg)` : `url(/utils/default.jpg)`};
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 2;
   cursor: pointer;
 
   img {
@@ -121,9 +120,9 @@ const FrontFace = styled(Face)<TypeProps>`
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
-  padding: 10px;
+  padding: 12px;
 `;
 
 
@@ -141,15 +140,35 @@ const BackFace = styled(Face)`
   background-repeat: no-repeat;
 `;
 
+const TypeContainer = styled.span`
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  
+  img{
+    padding: 2px;
+    width: 25px;
+    height: 25px;
+  }
+`
+
 const PokemonBgContainer = styled.div`
   width: 100%;
-  height: 80%;
-  background-color: #ffffff;
-
+  height: 60%;
+  // background-color: #ffffff;
+  background: linear-gradient(180deg, hsla(197, 71%, 73%, 1) 17%, hsla(0, 0%, 100%, 1) 100%);
+  transition: 0.5s ease;
+  overflow: hidden;
+  
+  &:hover {
+    height: 70%;
+  }
 `
 
 const PokemonInfoContainer = styled.div`
-  height: 20%;
+  height: 30%;
+  width: 100%;
+  border: 1px solid red;
 `
 
 
@@ -172,6 +191,8 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
 
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
+  console.log("data", data)
+
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
       <Card
@@ -181,9 +202,16 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
         {!flipped &&
           <FrontFace $type={primaryType} className="card">
             {data?.sprites?.front_default && !isLoading && (
-              <PokemonBgContainer>
-                <img src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
-              </PokemonBgContainer>
+              <>
+                <TypeContainer key={data?.id}>
+                  {data?.types?.map(t => (
+                    <img src={`/utils/types/${t.type.name}.png`} alt="pokemon_type" />
+                  ))}
+                </TypeContainer>
+                <PokemonBgContainer>
+                  <img src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
+                </PokemonBgContainer>
+              </>
             )}
             <PokemonInfoContainer>
               <Typography variant="h6" color="text.secondary" align="center">
