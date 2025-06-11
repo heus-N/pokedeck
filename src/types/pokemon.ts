@@ -6,6 +6,17 @@ export interface PokemonType {
   };
 }
 
+export interface Stats {
+  name: string;
+  url: string
+}
+
+export interface PokemonStats {
+  base_stat: number;
+  effort: number;
+  stat: Stats; 
+}
+
 export interface Pokemon {
   id?: number;
   name: string;
@@ -14,4 +25,5 @@ export interface Pokemon {
     [key: string]: any;
   };
   types?: PokemonType[];
+  stats?: PokemonStats[];
 }

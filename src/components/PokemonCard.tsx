@@ -138,32 +138,77 @@ const BackFace = styled(Face)`
 
 const TypeContainer = styled.span`
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 0px;
+  top: 0px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
   
   img{
     padding: 2px;
-    width: 25px;
-    height: 25px;
+    width: 100%;
     position: relative;
     z-index: 5;
-
-    &:hover {
-      
-    }
+    border: 1px solid red;
   }
+`
+
+const HpContainer = styled.span`
+  border: 1px solid red;
+  position: absolute;
+  top: 0;
+  right: 24px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 1;
 `
 
 const PokemonBgContainer = styled.div`
   width: 100%;
   height: 60%;
   // background-color: #ffffff;
-  background: linear-gradient(180deg, hsla(197, 71%, 73%, 1) 17%, hsla(0, 0%, 100%, 1) 100%);
+  // background: linear-gradient(180deg, hsla(197, 71%, 73%, 1) 17%, hsla(0, 0%, 100%, 1) 100%);
+  background-color: transparent;
   transition: 0.5s ease;
   overflow: hidden;
-  
+  position: relative;
+  box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 1);
+
+  border: 3px solid;
+  border-top: 10px solid;
+  border-bottom: 10px solid;
+  border-image: linear-gradient(135deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
+  clip-path: polygon(
+    10px 0%,
+    100% 0%,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0% 100%,
+    0% 10px
+  );
+
   &:hover {
     height: 70%;
+  };
+
+  .pokemon{
+    position: relative;
+    top: -20px;
+    box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .background{
+    position: absolute;
+    top: -140px;
+    left: 50%;
+    width: 420px;
+    height: auto;
+    transform: translate(-50%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 `
 
@@ -171,6 +216,17 @@ const PokemonInfoContainer = styled.div`
   height: 30%;
   width: 100%;
   border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  img{
+    padding: 2px;
+    width: 25px;
+    height: 25px;
+    position: relative;
+    z-index: 5;
+  }
 `
 
 
@@ -192,6 +248,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
   const rotation = flipped ? (flipDirection === 'forward' ? 180 : -180) : 0
 
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
+  const hpStat = data?.stats?.find(stat => stat.stat.name === 'hp');
 
   console.log("data", data)
 
@@ -205,23 +262,34 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
           <FrontFace $type={primaryType} className="card">
             {data?.sprites?.front_default && !isLoading && (
               <>
-                <TypeContainer key={data?.id}>
-                  {data?.types?.map(t => (
-                    <Tooltip title={t.type.name}>
-                      <img src={`/utils/types/${t.type.name}.png`} alt="pokemon_type" />
-                    </Tooltip>
-                  ))}
-                </TypeContainer>
                 <PokemonBgContainer>
-                  <img src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
+                  <TypeContainer key={data?.id}>
+                    <HpContainer>
+                      <Typography variant="h4">
+                        HP{hpStat?.base_stat}
+                      </Typography>
+                    </HpContainer>
+                    <Tooltip title={primaryType}>
+                      <img src={`/utils/types/${primaryType}.png`} alt="pokemon_type" />
+                    </Tooltip>
+                  </TypeContainer>
+                    <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
+                    <img className="pokemon" src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
                 </PokemonBgContainer>
+                <PokemonInfoContainer>
+                  <div style={{border: '1px solid red', display: 'flex', alignItems: 'center'}}>
+                    {data?.types?.map(t => (
+                      <Tooltip title={t.type?.name} key={t.type?.name}>
+                        <img src={`/utils/types/${t.type?.name}.png`} alt="pokemon_type" />
+                      </Tooltip>
+                    ))}
+                  </div>
+                  <Typography variant="h6" color="text.secondary" align="center">
+                    {data?.name}
+                  </Typography>
+                </PokemonInfoContainer>
               </>
             )}
-            <PokemonInfoContainer>
-              <Typography variant="h6" color="text.secondary" align="center">
-                {pokemon.name}
-              </Typography>
-            </PokemonInfoContainer>
           </FrontFace>}
         <BackFace />
       </Card>

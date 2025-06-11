@@ -90,7 +90,6 @@ export default function Home() {
   }, [pokemonList]);
 
   useEffect(() => {
-    //VOLTAR O TIMEOUT PARA 4500
     const timer = setTimeout(() => setShouldDisplay(true), 4000);
     return () => clearTimeout(timer);
   }, []);
