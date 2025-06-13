@@ -213,9 +213,8 @@ const PokemonBgContainer = styled.div`
 `
 
 const PokemonInfoContainer = styled.div`
-  height: 30%;
+  // height: 30%;
   width: 100%;
-  border: 1px solid red;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -277,16 +276,20 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     <img className="pokemon" src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
                 </PokemonBgContainer>
                 <PokemonInfoContainer>
-                  <div style={{display: 'flex', alignItems: 'center'}}>
-                    {data?.types?.map(t => (
-                      <Tooltip title={t.type?.name} key={t.type?.name}>
-                        <img src={`/utils/types/${t.type?.name}.png`} alt="pokemon_type" />
-                      </Tooltip>
-                    ))}
+
+                  <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#fff', opacity: '0.3'}}/>
+                  <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                      {data?.types?.map(t => (
+                        <Tooltip title={t.type?.name} key={t.type?.name}>
+                          <img src={`/utils/types/${t.type?.name}.png`} alt="pokemon_type" />
+                        </Tooltip>
+                      ))}
+                    </div>
+                    <Typography variant="h6" color="text.secondary" align="center">
+                      {data?.name}
+                    </Typography>
                   </div>
-                  <Typography variant="h6" color="text.secondary" align="center">
-                    {data?.name}
-                  </Typography>
                 </PokemonInfoContainer>
               </>
             )}
