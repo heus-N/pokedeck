@@ -277,7 +277,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     <img className="pokemon" src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
                 </PokemonBgContainer>
                 <PokemonInfoContainer>
-                  <div style={{border: '1px solid red', display: 'flex', alignItems: 'center'}}>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
                     {data?.types?.map(t => (
                       <Tooltip title={t.type?.name} key={t.type?.name}>
                         <img src={`/utils/types/${t.type?.name}.png`} alt="pokemon_type" />
