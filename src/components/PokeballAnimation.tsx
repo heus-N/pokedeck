@@ -23,7 +23,7 @@ export default function PokeballAnimation() {
                 duration: 1.5,
                 ease: "power2.out",
                 onComplete: () => {
-                // 2ª animação: zoom depois que a primeira termina
+                    
                 gsap.to(imgRef.current, {
                     scale: 50,
                     opacity: 0,

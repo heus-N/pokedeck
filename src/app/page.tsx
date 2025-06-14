@@ -83,8 +83,8 @@ export default function Home() {
   useEffect(() => {
     if (pokemonList) {
       const timer = setTimeout(() => {
-        setFlipped(false); // gira de volta para frente com o novo conteúdo
-      }, 500); // depois que os novos dados chegaram
+        setFlipped(false);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [pokemonList]);

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const pixelify = Pixelify_Sans({
   subsets: ['latin'],
-  weight: '400', // ou '700', 'variable', etc, conforme o que você precisa
+  weight: '400',
 });
 
 export default function RootLayout({

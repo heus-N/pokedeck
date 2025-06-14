@@ -16,8 +16,8 @@ const theme = createTheme({
       default: '#222831',
     },
     text: {
-      primary: '#000000', // Cor primária do texto
-      secondary: '#F7F7F7', // Cor secundária do texto
+      primary: '#000000',
+      secondary: '#F7F7F7',
     }
   },
   typography: {
@@ -27,7 +27,6 @@ const theme = createTheme({
     h3: { fontSize: '1.25rem', fontWeight: 400 },
     h4: { fontSize: '0.875rem', fontWeight: 400 },
     body1: { fontSize: '1rem' },
-    // Adicione mais como quiser
   },
 });
 
