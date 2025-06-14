@@ -22,7 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
+    <link rel="icon" type="image/svg+xml" href="/utils/pokeball.svg" />
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />

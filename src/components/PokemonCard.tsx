@@ -140,29 +140,16 @@ const TypeContainer = styled.span`
   position: absolute;
   right: 0px;
   top: 0px;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  
   img{
     padding: 2px;
-    width: 100%;
+    width: 25px;
     position: relative;
     z-index: 5;
-    border: 1px solid red;
   }
 `
 
 const HpContainer = styled.span`
-  border: 1px solid red;
-  position: absolute;
-  top: 0;
-  right: 24px;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  gap: 1;
+  text-align: center;
 `
 
 const PokemonBgContainer = styled.div`
@@ -175,6 +162,7 @@ const PokemonBgContainer = styled.div`
   overflow: hidden;
   position: relative;
   box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 1);
+  position: relative;
 
   border: 3px solid;
   border-top: 10px solid;
@@ -213,11 +201,17 @@ const PokemonBgContainer = styled.div`
 `
 
 const PokemonInfoContainer = styled.div`
-  // height: 30%;
+  height: 30%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+`
+
+const FooterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   img{
     padding: 2px;
@@ -226,6 +220,14 @@ const PokemonInfoContainer = styled.div`
     position: relative;
     z-index: 5;
   }
+`
+
+const BorderContainer = styled.div`
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+  // border-radius: 100px 0 100px 0;
+  border-radius: 0px 100px 100px 100px;
+  padding: 0 10px;
 `
 
 
@@ -249,8 +251,6 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const hpStat = data?.stats?.find(stat => stat.stat.name === 'hp');
 
-  console.log("data", data)
-
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
       <Card
@@ -263,11 +263,6 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
               <>
                 <PokemonBgContainer>
                   <TypeContainer key={data?.id}>
-                    <HpContainer>
-                      <Typography variant="h4">
-                        HP{hpStat?.base_stat}
-                      </Typography>
-                    </HpContainer>
                     <Tooltip title={primaryType}>
                       <img src={`/utils/types/${primaryType}.png`} alt="pokemon_type" />
                     </Tooltip>
@@ -276,20 +271,26 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     <img className="pokemon" src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
                 </PokemonBgContainer>
                 <PokemonInfoContainer>
-
-                  <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#fff', opacity: '0.3'}}/>
-                  <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+                  <HpContainer>
+                    <Typography variant="h6" color="text.secondary">
+                      {data?.name}
+                    </Typography>
+                  </HpContainer>
+                  <FooterContainer >
+                    <BorderContainer style={{display: 'flex', alignItems: 'center'}}>
                       {data?.types?.map(t => (
                         <Tooltip title={t.type?.name} key={t.type?.name}>
                           <img src={`/utils/types/${t.type?.name}.png`} alt="pokemon_type" />
                         </Tooltip>
                       ))}
-                    </div>
-                    <Typography variant="h6" color="text.secondary" align="center">
-                      {data?.name}
-                    </Typography>
-                  </div>
+                    </BorderContainer>
+                    <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#ffffff', opacity: '0.5'}}/>
+                    <HpContainer>
+                      <Typography variant="h4">
+                        HP{hpStat?.base_stat}
+                      </Typography>
+                    </HpContainer>
+                  </FooterContainer>
                 </PokemonInfoContainer>
               </>
             )}
