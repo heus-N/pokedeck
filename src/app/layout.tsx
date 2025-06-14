@@ -19,7 +19,7 @@ const pixelify = Pixelify_Sans({
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode; 
 }) {
   return (
     <html lang="pt-BR">

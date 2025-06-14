@@ -93,7 +93,8 @@ export default function Home() {
     const timer = setTimeout(() => setShouldDisplay(true), 4000);
     return () => clearTimeout(timer);
   }, []);
-;
+
+  console.log('pokemonList', pokemonList)
 
   return (
     <StyledContainer>

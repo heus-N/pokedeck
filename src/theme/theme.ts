@@ -1,6 +1,13 @@
 // src/theme/theme.ts
 'use client'
 import { createTheme } from '@mui/material/styles';
+import { Russo_One } from 'next/font/google';
+
+const russoOne = Russo_One({
+  subsets: ['latin'],
+  weight: '400',
+});
+
 
 const theme = createTheme({
   palette: {
@@ -9,12 +16,12 @@ const theme = createTheme({
       default: '#222831',
     },
     text: {
-      primary: '#EEEEEE', // Cor primária do texto
-      secondary: '#000000', // Cor secundária do texto
+      primary: '#000000', // Cor primária do texto
+      secondary: '#F7F7F7', // Cor secundária do texto
     }
   },
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: `${russoOne.style.fontFamily}, Roboto, sans-serif`,
     h1: { fontSize: '2rem', fontWeight: 600 },
     h2: { fontSize: '1.5rem', fontWeight: 500 },
     h3: { fontSize: '1.25rem', fontWeight: 400 },

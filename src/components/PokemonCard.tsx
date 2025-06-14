@@ -148,8 +148,10 @@ const TypeContainer = styled.span`
   }
 `
 
-const HpContainer = styled.span`
-  text-align: center;
+const NameContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const PokemonBgContainer = styled.div`
@@ -208,10 +210,20 @@ const PokemonInfoContainer = styled.div`
   justify-content: space-between;
 `
 
+const HpContainer = styled.span`
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 100px;
+  padding: 2px 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
+`
+
 const FooterContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 12px;
 
   img{
     padding: 2px;
@@ -223,11 +235,15 @@ const FooterContainer = styled.div`
 `
 
 const BorderContainer = styled.div`
-  border-bottom: 1px solid;
-  border-left: 1px solid;
+  border-bottom: 1px solid #F7F7F7;
+  border-left: 1px solid #F7F7F7;
   // border-radius: 100px 0 100px 0;
-  border-radius: 0px 100px 100px 100px;
+  border-radius: 100px;
+  // border-radius: 0px 100px 100px 100px;
   padding: 0 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
+
 `
 
 
@@ -271,11 +287,12 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     <img className="pokemon" src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
                 </PokemonBgContainer>
                 <PokemonInfoContainer>
-                  <HpContainer>
-                    <Typography variant="h6" color="text.secondary">
+                  <NameContainer>
+                    <Typography variant="h3" color="text.secondary" className="pokemonName" flexGrow="nowrap">
                       {data?.name}
                     </Typography>
-                  </HpContainer>
+                  </NameContainer>
+                  {/* <span style={{borderRight: '1px solid rgba(255, 255, 255, 0.5)', borderLeft: '1px solid rgba(255, 255, 255, 0.5)', height: '100%'}}/> */}
                   <FooterContainer >
                     <BorderContainer style={{display: 'flex', alignItems: 'center'}}>
                       {data?.types?.map(t => (
@@ -284,10 +301,10 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                         </Tooltip>
                       ))}
                     </BorderContainer>
-                    <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#ffffff', opacity: '0.5'}}/>
+                    <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#ffffff', opacity: '0.5', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'}}/>
                     <HpContainer>
-                      <Typography variant="h4">
-                        HP{hpStat?.base_stat}
+                      <Typography variant="h4" color="#e53935">
+                        hp{hpStat?.base_stat}
                       </Typography>
                     </HpContainer>
                   </FooterContainer>
