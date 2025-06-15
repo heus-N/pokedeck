@@ -3,7 +3,7 @@
 import styled, { keyframes } from "styled-components";
 import { Pokemon } from "../types/pokemon";
 import { Typography } from "@mui/material";
-import { usePokemonById, usePokemonType } from "@/hooks/usePokemonList";
+import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie, usePokemonType } from "@/hooks/usePokemonList";
 import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -141,6 +141,7 @@ const TypeContainer = styled.span`
   right: 0px;
   top: 0px;
   img{
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5));
     padding: 2px;
     width: 25px;
     position: relative;
@@ -152,6 +153,10 @@ const NameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .pokemonName{
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5))
+  }
 `
 
 const PokemonBgContainer = styled.div`
@@ -202,6 +207,18 @@ const PokemonBgContainer = styled.div`
   }
 `
 
+const EvolutionLevelContainer = styled.div`
+  position: absolute;
+  border: 1pox solid red;
+  z-index: 10;
+  left: 1.5rem;
+  top: -1px;
+
+  img{
+    width: 40px;
+  }
+`
+
 const PokemonInfoContainer = styled.div`
   height: 30%;
   width: 100%;
@@ -215,8 +232,13 @@ const HpContainer = styled.span`
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 100px;
   padding: 2px 12px;
+  height: 25px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   background-color: rgba(0, 0, 0, 0.25);
+
+  .hp{
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5))
+  }
 `
 
 const FooterContainer = styled.div`
@@ -231,19 +253,17 @@ const FooterContainer = styled.div`
     height: 25px;
     position: relative;
     z-index: 5;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5))
   }
 `
 
 const BorderContainer = styled.div`
   border-bottom: 1px solid #F7F7F7;
   border-left: 1px solid #F7F7F7;
-  // border-radius: 100px 0 100px 0;
   border-radius: 100px;
-  // border-radius: 0px 100px 100px 100px;
   padding: 0 10px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   background-color: rgba(0, 0, 0, 0.25);
-
 `
 
 
@@ -258,14 +278,45 @@ interface Props {
   page: number;
 }
 
+interface EvolutionChain {
+  species: { name: string };
+  evolves_to: EvolutionChain[];
+}
+
 export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection, index, page }: Props) {
   const pokemonId = url.split("pokemon/")[1];
   const { data, isLoading } = usePokemonById(pokemonId);
   const { data: pokemonType } = usePokemonType();
+  const { data: pokemonSpecie } = usePokemonSpecie(pokemonId);
+  const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(pokemonId);
   const rotation = flipped ? (flipDirection === 'forward' ? 180 : -180) : 0
 
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const hpStat = data?.stats?.find(stat => stat.stat.name === 'hp');
+
+  let evolution_level
+
+  
+  function getEvolutionLevel(chain: EvolutionChain, currentPokemonName: string): number {
+    if (!chain || !currentPokemonName) return 0;
+
+    // Se o Pokémon está na base
+    if (chain.species.name === currentPokemonName) return 1;
+
+    // Se está no primeiro nível de evolução
+    const firstEvo = chain.evolves_to.find(e1 => e1.species.name === currentPokemonName);
+    if (firstEvo) return 2;
+
+    // Se está no segundo nível de evolução
+    for (const e1 of chain.evolves_to) {
+      const secondEvo = e1.evolves_to.find(e2 => e2.species.name === currentPokemonName);
+      if (secondEvo) return 3;
+    }
+
+    // Caso não encontre
+    return 0;
+  }
+
 
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
@@ -277,6 +328,11 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
           <FrontFace $type={primaryType} className="card">
             {data?.sprites?.front_default && !isLoading && (
               <>
+                <Tooltip title="evolution level">
+                  <EvolutionLevelContainer>
+                    <img src="/utils/evolution_level/evolution_level_1.png" alt="evolution level"/>
+                  </EvolutionLevelContainer>
+                </Tooltip>
                 <PokemonBgContainer>
                   <TypeContainer key={data?.id}>
                     <Tooltip title={primaryType}>
@@ -303,7 +359,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     </BorderContainer>
                     <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#ffffff', opacity: '0.5', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'}}/>
                     <HpContainer>
-                      <Typography variant="h4" color="#e53935">
+                      <Typography className="hp" variant="h4" color="#F7F7F7">
                         hp{hpStat?.base_stat}
                       </Typography>
                     </HpContainer>

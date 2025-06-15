@@ -44,3 +44,61 @@ export function usePokemonType() {
     count: data?.count,
   };
 }
+
+
+interface EvolutionChain {
+  url: string;
+}
+
+interface FlavorTextEntry {
+  flavor_text: string;
+  language: {
+    name: string;
+  };
+}
+
+export interface PokemonSpecieResponse {
+  id: number;
+  evolution_chain: EvolutionChain;
+  evolves_from_species: { name: string; url: string } | null;
+  flavor_text_entries: FlavorTextEntry[];
+  habitat: { name: string } | null;
+}
+
+export function usePokemonSpecie(id: string) {
+  const { data, error, isLoading } = useSWR<PokemonSpecieResponse>(`/pokemon-species/${id}`, axiosFetcher);
+
+  return {
+    data,
+    isLoading,
+    isError: error,
+  };
+}
+
+
+interface EvolutionDetail {}
+
+interface EvolutionChainLink {
+  is_baby: boolean;
+  species: {
+    name: string;
+    url: string;
+  };
+  evolution_details: EvolutionDetail[];
+  evolves_to: EvolutionChainLink[]; // Recursão
+}
+
+export interface PokemonEvolutionChainResponse {
+  id: number;
+  chain: EvolutionChainLink;
+}
+
+export function usePokemonEvolutionChain(id: string) {
+  const { data, error, isLoading } = useSWR<PokemonEvolutionChainResponse>(`/evolution-chain/${id}`, axiosFetcher);
+
+  return {
+    data,
+    isLoading,
+    isError: error,
+  };
+}
