@@ -6,6 +6,7 @@ import { Typography } from "@mui/material";
 import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie, usePokemonType } from "@/hooks/usePokemonList";
 import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const fadeInFromRight = keyframes`
   from {
@@ -231,13 +232,19 @@ const HpContainer = styled.span`
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 100px;
-  padding: 2px 12px;
-  height: 25px;
+  padding: 0px 10px;
+  height: 28px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   background-color: rgba(0, 0, 0, 0.25);
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F7F7F7;
+  gap: 5px;
 
   .hp{
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5))
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
   }
 `
 
@@ -359,9 +366,11 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     </BorderContainer>
                     <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#ffffff', opacity: '0.5', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'}}/>
                     <HpContainer>
-                      <Typography className="hp" variant="h4" color="#F7F7F7">
-                        hp{hpStat?.base_stat}
-                      </Typography>
+                      <Tooltip title="hp">
+                        <Typography className="hp" variant="h4">
+                          <FavoriteIcon sx={{fontSize: '16px', marginBottom: '-2px'}}/> {hpStat?.base_stat}
+                        </Typography>
+                      </Tooltip>
                     </HpContainer>
                   </FooterContainer>
                 </PokemonInfoContainer>
