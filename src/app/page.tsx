@@ -94,8 +94,6 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  console.log('pokemonList', pokemonList)
-
   return (
     <StyledContainer>
       {shouldDisplay &&

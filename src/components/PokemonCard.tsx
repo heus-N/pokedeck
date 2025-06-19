@@ -7,6 +7,7 @@ import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie, usePokemonT
 import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useEffect } from "react";
 
 const fadeInFromRight = keyframes`
   from {
@@ -210,13 +211,13 @@ const PokemonBgContainer = styled.div`
 
 const EvolutionLevelContainer = styled.div`
   position: absolute;
-  border: 1pox solid red;
   z-index: 10;
   left: 1.5rem;
-  top: -1px;
+  top: 9px;
+  left: 25px;
 
   img{
-    width: 40px;
+    width: 30px;
   }
 `
 
@@ -295,35 +296,32 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
   const { data, isLoading } = usePokemonById(pokemonId);
   const { data: pokemonType } = usePokemonType();
   const { data: pokemonSpecie } = usePokemonSpecie(pokemonId);
-  const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(pokemonId);
+  const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
+  const evolutionChainId = evolutionChainUrl?.split('/').filter(Boolean).pop();
+  const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const rotation = flipped ? (flipDirection === 'forward' ? 180 : -180) : 0
 
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const hpStat = data?.stats?.find(stat => stat.stat.name === 'hp');
 
-  let evolution_level
-
-  
-  function getEvolutionLevel(chain: EvolutionChain, currentPokemonName: string): number {
+  function getEvolutionLevel(chain: EvolutionChain | undefined, currentPokemonName: string, level = 1): number {
     if (!chain || !currentPokemonName) return 0;
 
-    // Se o Pokémon está na base
-    if (chain.species.name === currentPokemonName) return 1;
-
-    // Se está no primeiro nível de evolução
-    const firstEvo = chain.evolves_to.find(e1 => e1.species.name === currentPokemonName);
-    if (firstEvo) return 2;
-
-    // Se está no segundo nível de evolução
-    for (const e1 of chain.evolves_to) {
-      const secondEvo = e1.evolves_to.find(e2 => e2.species.name === currentPokemonName);
-      if (secondEvo) return 3;
+    if (chain.species.name === currentPokemonName) {
+      return level;
     }
 
-    // Caso não encontre
+    for (const evolution of chain.evolves_to) {
+      const result = getEvolutionLevel(evolution, currentPokemonName, level + 1);
+      if (result !== 0) {
+        return result;
+      }
+    }
+
     return 0;
   }
 
+  const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
 
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
@@ -337,7 +335,10 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
               <>
                 <Tooltip title="evolution level">
                   <EvolutionLevelContainer>
-                    <img src="/utils/evolution_level/evolution_level_1.png" alt="evolution level"/>
+                    {evolutionLevel !== 0 
+                      ? <img src={`/utils/evolution_level/evolution_level_${evolutionLevel}.png`} alt="evolution level"/>
+                      : null
+                    }
                   </EvolutionLevelContainer>
                 </Tooltip>
                 <PokemonBgContainer>

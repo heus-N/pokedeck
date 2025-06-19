@@ -75,7 +75,6 @@ export function usePokemonSpecie(id: string) {
   };
 }
 
-
 interface EvolutionDetail {}
 
 interface EvolutionChainLink {
@@ -89,7 +88,7 @@ interface EvolutionChainLink {
 }
 
 export interface PokemonEvolutionChainResponse {
-  id: number;
+  id: string;
   chain: EvolutionChainLink;
 }
 
