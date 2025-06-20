@@ -18,6 +18,7 @@ export interface PokemonStats {
 }
 
 export interface Pokemon {
+  url?: string;
   id?: number;
   name: string;
   sprites?: {
