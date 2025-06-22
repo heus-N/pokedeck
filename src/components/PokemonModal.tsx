@@ -15,7 +15,6 @@ const StyledDialogContent = styled(DialogContent)<DialogProps>`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 1px solid #FFD700;
   border-radius: 5px;
 
   @media (min-width: 600px){
@@ -30,12 +29,57 @@ const StyledDialogContent = styled(DialogContent)<DialogProps>`
   };
 `
 
-const StyledModalContainer = styled.div`
+const ClipPath = styled.div`
+  position: absolute;
   width: 100%;
   height: 100%;
-  padding: 16px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
-  display: flex;
+  border: 16px solid;
+  border-image: linear-gradient(135deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
+  transition: all 0.3s ease;
+
+  clip-path: polygon(
+    0px 0px,
+    100% 0px,
+    100% 100%,
+    0 100%,
+    0 50%,
+    8px calc(50% + 8px),
+    8px calc(100% - 16px),
+    calc(100% - 8px) calc(100% - 16px),
+    calc(100% - 8px) calc(50% + 8px),
+    100% calc(50%),
+    calc(100% - 8px) calc(50% - 8px),
+    calc(100% - 8px) 16px,
+    8px 16px,
+    8px calc(50% - 8px),
+    0px 50%
+  );
+
+  @media (min-width: 600px){
+    clip-path: polygon(
+      0px 0px,
+      100% 0px,
+      100% 100%,
+      50% 100%,
+      calc(50% - -8px) calc(100% - 8px),
+      calc(100% - 16px) calc(100% - 8px),
+      calc(100% - 16px) 8px,
+      calc(50%) 8px,
+      calc(50% - 8px) 0px,
+      calc(50% - 16px) 8px,
+      16px 8px,
+      16px calc(100% - 8px),
+      calc(50% - 8px) calc(100% - 8px),
+      50% 100%,
+      0 100%
+    );
+  }
+`
+
+const ModalContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
 `
 
 
@@ -49,6 +93,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   if (!pokemon) return null;
   const url = pokemon.url
   const pokemonId = url?.split("pokemon/")[1];
+  if (!pokemonId) return null;
   const { data, isLoading } = usePokemonById(pokemonId);
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
@@ -65,13 +110,12 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
       }}
     >
       <StyledDialogContent $type={primaryType} id="alert-dialog-slide-description">
-        <StyledModalContainer>
-          <div style={{width: '100%', border: '1px solid red'}}>
-            {/* <Typography variant="h1">{pokemon.name}</Typography> */}
-          </div>
-
-          {/* <div style={{width: '100%'}}>test</div> */}
-        </StyledModalContainer>
+      <ClipPath />
+      <ModalContainer>
+        <Typography style={{ color: 'red', fontSize: '24px'}}>
+          {pokemon.name}
+        </Typography>
+      </ModalContainer>
       </StyledDialogContent>
     </Dialog>
   );
