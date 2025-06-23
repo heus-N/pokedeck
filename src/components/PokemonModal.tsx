@@ -74,6 +74,43 @@ const ClipPath = styled.div`
       0 100%
     );
   }
+
+`
+
+const ClipPathLine1 = styled.span`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  
+  // border: 16px solid;
+  // border-image: linear-gradient(135deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  opacity: 0.5;
+
+  clip-path: polygon(
+    0 20%,
+    30% 20%,
+    70% 80%,
+    100% 80%,
+    100% calc(80% + 1px),
+    calc(70% - 1px) calc(80% + 1px),
+    calc(30% - 1px) calc(20% + 1px),
+    0 calc(20% + 1px)
+  )
+`
+
+const ClipPathLine2 = styled(ClipPathLine1)`
+  clip-path: polygon(
+    0 80%,
+    30% 80%,
+    70% 20%,
+    100% 20%,
+    100% calc(20% + 1px),
+    calc(70% + 1px) calc(20% + 1px),
+    calc(30% + 1px) calc(80% + 1px),
+    0 calc(80% + 1px)
+  )
 `
 
 const ModalContainer = styled.div`
@@ -81,7 +118,6 @@ const ModalContainer = styled.div`
   height: 100%;
   padding: 1rem;
 `
-
 
 interface PropsModal {
   open: boolean;
@@ -110,7 +146,9 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
       }}
     >
       <StyledDialogContent $type={primaryType} id="alert-dialog-slide-description">
-      <ClipPath />
+      <ClipPathLine1/>
+      <ClipPathLine2/>
+      <ClipPath/>
       <ModalContainer>
         <Typography style={{ color: 'red', fontSize: '24px'}}>
           {pokemon.name}
