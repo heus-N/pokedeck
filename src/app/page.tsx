@@ -3,13 +3,13 @@
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
 import { usePokemonList } from '@/hooks/usePokemonList';
-import { Pokemon } from '@/types/pokemon';
 import { Box, Grid, Pagination } from '@mui/material';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
 import PokeballAnimation from '@/components/PokeballAnimation';
 import PokeballSvg from '../../public/utils/pokeballSvg';
+import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 
 const StyledContainer = styled.section`
   margin: 0;
@@ -69,17 +69,25 @@ const StyledFooter = styled(Box)`
 
 
 export default function Home() {
-  const [ open, setOpen ] = useState(false)
-  const [ page, setPage ] = useState(1)
-  const offset = (page - 1) * 20;
+  const {
+    currentPage,
+    handlePageChange,
+    handleOpenModal,
+    handleCloseModal,
+    pokemonQuery
+  } = usePokemonNavigation();
+
+  const offset = (currentPage - 1) * 20;
+
   const { data: pokemonList, isLoading, isError, count } = usePokemonList(offset);
-  const [ selectedPokemon, setSelectedPokemon ] = useState<Pokemon | null>(null);
+  const selectedPokemon = pokemonList?.find(p => p.name === pokemonQuery) || null;
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
   const lastPage = count && Math.floor(count / 20) + 1
-  const [flipped, setFlipped] = useState(false);
-  const [flipDirection, setFlipDirection] = useState<'forward' | 'backward'>('forward');
-  const [shouldDisplay, setShouldDisplay] = useState(false)
-
+  const [ flipped, setFlipped ] = useState(false);
+  const [ flipDirection, setFlipDirection ] = useState<'forward' | 'backward'>('forward');
+  const [ shouldDisplay, setShouldDisplay ] = useState(false)
+  const isModalOpen = !!pokemonQuery;
+  
   useEffect(() => {
     if (pokemonList) {
       const timer = setTimeout(() => {
@@ -93,8 +101,6 @@ export default function Home() {
     const timer = setTimeout(() => setShouldDisplay(true), 4000);
     return () => clearTimeout(timer);
   }, []);
-
-  console.log('pokemonList', pokemonList)
 
   return (
     <StyledContainer>
@@ -111,7 +117,7 @@ export default function Home() {
           <PokeballSvg shouldDisplay={shouldDisplay}/>
         </div>
       }
-      <PokemonModal open={open} handleClose={() => setOpen(false)} pokemon={selectedPokemon} />
+      <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />
         <StyledCardContainer>
           <Grid 
             container 
@@ -137,12 +143,12 @@ export default function Home() {
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}>
                 <PokemonCard
-                  page={page}
+                  page={currentPage}
                   index={index}
                   flipped={flipped}
                   url={pokemon?.url}
                   pokemon={pokemon}
-                  onClick={() => {setOpen(true); setSelectedPokemon(pokemon)}}
+                  onClick={() => handleOpenModal(pokemon)}
                   flipDirection={flipDirection}
                 />
             </StyledCardGrid>
@@ -159,14 +165,14 @@ export default function Home() {
                 },
               }}
               count={lastPage}
-              page={page}
+              page={currentPage}
               siblingCount={0}
               boundaryCount={1} 
               onChange={(event, value) => {
-                if (value === page) return;
-                setFlipDirection(value > page ? 'forward' : 'backward');
-                setFlipped(true);
-                setPage(value);
+                if (value === currentPage) return;
+                setFlipDirection(value > currentPage ? 'forward' : 'backward');
+                // setFlipped(true);
+                handlePageChange(value);
               }}
             />
           </StyledFooter>

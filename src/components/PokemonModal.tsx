@@ -131,6 +131,10 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const { data, isLoading } = usePokemonById(pokemonId);
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
+
+
+
+
   return (
     <Dialog
       open={open}

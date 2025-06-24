@@ -22,7 +22,7 @@ const fadeInFromRight = keyframes`
 
 interface WrapperProps {
   $flipped: boolean,
-  $delay: number,
+  $delay?: number,
   $page: number
 }
 
@@ -44,7 +44,8 @@ const CardWrapper = styled.div<WrapperProps>`
   pointer-events: ${({$flipped}) => $flipped ? 'none' : null};
 
   transition: all 0.3s ease;
-  animation: ${fadeInFromRight} ${({$delay, $page}) => ($page === 1) && $delay ? `${$delay * 0.15}s` : '0.2s ease forwards'};
+  // animation: ${fadeInFromRight} ${({$delay, $page}) => ($page === 1) && $delay ? `${$delay * 0.15}s` : '0.2s ease forwards'};
+  animation: ${fadeInFromRight} ${({$delay, $page}) => $delay ? `${$delay * 0.15}s` : '0.2s ease forwards'};
 `;
 
 
