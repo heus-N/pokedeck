@@ -126,10 +126,8 @@ interface PropsModal {
 }
 
 export default function PokemonModal({ open, handleClose, pokemon }: PropsModal) {
-  if (!pokemon) return null;
-  const url = pokemon.url
-  const pokemonId = url?.split("pokemon/")[1];
-  if (!pokemonId) return null;
+  const url = pokemon?.url
+  const pokemonId = url?.split("pokemon/")[1] ?? '';
   const { data, isLoading } = usePokemonById(pokemonId);
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
@@ -146,14 +144,24 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
       }}
     >
       <StyledDialogContent $type={primaryType} id="alert-dialog-slide-description">
-      <ClipPathLine1/>
-      <ClipPathLine2/>
-      <ClipPath/>
-      <ModalContainer>
-        <Typography style={{ color: 'red', fontSize: '24px'}}>
-          {pokemon.name}
-        </Typography>
-      </ModalContainer>
+        <ClipPathLine1 />
+        <ClipPathLine2 />
+        <ClipPath />
+        <ModalContainer>
+          {(!pokemon || !pokemonId) ? (
+            <Typography style={{ color: 'red', fontSize: '24px' }}>
+              Nenhum Pokémon selecionado.
+            </Typography>
+          ) : isLoading ? (
+            <Typography style={{ color: 'blue', fontSize: '24px' }}>
+              Carregando...
+            </Typography>
+          ) : (
+            <Typography style={{ color: 'red', fontSize: '24px' }}>
+              {pokemon.name}
+            </Typography>
+          )}
+        </ModalContainer>
       </StyledDialogContent>
     </Dialog>
   );
