@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
 import { Pokemon } from '@/types/pokemon';
 
 export function usePokemonNavigation() {

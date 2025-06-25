@@ -64,9 +64,9 @@ const ClipPath = styled.div`
       calc(50% - -8px) calc(100% - 8px),
       calc(100% - 16px) calc(100% - 8px),
       calc(100% - 16px) 8px,
-      calc(50%) 8px,
-      calc(50% - 8px) 0px,
-      calc(50% - 16px) 8px,
+      calc(50% + 8px) 8px,
+      calc(50%) 0px,
+      calc(50% - 8px) 8px,
       16px 8px,
       16px calc(100% - 8px),
       calc(50% - 8px) calc(100% - 8px),
@@ -116,7 +116,51 @@ const ClipPathLine2 = styled(ClipPathLine1)`
 const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+`
+
+const LeftModalContainer = styled.div`
+  border: 1px solid red;
+  width: 50%;
+  height: 100%;
+  padding: 10px;
+`
+
+const RightModalContainer = styled.div`
+  border: 1px solid blue;
+  width: 50%;
+  padding: 10px;
+`
+
+const PokemonInfo = styled.div`
+  border: 1px solid green;
+  height: 20%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+`
+
+const TypeContainer = styled.div`
+  border: 1px solid red;
+  display: flex;
+  padding: 2px 5px;
+  border-radius: 20px;
+  & + & {
+    margin-left: 10px;
+  }
+`
+
+const ImageContainer = styled.div`
+  border: 1px solid yellow;
+  height: 60%;
+`
+
+const StatsContainer = styled.div`
+  border: 1px solid purple;
+  height: 20%;
 `
 
 interface PropsModal {
@@ -131,9 +175,8 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const { data, isLoading } = usePokemonById(pokemonId);
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
-
-
-
+  console.log('data', data)
+  console.log('pokemon', pokemon)
 
   return (
     <Dialog
@@ -153,17 +196,41 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
         <ClipPath />
         <ModalContainer>
           {(!pokemon || !pokemonId) ? (
-            <Typography style={{ color: 'red', fontSize: '24px' }}>
+            <Typography variant='h2'>
               Nenhum Pokémon selecionado.
             </Typography>
           ) : isLoading ? (
-            <Typography style={{ color: 'blue', fontSize: '24px' }}>
+            <Typography variant='h2'>
               Carregando...
             </Typography>
           ) : (
-            <Typography style={{ color: 'red', fontSize: '24px' }}>
-              {pokemon.name}
-            </Typography>
+            <>
+              <LeftModalContainer>
+                <PokemonInfo>
+                  <Typography variant='h2'>
+                    {pokemon.name}
+                  </Typography>
+                  <div style={{display: 'flex'}}>
+                    {data?.types?.map(t => (
+                      <TypeContainer key={t.type.name}>{t.type.name}</TypeContainer>
+                    ))}
+                  </div>
+                </PokemonInfo>
+                <ImageContainer>
+                  imagem
+                </ImageContainer>
+                <StatsContainer>
+                  stats
+                </StatsContainer>
+              </LeftModalContainer>
+
+              <RightModalContainer>
+                <Typography>evoluções</Typography>
+                <div>evol 1</div>
+                <div>evol 2</div>
+                <div>evol 3</div>
+              </RightModalContainer>
+            </>
           )}
         </ModalContainer>
       </StyledDialogContent>
