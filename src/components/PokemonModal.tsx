@@ -121,7 +121,6 @@ const ModalContainer = styled.div`
 `
 
 const LeftModalContainer = styled.div`
-  border: 1px solid red;
   width: 50%;
   height: 100%;
   padding: 10px;
@@ -134,8 +133,8 @@ const RightModalContainer = styled.div`
 `
 
 const PokemonInfo = styled.div`
-  border: 1px solid green;
-  height: 20%;
+  // border: 1px solid green;
+  height: calc(20% - 16px);
   width: 100%;
 
   display: flex;
@@ -143,25 +142,59 @@ const PokemonInfo = styled.div`
   justify-content: space-around;
 `
 
-const TypeContainer = styled.div`
-  border: 1px solid red;
+interface TypeContainerProps{
+  $type: string
+}
+
+const TypeContainer = styled.div<TypeContainerProps>`
+  border: 1px solid rgba(255, 255, 255, 0.5);
   display: flex;
-  padding: 2px 5px;
+  padding: 2px 10px;
   border-radius: 20px;
   & + & {
     margin-left: 10px;
+  };
+  box-shadow: 0px 0px 3px rgba(0, 0 , 0, 0.5);
+  background-color: ${({$type}) => typeColors[$type] || typeColors.default};
+  transition: 0.3s ease;
+  &:hover{
+    scale: 1.05;
   }
 `
 
 const ImageContainer = styled.div`
-  border: 1px solid yellow;
-  height: 60%;
+  // border: 1px solid yellow;
+  height: calc(60% + 32px);
 `
 
 const StatsContainer = styled.div`
-  border: 1px solid purple;
-  height: 20%;
+  // border: 1px solid purple;
+  height: calc(20% - 16px);
 `
+
+const typeColors: Record<string, string> = {
+  normal: '#A8A77A',
+  fire: '#F5AC78',
+  water: '#9DB7F5',
+  electric: '#FAE078',
+  grass: '#A7DB8D',
+  ice: '#BCE6E6',
+  fighting: '#D67873',
+  poison: '#C183C1',
+  ground: '#EBD69D',
+  flying: '#C6B7F5',
+  psychic: '#FA92B2',
+  bug: '#C6D16E',
+  rock: '#D1C17D',
+  ghost: '#A292BC',
+  dragon: '#A27DFA',
+  dark: '#A29288',
+  steel: '#D1D1E0',
+  fairy: '#F4BDC9',
+  stellar: '#D6C6F0',
+  unknown: '#CCCCCC',
+  default: '#A0A0A0',
+};
 
 interface PropsModal {
   open: boolean;
@@ -212,7 +245,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   </Typography>
                   <div style={{display: 'flex'}}>
                     {data?.types?.map(t => (
-                      <TypeContainer key={t.type.name}>{t.type.name}</TypeContainer>
+                      <TypeContainer $type={t.type.name} key={t.type.name}>{t.type.name}</TypeContainer>
                     ))}
                   </div>
                 </PokemonInfo>
