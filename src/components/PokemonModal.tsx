@@ -124,6 +124,9 @@ const LeftModalContainer = styled.div`
   width: 50%;
   height: 100%;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const RightModalContainer = styled.div`
@@ -134,7 +137,7 @@ const RightModalContainer = styled.div`
 
 const PokemonInfo = styled.div`
   // border: 1px solid green;
-  height: calc(20% - 16px);
+  height: 20%;
   width: 100%;
 
   display: flex;
@@ -154,7 +157,7 @@ const TypeContainer = styled.div<TypeContainerProps>`
   & + & {
     margin-left: 10px;
   };
-  box-shadow: 0px 0px 3px rgba(0, 0 , 0, 0.5);
+  box-shadow: 1px 1px 3px rgba(0, 0 , 0, 0.5);
   background-color: ${({$type}) => typeColors[$type] || typeColors.default};
   transition: 0.3s ease;
   &:hover{
@@ -164,12 +167,27 @@ const TypeContainer = styled.div<TypeContainerProps>`
 
 const ImageContainer = styled.div`
   // border: 1px solid yellow;
-  height: calc(60% + 32px);
+  height: 70%;
 `
 
 const StatsContainer = styled.div`
   // border: 1px solid purple;
-  height: calc(20% - 16px);
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  hr{
+    border: none;
+    width: 1px;
+    height: calc(100% - 2rem);
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 10px 10px;
+  }
+
+  .stats1, .stats2{
+    width: 50%;
+  }
 `
 
 const typeColors: Record<string, string> = {
@@ -209,7 +227,6 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
   console.log('data', data)
-  console.log('pokemon', pokemon)
 
   return (
     <Dialog
@@ -253,7 +270,17 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   imagem
                 </ImageContainer>
                 <StatsContainer>
-                  stats
+                  <div className='stats2'>
+                    <Typography>hp: <span className='stat'>{data?.stats?.find(s => s.stat.name === 'hp')?.base_stat}</span></Typography>
+                    <Typography>attack: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'attack')?.base_stat} </Typography>
+                    <Typography>defense: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'defense')?.base_stat} </Typography>
+                  </div>
+                  <hr/>
+                  <div className='stats2'>
+                    <Typography>special-attack: <span className='stat'> {data?.stats?.find(s => s.stat.name === 'special-attack')?.base_stat} </span> </Typography>
+                    <Typography>special-defense: <span className='stat'> {data?.stats?.find(s => s.stat.name === 'special-defense')?.base_stat} </span> </Typography>
+                    <Typography>speed: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'speed')?.base_stat} </Typography>
+                  </div>
                 </StatsContainer>
               </LeftModalContainer>
 

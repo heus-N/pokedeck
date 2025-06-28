@@ -247,6 +247,13 @@ const HpContainer = styled.span`
 
   .hp{
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  };
+
+  .favoriteIcon:hover{
+    scale: 1.2;
+  }
+  .favoriteIcon {
+    transition: all 1s ease;
   }
 `
 
@@ -370,7 +377,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     <HpContainer>
                       <Tooltip title="hp">
                         <Typography className="hp" variant="h4">
-                          <FavoriteIcon sx={{fontSize: '16px', marginBottom: '-2px'}}/> {hpStat?.base_stat}
+                          <FavoriteIcon className="favoriteIcon" sx={{fontSize: '16px', marginBottom: '-2px'}}/> {hpStat?.base_stat}
                         </Typography>
                       </Tooltip>
                     </HpContainer>
