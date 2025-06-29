@@ -3,11 +3,12 @@
 import styled, { keyframes } from "styled-components";
 import { Pokemon } from "../types/pokemon";
 import { Typography } from "@mui/material";
-import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie, usePokemonType } from "@/hooks/usePokemonList";
+import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie } from "@/hooks/usePokemonList";
 import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useEffect } from "react";
+import getEvolutionLevel from "@/hooks/usePokemonEvolLevel";
 
 const fadeInFromRight = keyframes`
   from {
@@ -194,7 +195,15 @@ const PokemonBgContainer = styled.div`
   .pokemon{
     position: relative;
     top: -20px;
+    width: 100%;
     box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .notFound{
+    position: relative;
+    left: 50%;
+    top: 120px;
+    transform: translate(-50%, -50%);
   }
 
   .background{
@@ -244,6 +253,7 @@ const HpContainer = styled.span`
   justify-content: center;
   color: #F7F7F7;
   gap: 5px;
+  white-space: nowrap;
 
   .hp{
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
@@ -302,7 +312,6 @@ interface EvolutionChain {
 export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection, index, page }: Props) {
   const pokemonId = url.split("pokemon/")[1];
   const { data, isLoading } = usePokemonById(pokemonId);
-  const { data: pokemonType } = usePokemonType();
   const { data: pokemonSpecie } = usePokemonSpecie(pokemonId);
   const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
   const evolutionChainId = evolutionChainUrl?.split('/').filter(Boolean).pop();
@@ -311,23 +320,6 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
 
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const hpStat = data?.stats?.find(stat => stat.stat.name === 'hp');
-
-  function getEvolutionLevel(chain: EvolutionChain | undefined, currentPokemonName: string, level = 1): number {
-    if (!chain || !currentPokemonName) return 0;
-
-    if (chain.species.name === currentPokemonName) {
-      return level;
-    }
-
-    for (const evolution of chain.evolves_to) {
-      const result = getEvolutionLevel(evolution, currentPokemonName, level + 1);
-      if (result !== 0) {
-        return result;
-      }
-    }
-
-    return 0;
-  }
 
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
 
@@ -339,7 +331,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
       >
         {!flipped &&
           <FrontFace $type={primaryType} className="card">
-            {data?.sprites?.front_default && !isLoading && (
+            {!isLoading && (
               <>
                 <Tooltip title="evolution level">
                   <EvolutionLevelContainer>
@@ -356,7 +348,12 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     </Tooltip>
                   </TypeContainer>
                     <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
-                    <img className="pokemon" src={data.sprites.front_default} alt={`image_${pokemon.name}`} width="100%" />
+                    {data?.sprites?.front_default 
+                      ? <img className="pokemon" src={data?.sprites?.front_default} alt={`image_${pokemon.name}`} />
+                      : <Tooltip title="imagem não disponível">
+                          <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
+                        </Tooltip> 
+                    }
                 </PokemonBgContainer>
                 <PokemonInfoContainer>
                   <NameContainer>
@@ -364,7 +361,6 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                       {data?.name}
                     </Typography>
                   </NameContainer>
-                  {/* <span style={{borderRight: '1px solid rgba(255, 255, 255, 0.5)', borderLeft: '1px solid rgba(255, 255, 255, 0.5)', height: '100%'}}/> */}
                   <FooterContainer >
                     <BorderContainer style={{display: 'flex', alignItems: 'center'}}>
                       {data?.types?.map(t => (

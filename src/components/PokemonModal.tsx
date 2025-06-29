@@ -1,12 +1,37 @@
-import { usePokemonById, usePokemonType } from '@/hooks/usePokemonList';
+import getEvolutionLevel from '@/hooks/usePokemonEvolLevel';
+import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
-import { Dialog, DialogContent, Typography } from '@mui/material';
-import { useState } from 'react';
+import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/material';
 import styled from 'styled-components';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 interface DialogProps{
   $type: string
 }
+
+const typeColors: Record<string, string> = {
+  normal: '#A8A77A',
+  fire: '#F5AC78',
+  water: '#9DB7F5',
+  electric: '#FAE078',
+  grass: '#A7DB8D',
+  ice: '#BCE6E6',
+  fighting: '#D67873',
+  poison: '#C183C1',
+  ground: '#EBD69D',
+  flying: '#C6B7F5',
+  psychic: '#FA92B2',
+  bug: '#C6D16E',
+  rock: '#D1C17D',
+  ghost: '#A292BC',
+  dragon: '#A27DFA',
+  dark: '#A29288',
+  steel: '#D1D1E0',
+  fairy: '#F4BDC9',
+  stellar: '#D6C6F0',
+  unknown: '#CCCCCC',
+  default: '#A0A0A0',
+};
 
 const StyledDialogContent = styled(DialogContent)<DialogProps>`
   width: 300px;
@@ -123,7 +148,7 @@ const ModalContainer = styled.div`
 const LeftModalContainer = styled.div`
   width: 50%;
   height: 100%;
-  padding: 10px;
+  padding: 0 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -132,17 +157,43 @@ const LeftModalContainer = styled.div`
 const RightModalContainer = styled.div`
   border: 1px solid blue;
   width: 50%;
-  padding: 10px;
+  padding: 0 10px;
 `
 
 const PokemonInfo = styled.div`
   // border: 1px solid green;
-  height: 20%;
+  height: calc(20% + 8px);
   width: 100%;
 
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+
+  img{
+    margin-left: 3px;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: all 0.5s ease;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5));
+
+    &:hover{
+      scale: 1.1;
+      filter: drop-shadow(0 0 3px rgba(252, 177, 3, 0.9));
+    }
+  }
+
+  .redirect{
+    transition: scale 0.5s ease;
+    color: #000;
+    &:hover{
+      scale: 1.1;
+      // cursor: pointer
+    }
+  }
+  
+  span{
+    margin-left: 5px;
+  }
 `
 
 interface TypeContainerProps{
@@ -165,14 +216,74 @@ const TypeContainer = styled.div<TypeContainerProps>`
   }
 `
 
-const ImageContainer = styled.div`
-  // border: 1px solid yellow;
+interface ImageProps {
+  $type: string;
+}
+
+const ImageContainer = styled.div<ImageProps>`
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
   height: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 10px 10px 100px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+
+  .container{
+    width: 350px;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .pokemon{
+      position: relative;
+      top: 20px;
+    }
+
+  .notFound{
+    position: relative;
+    cursor: pointer;
+  }
+
+  .pokemon, .notFound{
+    transition: all 0.5s ease;
+    &:hover {
+      filter: drop-shadow(0px 0px 10px ${({ $type }) => typeColors[$type] || typeColors.default});
+    };
+  }
+  
+  .background{
+    bottom: 0;
+    position: absolute;
+    left: 50%;
+    width: 300%;
+    transform: translate(-50%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  @media (min-width: 600px){
+    .background{
+      width: 200%;
+    }
+  }
+
+  @media (min-width: 960px){
+    .background{
+      width: 100%;
+    }
+  }
+  
 `
 
 const StatsContainer = styled.div`
   // border: 1px solid purple;
-  height: 20%;
+  height: calc(20% + 8px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -190,30 +301,6 @@ const StatsContainer = styled.div`
   }
 `
 
-const typeColors: Record<string, string> = {
-  normal: '#A8A77A',
-  fire: '#F5AC78',
-  water: '#9DB7F5',
-  electric: '#FAE078',
-  grass: '#A7DB8D',
-  ice: '#BCE6E6',
-  fighting: '#D67873',
-  poison: '#C183C1',
-  ground: '#EBD69D',
-  flying: '#C6B7F5',
-  psychic: '#FA92B2',
-  bug: '#C6D16E',
-  rock: '#D1C17D',
-  ghost: '#A292BC',
-  dragon: '#A27DFA',
-  dark: '#A29288',
-  steel: '#D1D1E0',
-  fairy: '#F4BDC9',
-  stellar: '#D6C6F0',
-  unknown: '#CCCCCC',
-  default: '#A0A0A0',
-};
-
 interface PropsModal {
   open: boolean;
   handleClose: () => void;
@@ -224,9 +311,15 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const url = pokemon?.url
   const pokemonId = url?.split("pokemon/")[1] ?? '';
   const { data, isLoading } = usePokemonById(pokemonId);
-  const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
 
-  console.log('data', data)
+  const { data: pokemonSpecie } = usePokemonSpecie(pokemonId);
+  const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
+  const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
+  const evolutionChainId = evolutionChainUrl?.split('/').filter(Boolean).pop();
+  const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
+  const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
+
+  console.log('pokemonEvolutionChain', pokemonEvolutionChain)
 
   return (
     <Dialog
@@ -258,7 +351,12 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
               <LeftModalContainer>
                 <PokemonInfo>
                   <Typography variant='h2'>
-                    {pokemon.name}
+                      {pokemon.name} 
+                      <Tooltip title="evolution level">
+                        <span>
+                          {Array.from({ length: evolutionLevel }, (_, i) => <img key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
+                        </span>
+                      </Tooltip>
                   </Typography>
                   <div style={{display: 'flex'}}>
                     {data?.types?.map(t => (
@@ -266,8 +364,25 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                     ))}
                   </div>
                 </PokemonInfo>
-                <ImageContainer>
-                  imagem
+                <ImageContainer $type={primaryType}>
+                  <div className='container'>
+                    <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
+                    {data?.sprites?.front_default 
+                      ? <img className="pokemon" src={data?.sprites?.front_default} alt={`image_${pokemon.name}`} width="100%" />
+                      : <IconButton 
+                        sx={{
+                          width: '100%', 
+                          height: '100%', 
+                          cursor: 'default',
+                          '&:hover': {
+                            backgroundColor: 'transparent',
+                          }}}>
+                          <Tooltip title="Oops! Parece que esse pokemon ainda não retornou, mas se você clicar aqui, será redirecionado para uma página web onde poderá vê-lo!">
+                            <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
+                          </Tooltip>
+                        </IconButton>
+                      }
+                  </div>
                 </ImageContainer>
                 <StatsContainer>
                   <div className='stats2'>

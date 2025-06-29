@@ -65,8 +65,10 @@ export interface PokemonSpecieResponse {
   habitat: { name: string } | null;
 }
 
-export function usePokemonSpecie(id: string) {
-  const { data, error, isLoading } = useSWR<PokemonSpecieResponse>(`/pokemon-species/${id}`, axiosFetcher);
+export function usePokemonSpecie(id: string | undefined) {
+  const shouldFetch = !!id && !isNaN(Number(id));
+
+  const { data, error, isLoading } = useSWR<PokemonSpecieResponse>( shouldFetch ? `/pokemon-species/${id}` : null, axiosFetcher);
 
   return {
     data,

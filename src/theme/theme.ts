@@ -15,6 +15,7 @@ const theme = createTheme({
     background: {
       default: '#222831',
     },
+
     text: {
       primary: '#000000',
       secondary: '#F7F7F7',
@@ -27,6 +28,15 @@ const theme = createTheme({
     h3: { fontSize: '1.25rem', fontWeight: 400 },
     h4: { fontSize: '0.875rem', fontWeight: 400 },
     body1: { fontSize: '1rem' },
+  },
+  components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          filter: 'drop-shadow(0 0 1px rgba(0, 0, 0, 0.5))',
+        },
+      },
+    },
   },
 });
 
