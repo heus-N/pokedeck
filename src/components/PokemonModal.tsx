@@ -369,14 +369,18 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                     <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
                     {data?.sprites?.front_default 
                       ? <img className="pokemon" src={data?.sprites?.front_default} alt={`image_${pokemon.name}`} width="100%" />
-                      : <IconButton 
-                        sx={{
-                          width: '100%', 
-                          height: '100%', 
-                          cursor: 'default',
-                          '&:hover': {
-                            backgroundColor: 'transparent',
-                          }}}>
+                      : <IconButton
+                          component="a"
+                          href={`https://www.google.com/search?tbm=isch&q=pokemon+${pokemon.name}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          sx={{
+                            width: '100%', 
+                            height: '100%', 
+                            cursor: 'default',
+                            '&:hover': {
+                              backgroundColor: 'transparent',
+                            }}}>
                           <Tooltip title="Oops! Parece que esse pokemon ainda não retornou, mas se você clicar aqui, será redirecionado para uma página web onde poderá vê-lo!">
                             <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
                           </Tooltip>
