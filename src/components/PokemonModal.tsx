@@ -182,12 +182,32 @@ const PokemonInfo = styled.div`
     }
   }
 
+  .evolution_rating{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
   .redirect{
     transition: scale 0.5s ease;
     color: #000;
     &:hover{
       scale: 1.1;
       // cursor: pointer
+    }
+  }
+
+  .question_mark{
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    
+    img{
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
     }
   }
   
@@ -352,17 +372,19 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
             <>
               <LeftModalContainer>
                 <PokemonInfo>
-                  <Typography variant='h2'>
-                      {pokemon.name} 
-                      <Tooltip title={evolutionLevel > 0 ? "evolution level" : "Este pokemon não possui cadeia evolutiva."}>
-                        <span>
-                          {evolutionLevel > 0 
-                            ? Array.from({ length: evolutionLevel }, (_, i) => <img key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)
-                            : <img key={0} alt="evolution level" src={`/utils/evolution_level/question_mark.png`} />
-                          }
-                        </span>
-                      </Tooltip>
-                  </Typography>
+                  <div style={{display: 'flex', alignItems: 'center', whiteSpace: 'nowrap'}}>
+                    <Typography variant='h2'>
+                        {pokemon.name} 
+                    </Typography>
+                    <Tooltip title={evolutionLevel > 0 ? "evolution level" : "Este pokemon não possui cadeia evolutiva."}>
+                      <span className='evolution_rating'>
+                        {evolutionLevel > 0 
+                          ? Array.from({ length: evolutionLevel }, (_, i) => <img key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)
+                          : <span className='question_mark'> <img key={0} alt="evolution level" src={`/utils/evolution_level/question_mark.png`} /> </span>
+                        }
+                      </span>
+                    </Tooltip>
+                  </div>
                   <div style={{display: 'flex'}}>
                     {data?.types?.map(t => (
                       <TypeContainer $type={t.type.name} key={t.type.name}>{t.type.name}</TypeContainer>
