@@ -228,6 +228,7 @@ const EvolutionLevelContainer = styled.div`
 
   img{
     width: 30px;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
   }
 `
 
@@ -331,10 +332,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
               <>
                 <Tooltip title="evolution level">
                   <EvolutionLevelContainer>
-                    {evolutionLevel !== 0 
-                      ? <img src={`/utils/evolution_level/evolution_level_${evolutionLevel}.png`} alt="evolution level"/>
-                      : null
-                    }
+                    <img src={`/utils/evolution_level/evolution_level_${evolutionLevel}.png`} alt="evolution level"/>
                   </EvolutionLevelContainer>
                 </Tooltip>
                 <PokemonBgContainer>

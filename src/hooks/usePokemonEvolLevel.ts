@@ -8,13 +8,21 @@ export default function getEvolutionLevel(
   currentPokemonName: string,
   level = 1
 ): number {
-  if (!chain || !currentPokemonName) return 0;
 
-  if (chain.species.name === currentPokemonName) {
-    return level;
+  if(!currentPokemonName) return 0
+  if(chain?.evolves_to === undefined) return 0
+
+  const splitedName = currentPokemonName.split('-')[0]
+  //Alguns pokemons não possuem cadeia de evolução, a condição de 'level === 3' é somente para pokemon que possuem a cadeia
+  if ( splitedName === chain?.species.name && !chain?.evolves_to?.length ){
+    if (level > 1) return level
   }
 
-  for (const evolution of chain.evolves_to) {
+  if ( splitedName === chain?.species.name && chain.evolves_to.length ){
+    return level
+  }
+
+  for (const evolution of chain?.evolves_to) {
     const result = getEvolutionLevel(evolution, currentPokemonName, level + 1);
     if (result !== 0) {
       return result;

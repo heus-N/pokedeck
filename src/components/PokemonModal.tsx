@@ -228,8 +228,10 @@ const ImageContainer = styled.div<ImageProps>`
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: inset 10px 10px 100px rgba(0, 0, 0, 0.25);
+  // box-shadow: 10px 10px 100px rgba(0, 0, 0, 0.9);
   overflow: hidden;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+
 
   .container{
     width: 350px;
@@ -315,10 +317,11 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const { data: pokemonSpecie } = usePokemonSpecie(pokemonId);
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
-  const evolutionChainId = evolutionChainUrl?.split('/').filter(Boolean).pop();
+  const evolutionChainId = evolutionChainUrl?.split('evolution-chain/')[1];
   const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
 
+  console.log(evolutionLevel)
 
   return (
     <Dialog
@@ -351,9 +354,12 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                 <PokemonInfo>
                   <Typography variant='h2'>
                       {pokemon.name} 
-                      <Tooltip title="evolution level">
+                      <Tooltip title={evolutionLevel > 0 ? "evolution level" : "Este pokemon não possui cadeia evolutiva."}>
                         <span>
-                          {Array.from({ length: evolutionLevel }, (_, i) => <img key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
+                          {evolutionLevel > 0 
+                            ? Array.from({ length: evolutionLevel }, (_, i) => <img key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)
+                            : <img key={0} alt="evolution level" src={`/utils/evolution_level/question_mark.png`} />
+                          }
                         </span>
                       </Tooltip>
                   </Typography>
