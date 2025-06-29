@@ -194,7 +194,7 @@ const PokemonBgContainer = styled.div`
 
   .pokemon{
     position: relative;
-    top: -20px;
+    top: -10px;
     width: 100%;
     box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.5);
   }
@@ -210,12 +210,16 @@ const PokemonBgContainer = styled.div`
     position: absolute;
     top: -140px;
     left: 50%;
-    width: 420px;
+    width: 350px;
     height: auto;
     transform: translate(-50%);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+
+    @media(min-width: 960px){
+      width: 400px;
+    }
   }
 `
 

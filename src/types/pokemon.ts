@@ -27,4 +27,5 @@ export interface Pokemon {
   };
   types?: PokemonType[];
   stats?: PokemonStats[];
+  weight?: number;
 }

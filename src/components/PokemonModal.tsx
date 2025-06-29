@@ -4,6 +4,7 @@ import { Pokemon } from '@/types/pokemon';
 import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/material';
 import styled from 'styled-components';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { kgToLb } from '../../public/utils/unitConverter';
 
 interface DialogProps{
   $type: string
@@ -61,6 +62,7 @@ const ClipPath = styled.div`
   border: 16px solid;
   border-image: linear-gradient(135deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
   transition: all 0.3s ease;
+  z-index: 10;
 
   clip-path: polygon(
     0px 0px,
@@ -143,21 +145,34 @@ const ModalContainer = styled.div`
   height: 100%;
   padding: 0.5rem 1rem;
   display: flex;
+  flex-direction: column;
+
+  @media(min-width: 960px){
+    flex-direction: row;
+  }
 `
 
 const LeftModalContainer = styled.div`
-  width: 50%;
+  width: 100%;
   height: 100%;
   padding: 0 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media(min-width: 960px){
+    width: 50%;
+  }
 `
 
 const RightModalContainer = styled.div`
   border: 1px solid blue;
-  width: 50%;
+  width: 100%;
   padding: 0 10px;
+
+  @media(min-width: 960px){
+    width: 50%;
+  }
 `
 
 const PokemonInfo = styled.div`
@@ -264,6 +279,18 @@ const ImageContainer = styled.div<ImageProps>`
   .pokemon{
       position: relative;
       top: 20px;
+      width: 100%;
+
+      @media(min-width: 600px){
+        left: 50px;
+        width: 70%;
+      }
+
+      @media(min-width: 960px){
+        left: 50px;
+        width: 70%;
+      }
+
     }
 
   .notFound{
@@ -282,7 +309,7 @@ const ImageContainer = styled.div<ImageProps>`
     bottom: 0;
     position: absolute;
     left: 50%;
-    width: 300%;
+    width: 200%;
     transform: translate(-50%);
     background-position: center;
     background-repeat: no-repeat;
@@ -291,15 +318,15 @@ const ImageContainer = styled.div<ImageProps>`
   
   @media (min-width: 600px){
     .background{
-      width: 200%;
-    }
-  }
-
-  @media (min-width: 960px){
-    .background{
       width: 100%;
     }
   }
+
+  // @media (min-width: 960px){
+  //   .background{
+  //     width: 100%;
+  //   }
+  // }
   
 `
 
@@ -340,8 +367,6 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const evolutionChainId = evolutionChainUrl?.split('evolution-chain/')[1];
   const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
-
-  console.log(evolutionLevel)
 
   return (
     <Dialog
@@ -385,10 +410,13 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                       </span>
                     </Tooltip>
                   </div>
-                  <div style={{display: 'flex'}}>
-                    {data?.types?.map(t => (
-                      <TypeContainer $type={t.type.name} key={t.type.name}>{t.type.name}</TypeContainer>
-                    ))}
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <div style={{display: 'flex'}}>
+                      {data?.types?.map(t => (
+                        <TypeContainer $type={t.type.name} key={t.type.name}>{t.type.name}</TypeContainer>
+                      ))}
+                    </div>
+                    <Typography>weight: <span className='stat'>{`${kgToLb(data?.weight ? (data?.weight) / 10 : 0)} lbs`}</span></Typography>
                   </div>
                 </PokemonInfo>
                 <ImageContainer $type={primaryType}>
@@ -408,7 +436,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                             '&:hover': {
                               backgroundColor: 'transparent',
                             }}}>
-                          <Tooltip title="Oops! Parece que esse pokemon ainda não retornou, mas se você clicar aqui, será redirecionado para uma página web onde poderá vê-lo!">
+                          <Tooltip title="Oops! Parece que esse pokemon não está disponível, mas se você clicar aqui, será redirecionado para uma página web onde poderá vê-lo!">
                             <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
                           </Tooltip>
                         </IconButton>
@@ -416,7 +444,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   </div>
                 </ImageContainer>
                 <StatsContainer>
-                  <div className='stats2'>
+                  <div className='stats1'>
                     <Typography>hp: <span className='stat'>{data?.stats?.find(s => s.stat.name === 'hp')?.base_stat}</span></Typography>
                     <Typography>attack: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'attack')?.base_stat} </Typography>
                     <Typography>defense: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'defense')?.base_stat} </Typography>
