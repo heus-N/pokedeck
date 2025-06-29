@@ -319,7 +319,6 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
 
-  console.log('pokemonEvolutionChain', pokemonEvolutionChain)
 
   return (
     <Dialog

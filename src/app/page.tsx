@@ -102,6 +102,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+
   return (
     <StyledContainer>
       {shouldDisplay &&

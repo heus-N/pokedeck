@@ -304,10 +304,6 @@ interface Props {
   page: number;
 }
 
-interface EvolutionChain {
-  species: { name: string };
-  evolves_to: EvolutionChain[];
-}
 
 export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection, index, page }: Props) {
   const pokemonId = url.split("pokemon/")[1];
