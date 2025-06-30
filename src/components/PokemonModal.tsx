@@ -5,6 +5,8 @@ import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/mat
 import styled from 'styled-components';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { kgToLb } from '../../public/utils/unitConverter';
+import { getEvolutions, usePokemonSpeciesBatch } from '../../public/utils/getEvolutions';
+import { useEffect } from 'react';
 
 interface DialogProps{
   $type: string
@@ -168,6 +170,7 @@ const LeftModalContainer = styled.div`
 const RightModalContainer = styled.div`
   border: 1px solid blue;
   width: 100%;
+  height: 100%;
   padding: 0 10px;
 
   @media(min-width: 960px){
@@ -175,9 +178,15 @@ const RightModalContainer = styled.div`
   }
 `
 
+const EvolutionContainer = styled.div`
+  border: 1px solid red;
+  width: 100%;
+  height: 60%;
+`
+
 const PokemonInfo = styled.div`
   // border: 1px solid green;
-  height: calc(20% + 8px);
+  height: 20%;
   width: 100%;
 
   display: flex;
@@ -258,15 +267,13 @@ interface ImageProps {
 const ImageContainer = styled.div<ImageProps>`
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  height: 70%;
+  height: 60%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  // box-shadow: 10px 10px 100px rgba(0, 0, 0, 0.9);
   overflow: hidden;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
-
 
   .container{
     width: 350px;
@@ -332,7 +339,7 @@ const ImageContainer = styled.div<ImageProps>`
 
 const StatsContainer = styled.div`
   // border: 1px solid purple;
-  height: calc(20% + 8px);
+  height: 20%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -367,6 +374,8 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const evolutionChainId = evolutionChainUrl?.split('evolution-chain/')[1];
   const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
+  const evolutionIds = getEvolutions(pokemonEvolutionChain?.chain)
+
 
   return (
     <Dialog
@@ -459,10 +468,33 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
               </LeftModalContainer>
 
               <RightModalContainer>
-                <Typography>evoluções</Typography>
-                <div>evol 1</div>
-                <div>evol 2</div>
-                <div>evol 3</div>
+                <div style={{height: '20%', border: '1px solid blue'}}>
+                  <Typography>evoluções</Typography>
+                </div>
+                <EvolutionContainer>
+                  <Typography>
+                    {pokemonEvolutionChain?.chain?.species?.name}
+                  </Typography>
+                  {pokemonEvolutionChain?.chain?.evolves_to?.map(ec1 => (
+                    <div key={pokemonEvolutionChain.id}>
+                      <div key={ec1.species.name}>
+                        <Typography>
+                          {ec1.species.name}
+                        </Typography>
+                      </div>
+                      {ec1?.evolves_to?.map(ec2 => (
+                        <div key={ec2.species.name}>
+                          <Typography>
+                            {ec2.species.name}
+                          </Typography>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </EvolutionContainer>
+                <div style={{height: '20%', border: '1px solid yellow'}}>
+                  test
+                </div>
               </RightModalContainer>
             </>
           )}

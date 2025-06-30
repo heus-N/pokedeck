@@ -68,9 +68,6 @@ export interface PokemonSpecieResponse {
 export function usePokemonSpecie(id: string | undefined) {
   const shouldFetch = !!id && isNaN(Number(id));
 
-  // console.log('shouldFetch', shouldFetch)
-  // console.log('id', id)
-
   const { data, error, isLoading } = useSWR<PokemonSpecieResponse>(shouldFetch ? `/pokemon-species/${id}` : null, axiosFetcher);
 
   return {
