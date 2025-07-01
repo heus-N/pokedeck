@@ -180,20 +180,67 @@ const RightModalContainer = styled.div`
 `
 
 const EvolutionContainer = styled.div`
-  border: 1px solid red;
   width: 100%;
   height: 60%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
 `
 
-const EvolutionsEl = styled.div`
+interface EvolutionProps {
+  $level?: number
+}
+
+const evolutionColors: Record<string, string> = {
+  1: '#4CAF50',
+  2: '#2196F3',
+  3: '#F44336',  
+  
+  // level1: '#4CAF50 ',
+  // level2: '#DFF0DF',
+  // level3: '#BFE5BF',
+
+  // test1: '#2196F3',
+  // test2: '#DDEFFC',
+  // test3: '#B3DAF2',
+
+  // test4: '#F44336 ',
+  // test5: '#FDE0DC ',
+  // test6: '#F8CFC9',
+};
+
+const EvolutionsEl = styled.div<EvolutionProps>`
   border: 2px solid rgba(255, 255, 255, 0.5);
-  height: 30%;
   border-radius: 12px;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  display: flex;
+  background-color: ${({ $level }) => $level !== undefined && evolutionColors[$level] || 'transparent'};
+  transition: scale 0.5s ease;
+
+  &:hover{
+    scale: 1.01
+  }
+  
+  .img_container{
+    min-height: 80px;
+    min-width: 80px;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 7px;
+
+    img{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .evolStar{
+    width: 15px;
+  }
 `
 
 const PokemonInfo = styled.div`
@@ -485,29 +532,18 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   <Typography>evoluções</Typography>
                 </div>
                 <EvolutionContainer>
-                  {/* {pokemonEvolutionChain?.chain?.evolves_to?.length ? (
-                    <>
-                      <Typography>
-                        {pokemonEvolutionChain?.chain?.species?.name}
-                      </Typography>
-
-                      {pokemonEvolutionChain.chain.evolves_to.map((ec1) => (
-                        <div key={ec1.species.name}>
-                          <Typography>{ec1.species.name}</Typography>
-
-                          {ec1.evolves_to.map((ec2) => (
-                            <div key={ec2.species.name}>
-                              <Typography>{ec2.species.name}</Typography>
-                            </div>
-                          ))}
-                        </div>
-                      ))}
-                    </>
-                  ) : null} */}
                   {!evolutionisLoading &&
-                    evolutionPokemons?.map(ev => (
-                      <EvolutionsEl>
-                        {ev.name}
+                    evolutionPokemons?.map((ev, index) => (
+                      <EvolutionsEl $level={index + 1}>
+                        <div className="img_container">
+                          <img src={ev?.sprites?.front_default}/>
+                        </div>
+                        <div style={{display: 'flex', alignItems:'flex-start', justifyContent: 'space-between', width: '100%'}}>
+                          {ev.name}
+                          <div>
+                            {Array.from({ length: index + 1 }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
+                          </div>
+                        </div>
                       </EvolutionsEl>
                     ))}
                 </EvolutionContainer>
