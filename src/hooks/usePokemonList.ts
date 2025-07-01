@@ -2,6 +2,7 @@
 import useSWR from 'swr';
 import { axiosFetcher } from '@/services/swrFetch';
 import { Pokemon } from '@/types/pokemon';
+import api from '@/services/api';
 
 interface PokemonListResponse {
   count: number;
@@ -24,6 +25,26 @@ export function usePokemonById(id : string) {
 
   return {
     data: data,
+    isLoading,
+    isError: error,
+  };
+}
+
+export function useMultiplePokemonByIds(ids: string[]) {
+  const shouldFetch = ids && ids.length > 0;
+
+  const { data, error, isLoading } = useSWR<Pokemon[]>(
+    shouldFetch ? ['multiple-pokemon', ...ids] : null,
+    async () => {
+      const responses = await Promise.all(
+        ids.map(id => api.get(`/pokemon/${id}`)) // reaproveita sua instância `api`
+      );
+      return responses.map(res => res.data);
+    }
+  );
+
+  return {
+    data,
     isLoading,
     isError: error,
   };

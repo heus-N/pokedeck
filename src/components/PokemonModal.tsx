@@ -1,12 +1,13 @@
 import getEvolutionLevel from '@/hooks/usePokemonEvolLevel';
-import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie } from '@/hooks/usePokemonList';
+import { useMultiplePokemonByIds, usePokemonById, usePokemonEvolutionChain, usePokemonList, usePokemonSpecie } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/material';
 import styled from 'styled-components';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { kgToLb } from '../../public/utils/unitConverter';
-import { getEvolutions, usePokemonSpeciesBatch } from '../../public/utils/getEvolutions';
+import { getEvolutions } from '../../public/utils/getEvolutions';
 import { useEffect } from 'react';
+import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 
 interface DialogProps{
   $type: string
@@ -182,6 +183,17 @@ const EvolutionContainer = styled.div`
   border: 1px solid red;
   width: 100%;
   height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
+const EvolutionsEl = styled.div`
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  height: 30%;
+  border-radius: 12px;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 `
 
 const PokemonInfo = styled.div`
@@ -364,6 +376,7 @@ interface PropsModal {
 }
 
 export default function PokemonModal({ open, handleClose, pokemon }: PropsModal) {
+
   const url = pokemon?.url
   const pokemonId = url?.split("pokemon/")[1] ?? '';
   const { data, isLoading } = usePokemonById(pokemonId);
@@ -375,7 +388,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
   const evolutionIds = getEvolutions(pokemonEvolutionChain?.chain)
-
+  const { data: evolutionPokemons, isLoading: evolutionisLoading } = useMultiplePokemonByIds(evolutionIds);
 
   return (
     <Dialog
@@ -472,25 +485,31 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   <Typography>evoluções</Typography>
                 </div>
                 <EvolutionContainer>
-                  <Typography>
-                    {pokemonEvolutionChain?.chain?.species?.name}
-                  </Typography>
-                  {pokemonEvolutionChain?.chain?.evolves_to?.map(ec1 => (
-                    <div key={pokemonEvolutionChain.id}>
-                      <div key={ec1.species.name}>
-                        <Typography>
-                          {ec1.species.name}
-                        </Typography>
-                      </div>
-                      {ec1?.evolves_to?.map(ec2 => (
-                        <div key={ec2.species.name}>
-                          <Typography>
-                            {ec2.species.name}
-                          </Typography>
+                  {/* {pokemonEvolutionChain?.chain?.evolves_to?.length ? (
+                    <>
+                      <Typography>
+                        {pokemonEvolutionChain?.chain?.species?.name}
+                      </Typography>
+
+                      {pokemonEvolutionChain.chain.evolves_to.map((ec1) => (
+                        <div key={ec1.species.name}>
+                          <Typography>{ec1.species.name}</Typography>
+
+                          {ec1.evolves_to.map((ec2) => (
+                            <div key={ec2.species.name}>
+                              <Typography>{ec2.species.name}</Typography>
+                            </div>
+                          ))}
                         </div>
                       ))}
-                    </div>
-                  ))}
+                    </>
+                  ) : null} */}
+                  {!evolutionisLoading &&
+                    evolutionPokemons?.map(ev => (
+                      <EvolutionsEl>
+                        {ev.name}
+                      </EvolutionsEl>
+                    ))}
                 </EvolutionContainer>
                 <div style={{height: '20%', border: '1px solid yellow'}}>
                   test
