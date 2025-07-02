@@ -1,5 +1,3 @@
-import { usePokemonSpecie } from "@/hooks/usePokemonList";
-
 export function getEvolutions(chain: any): string[]{
     if(!chain) return [];
 

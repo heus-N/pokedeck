@@ -98,7 +98,9 @@ export function usePokemonSpecie(id: string | undefined) {
   };
 }
 
-interface EvolutionDetail {}
+interface EvolutionDetail {
+  min_level?: number;
+}
 
 interface EvolutionChainLink {
   is_baby: boolean;

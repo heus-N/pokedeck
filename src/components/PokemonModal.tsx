@@ -8,6 +8,8 @@ import { kgToLb } from '../../public/utils/unitConverter';
 import { getEvolutions } from '../../public/utils/getEvolutions';
 import { useEffect } from 'react';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
+import { getMinLevelToEvolve } from '../../public/utils/getLevelToEvolve';
+import ArrowDown from './ArrowDown';
 
 interface DialogProps{
   $type: string
@@ -180,11 +182,13 @@ const RightModalContainer = styled.div`
 `
 
 const EvolutionContainer = styled.div`
+  position: relative;
   width: 100%;
   height: 60%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 14px;
   box-sizing: border-box;
 `
 
@@ -193,21 +197,9 @@ interface EvolutionProps {
 }
 
 const evolutionColors: Record<string, string> = {
-  1: '#4CAF50',
-  2: '#2196F3',
-  3: '#F44336',  
-  
-  // level1: '#4CAF50 ',
-  // level2: '#DFF0DF',
-  // level3: '#BFE5BF',
-
-  // test1: '#2196F3',
-  // test2: '#DDEFFC',
-  // test3: '#B3DAF2',
-
-  // test4: '#F44336 ',
-  // test5: '#FDE0DC ',
-  // test6: '#F8CFC9',
+  1: 'rgba(76, 175, 80, 0.25)',
+  2: 'rgba(33, 150, 243, 0.25)',
+  3: 'rgba(244, 67, 54, 0.25)',  
 };
 
 const EvolutionsEl = styled.div<EvolutionProps>`
@@ -219,6 +211,8 @@ const EvolutionsEl = styled.div<EvolutionProps>`
   display: flex;
   background-color: ${({ $level }) => $level !== undefined && evolutionColors[$level] || 'transparent'};
   transition: scale 0.5s ease;
+  z-index: 10;
+  overflow: visible;
 
   &:hover{
     scale: 1.01
@@ -230,6 +224,9 @@ const EvolutionsEl = styled.div<EvolutionProps>`
     position: relative;
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 7px;
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
 
     img{
       position: absolute;
@@ -240,6 +237,22 @@ const EvolutionsEl = styled.div<EvolutionProps>`
 
   .evolStar{
     width: 15px;
+  }
+
+  .nameStarContainer{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    // border: 1px solid red;
+    height: fit-content;
+  }
+
+  .nameStarContent{
+    // border: 1px solid blue;
+    position: relative;
   }
 `
 
@@ -528,21 +541,42 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
               </LeftModalContainer>
 
               <RightModalContainer>
-                <div style={{height: '20%', border: '1px solid blue'}}>
+                <div style={{height: '20%'}}>
                   <Typography>evoluções</Typography>
                 </div>
                 <EvolutionContainer>
+                  <Typography variant='h3' sx={{position: 'absolute', top: -25, zIndex: 10, textAlign: 'center', width: '100%'}}>
+                    Evolution Chain
+                  </Typography>
                   {!evolutionisLoading &&
                     evolutionPokemons?.map((ev, index) => (
-                      <EvolutionsEl $level={index + 1}>
-                        <div className="img_container">
-                          <img src={ev?.sprites?.front_default}/>
-                        </div>
-                        <div style={{display: 'flex', alignItems:'flex-start', justifyContent: 'space-between', width: '100%'}}>
-                          {ev.name}
-                          <div>
-                            {Array.from({ length: index + 1 }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
+                      <EvolutionsEl $level={index + 1} key={ev.id}>
+                        <Tooltip title="default">
+                          <div className="img_container">
+                            <img src={ev?.sprites?.front_default}/>
                           </div>
+                        </Tooltip>
+                        <Tooltip title="shiny">
+                          <div className="img_container">
+                            <img src={ev?.sprites?.front_shiny}/>
+                          </div>
+                        </Tooltip>
+                        <div className='nameStarContainer'>
+                          <div className='nameStarContent'>
+                            <Typography>
+                              {ev.name}
+                            </Typography>
+                            <div style={{position: 'absolute', right: '0', top: '0'}}>
+                              {Array.from({ length: getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
+                            </div>
+                          </div>
+                          <Typography>
+                            {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < 3) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
+                          </Typography>
+                          <Typography>
+                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < 3 && 'evolves to:'}
+                          </Typography>
+                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < 3 && <ArrowDown />}
                         </div>
                       </EvolutionsEl>
                     ))}
