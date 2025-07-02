@@ -551,12 +551,12 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   {!evolutionisLoading &&
                     evolutionPokemons?.map((ev, index) => (
                       <EvolutionsEl $level={index + 1} key={ev.id}>
-                        <Tooltip title="default">
+                        <Tooltip title={`default ${ev.name}`}>
                           <div className="img_container">
                             <img src={ev?.sprites?.front_default}/>
                           </div>
                         </Tooltip>
-                        <Tooltip title="shiny">
+                        <Tooltip title={`shiny ${ev.name}`}>
                           <div className="img_container">
                             <img src={ev?.sprites?.front_shiny}/>
                           </div>
@@ -571,12 +571,12 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                             </div>
                           </div>
                           <Typography>
-                            {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < 3) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
+                            {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
                           </Typography>
                           <Typography>
-                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < 3 && 'evolves to:'}
+                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && 'evolves to:'}
                           </Typography>
-                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < 3 && <ArrowDown />}
+                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && <ArrowDown />}
                         </div>
                       </EvolutionsEl>
                     ))}
