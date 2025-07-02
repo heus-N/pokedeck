@@ -16,10 +16,11 @@ const gradientShift = keyframes`
 
 const StyledArrowContainer = styled.div`
     position: absolute;
-    width: 100%;
+    width: 20px;
     height: 25px;
     bottom: -40px;
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+    left: 45%;
 
 `
 
@@ -27,7 +28,6 @@ const StyledArrow = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
-    left: calc(50% - 10px);
     background: linear-gradient(180deg, #e0e0e0, #f5f5f5, #e0e0e0);
     background-size: 100% 200%;
     animation: ${gradientShift} 2s linear infinite;
