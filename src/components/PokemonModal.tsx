@@ -1,15 +1,16 @@
-import getEvolutionLevel from '@/hooks/usePokemonEvolLevel';
-import { useMultiplePokemonByIds, usePokemonById, usePokemonEvolutionChain, usePokemonList, usePokemonSpecie } from '@/hooks/usePokemonList';
+import getEvolutionLevel from '../../public/utils/helpers/usePokemonEvolLevel';
+import { useMultiplePokemonByIds, usePokemonAbility, usePokemonById, usePokemonEvolutionChain, usePokemonList, usePokemonSpecie } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/material';
 import styled from 'styled-components';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { kgToLb } from '../../public/utils/unitConverter';
-import { getEvolutions } from '../../public/utils/getEvolutions';
+import { kgToLb } from '../../public/utils/helpers/unitConverter';
+import { getEvolutions } from '../../public/utils/helpers/getEvolutions';
 import { useEffect } from 'react';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
-import { getMinLevelToEvolve } from '../../public/utils/getLevelToEvolve';
+import { getMinLevelToEvolve } from '../../public/utils/helpers/getLevelToEvolve';
 import ArrowDown from './ArrowDown';
+import { getAbilitiesIds } from '../../public/utils/helpers/getAbilities';
 
 interface DialogProps{
   $type: string
@@ -448,7 +449,13 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
   const evolutionIds = getEvolutions(pokemonEvolutionChain?.chain)
+  const abilityIds = getAbilitiesIds(data?.abilities)
   const { data: evolutionPokemons, isLoading: evolutionisLoading } = useMultiplePokemonByIds(evolutionIds);
+  // const { data: pokemonAbility, isLoading: loadingPokemonAbility} = usePokemonAbility()
+
+  console.log('data', data)
+  console.log('abilityIds', abilityIds)
+  console.log('evolutionIds', evolutionIds)
 
   return (
     <Dialog
@@ -582,7 +589,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                     ))}
                 </EvolutionContainer>
                 <div style={{height: '20%', border: '1px solid yellow'}}>
-                  test
+                  habitat: {pokemonSpecie?.habitat?.name}
                 </div>
               </RightModalContainer>
             </>

@@ -17,7 +17,12 @@ export interface PokemonStats {
   stat: Stats; 
 }
 
+export interface Abilities {
+  name: string;
+  url: string
+}
 export interface Pokemon {
+  abilities?: Abilities[];
   url?: string;
   id?: number;
   name: string;

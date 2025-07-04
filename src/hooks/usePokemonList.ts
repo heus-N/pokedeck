@@ -126,3 +126,23 @@ export function usePokemonEvolutionChain(id: string) {
     isError: error,
   };
 }
+
+export function usePokemonAbility(ids: string[]) {
+  const shouldFetch = ids && ids.length > 0;
+
+  const { data, error, isLoading } = useSWR<Pokemon[]>(
+    shouldFetch ? ['multiple-pokemon', ...ids] : null,
+    async () => {
+      const responses = await Promise.all(
+        ids.map(id => api.get(`/ability/${id}`)) // reaproveita sua instância `api`
+      );
+      return responses.map(res => res.data);
+    }
+  );
+
+  return {
+    data,
+    isLoading,
+    isError: error,
+  };
+}
