@@ -1,7 +1,7 @@
 // usePokemonList.ts
 import useSWR from 'swr';
 import { axiosFetcher } from '@/services/swrFetch';
-import { Pokemon } from '@/types/pokemon';
+import { Pokemon, PokemonAbilities } from '@/types/pokemon';
 import api from '@/services/api';
 
 interface PokemonListResponse {
@@ -130,7 +130,7 @@ export function usePokemonEvolutionChain(id: string) {
 export function usePokemonAbility(ids: string[]) {
   const shouldFetch = ids && ids.length > 0;
 
-  const { data, error, isLoading } = useSWR<Pokemon[]>(
+  const { data, error, isLoading } = useSWR<PokemonAbilities[]>(
     shouldFetch ? ['multiple-pokemon', ...ids] : null,
     async () => {
       const responses = await Promise.all(

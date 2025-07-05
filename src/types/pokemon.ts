@@ -17,9 +17,25 @@ export interface PokemonStats {
   stat: Stats; 
 }
 
+interface LanguageProps{
+  name?: string; 
+}
+
+interface EffectProps {
+  effect?: string;
+  short_effect?: string;
+  language?: LanguageProps
+}
+
+export interface PokemonAbilities {
+  id?: number;
+  name?: string;
+  effect_entries?: EffectProps[]
+}
+
 export interface Abilities {
   name: string;
-  url: string
+  url: string;
 }
 export interface Pokemon {
   abilities?: Abilities[];

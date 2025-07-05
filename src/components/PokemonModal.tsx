@@ -182,6 +182,24 @@ const RightModalContainer = styled.div`
   }
 `
 
+const AbilitiesContainer = styled.div`
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 0.5rem;
+  height: calc(20% - 30px);
+  margin-bottom: 30px;
+  background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+
+  .divisor{
+    margin: 5px 0;
+    height: 1px;
+    border: none;
+    background-color:rgba(255, 255, 255, 0.5);
+  }
+`
+
 const EvolutionContainer = styled.div`
   position: relative;
   width: 100%;
@@ -451,11 +469,10 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const evolutionIds = getEvolutions(pokemonEvolutionChain?.chain)
   const abilityIds = getAbilitiesIds(data?.abilities)
   const { data: evolutionPokemons, isLoading: evolutionisLoading } = useMultiplePokemonByIds(evolutionIds);
-  // const { data: pokemonAbility, isLoading: loadingPokemonAbility} = usePokemonAbility()
+  const { data: pokemonAbility, isLoading: loadingPokemonAbility} = usePokemonAbility(abilityIds)
 
-  console.log('data', data)
-  console.log('abilityIds', abilityIds)
-  console.log('evolutionIds', evolutionIds)
+  console.log('pokemonAbility', pokemonAbility)
+  console.log('evolutionPokemons', evolutionPokemons)
 
   return (
     <Dialog
@@ -548,11 +565,22 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
               </LeftModalContainer>
 
               <RightModalContainer>
-                <div style={{height: '20%'}}>
-                  <Typography>evoluções</Typography>
-                </div>
+                <AbilitiesContainer>
+                  <Typography variant='h4'>
+                    Abilities:
+                  </Typography>
+                      {pokemonAbility?.map(ab => (
+                        <Typography variant='h4' key={ab.id}>
+                          {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
+                          
+                          <hr className='divisor'/>
+                        </Typography>
+                      ))}
+                </AbilitiesContainer>
                 <EvolutionContainer>
-                  <Typography variant='h3' sx={{position: 'absolute', top: -25, zIndex: 10, textAlign: 'center', width: '100%'}}>
+                  <Typography variant='h3' 
+                    sx={{position: 'absolute', top: -25, zIndex: 10, textAlign: 'center', width: '100%'}}
+                    >
                     Evolution Chain
                   </Typography>
                   {!evolutionisLoading &&
