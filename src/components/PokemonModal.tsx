@@ -174,7 +174,7 @@ const LeftModalContainer = styled.div`
 const RightModalContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 10px;
+  padding: 10px;
   overflow: hidden;
   display: flex; 
   flex-direction: column;
@@ -189,12 +189,12 @@ const AbilitiesContainer = styled.div`
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   padding: 0.5rem;
-  height: calc(20% - 30px);
-  max-height: calc(35% - 30px);
-  margin-bottom: 30px;
+  height: 18%;
+  margin: 0 5px;
+  // max-height: calc(5% - 30px);
   background-color: rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
   overflow-y: hidden;
 
   .divisor{
@@ -205,21 +205,54 @@ const AbilitiesContainer = styled.div`
   }
 
   &:hover{
-    height: calc(33% - 30px);
+    transition: all 0.3s ease;
+    height: 100%;
+    overflow-y: auto;
   }
 `
-
 const EvolutionContainer = styled.div`
+  height: 65%;
   position: relative;
   width: 100%;
-  height: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 19px;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-`
+  margin-top: 10px;
+  transition: all 0.3s ease;
+
+  .chainTitle{
+    opacity: 0;
+    position: absolute;
+    top: -14px;
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  .mainContainer{
+    height: 100%;
+    padding: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    
+    &:hover {
+      .chainTitle{
+        opacity: 1;
+      }
+      overflow-y: auto;
+    }
+  }
+
+  .evolContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+  }
+`;
 
 interface EvolutionProps {
   $level?: number
@@ -234,8 +267,8 @@ const evolutionColors: Record<string, string> = {
 const EvolutionsEl = styled.div<EvolutionProps>`
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  // filter: drop-shadow(10px 0px 1px rgba(0, 0, 0, 0.5));
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
   padding: 10px;
   display: flex;
   background-color: ${({ $level }) => $level !== undefined && evolutionColors[$level] || 'transparent'};
@@ -258,6 +291,7 @@ const EvolutionsEl = styled.div<EvolutionProps>`
     }
 
     img{
+      filter: drop-shadow(5px 0px 0px rgba(0, 0, 0, 0.25));
       position: absolute;
       width: 100%;
       height: 100%;
@@ -436,7 +470,6 @@ const ImageContainer = styled.div<ImageProps>`
 `
 
 const StatsContainer = styled.div`
-  // border: 1px solid purple;
   height: 20%;
   display: flex;
   align-items: center;
@@ -458,14 +491,16 @@ const StatsContainer = styled.div`
 const HabitatContainer = styled.div`
   border: 1px solid yellow;
   height: 18%;
+  margin: 0px 5px;
+  margin-top: 5px;
   padding: 0.5rem;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
   background-color: rgba(0, 0, 0, 0.15);
 
   &:hover{
-    height: 30%;
+    height: 100%;
   }
 `
 
@@ -584,57 +619,90 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   </div>
                 </StatsContainer>
               </LeftModalContainer>
-
               <RightModalContainer>
-                <AbilitiesContainer>
-                  <Typography variant='h4'>
-                    Abilities:
-                  </Typography>
-                      {pokemonAbility?.map(ab => (
-                        <Typography variant='h4' key={ab.id}>
-                          {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
-                          <hr className='divisor'/>
-                        </Typography>
-                      ))}
-                </AbilitiesContainer>
+                  <AbilitiesContainer>
+                    <Typography variant='h4' sx={{padding: '5px 0'}}>
+                      Abilities:
+                    </Typography>
+                        {pokemonAbility?.map(ab => (
+                          <Typography variant='h4' key={ab.id}>
+                            {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
+                            <hr className='divisor'/>
+                          </Typography>
+                        ))}
+                  </AbilitiesContainer>
                 <EvolutionContainer>
-                  <Typography variant='h3' 
-                    sx={{position: 'absolute', top: -25, zIndex: 10, textAlign: 'center', width: '100%'}}
-                    >
-                    Evolution Chain
-                  </Typography>
-                  {!evolutionisLoading &&
-                    evolutionPokemons?.map((ev, index) => (
-                      <EvolutionsEl $level={index + 1} key={ev.id}>
-                        <Tooltip title={`default ${ev.name}`}>
-                          <div className="img_container">
-                            <img src={ev?.sprites?.front_default}/>
-                          </div>
-                        </Tooltip>
-                        <Tooltip title={`shiny ${ev.name}`}>
-                          <div className="img_container">
-                            <img src={ev?.sprites?.front_shiny}/>
-                          </div>
-                        </Tooltip>
-                        <div className='nameStarContainer'>
-                          <div className='nameStarContent'>
-                            <Typography>
-                              {ev.name}
-                            </Typography>
-                            <div style={{position: 'absolute', right: '0', top: '0'}}>
-                              {Array.from({ length: getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
+                  <div className='mainContainer'>
+                    <Typography variant='h3' className='chainTitle'>
+                      Evolution Chain
+                    </Typography>
+                    <div className="evolContainer">
+                      {!evolutionisLoading &&
+                        evolutionPokemons?.map((ev, index) => (
+                          <EvolutionsEl $level={index + 1} key={ev.id}>
+                            <Tooltip 
+                              slotProps={{
+                                popper:{
+                                  modifiers: [
+                                    {
+                                      name: 'disablePointerEvents',
+                                      enabled: true,
+                                      phase: 'afterWrite',
+                                      fn: ({ state }) => {
+                                        if (state.elements.popper) {
+                                          state.elements.popper.style.pointerEvents = 'none';
+                                        }
+                                      },
+                                    },
+                                  ]},
+                                }} 
+                                title={`default ${ev.name}`}>
+                              <div className="img_container">
+                                <img src={ev?.sprites?.front_default}/>
+                              </div>
+                            </Tooltip>
+                            <Tooltip 
+                              slotProps={{
+                                popper:{
+                                  modifiers: [
+                                    {
+                                      name: 'disablePointerEvents',
+                                      enabled: true,
+                                      phase: 'afterWrite',
+                                      fn: ({ state }) => {
+                                        if (state.elements.popper) {
+                                          state.elements.popper.style.pointerEvents = 'none';
+                                        }
+                                      },
+                                    },
+                                  ]},
+                                }} 
+                              title={`shiny ${ev.name}`}>
+                              <div className="img_container">
+                                <img src={ev?.sprites?.front_shiny}/>
+                              </div>
+                            </Tooltip>
+                            <div className='nameStarContainer'>
+                              <div className='nameStarContent'>
+                                <Typography>
+                                  {ev.name}
+                                </Typography>
+                                <div style={{position: 'absolute', right: '0', top: '0'}}>
+                                  {Array.from({ length: getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
+                                </div>
+                              </div>
+                              <Typography>
+                                {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
+                              </Typography>
+                              <Typography>
+                                {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && 'evolves to:'}
+                              </Typography>
+                                {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && <ArrowDown />}
                             </div>
-                          </div>
-                          <Typography>
-                            {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
-                          </Typography>
-                          <Typography>
-                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && 'evolves to:'}
-                          </Typography>
-                            {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && <ArrowDown />}
-                        </div>
-                      </EvolutionsEl>
-                    ))}
+                          </EvolutionsEl>
+                        ))}
+                      </div>
+                  </div>
                 </EvolutionContainer>
                 <HabitatContainer >
                   habitat: {pokemonSpecie?.habitat?.name}

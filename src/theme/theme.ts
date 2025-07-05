@@ -37,6 +37,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          pointerEvents: 'none',
+        },
+      },
+    }
   },
 });
 
