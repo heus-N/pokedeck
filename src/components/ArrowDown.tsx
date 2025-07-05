@@ -28,7 +28,7 @@ const StyledArrow = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, #e0e0e0, #f5f5f5, #e0e0e0);
+    background: linear-gradient(180deg,rgb(184, 184, 184), #f5f5f5, rgb(184, 184, 184));
     background-size: 100% 200%;
     animation: ${gradientShift} 2s linear infinite;
 
@@ -46,7 +46,7 @@ export default function ArrowDown(){
     return(
         <>
             <StyledArrowContainer>
-                <StyledArrow style={{ animationDelay: '0s' }} />
+                <StyledArrow style={{ animationDelay: '0s'}} />
                 <StyledArrow style={{ animationDelay: '1s', bottom: '15px'}} />
             </StyledArrowContainer>
         </>

@@ -172,10 +172,13 @@ const LeftModalContainer = styled.div`
 `
 
 const RightModalContainer = styled.div`
-  border: 1px solid blue;
   width: 100%;
   height: 100%;
   padding: 0 10px;
+  overflow: hidden;
+  display: flex; 
+  flex-direction: column;
+  justify-content: space-between;
 
   @media(min-width: 960px){
     width: 50%;
@@ -187,16 +190,22 @@ const AbilitiesContainer = styled.div`
   border-radius: 12px;
   padding: 0.5rem;
   height: calc(20% - 30px);
+  max-height: calc(35% - 30px);
   margin-bottom: 30px;
   background-color: rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-  overflow-y: auto;
+  transition: 0.3s ease;
+  overflow-y: hidden;
 
   .divisor{
     margin: 5px 0;
     height: 1px;
     border: none;
     background-color:rgba(255, 255, 255, 0.5);
+  }
+
+  &:hover{
+    height: calc(33% - 30px);
   }
 `
 
@@ -207,8 +216,9 @@ const EvolutionContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 14px;
+  gap: 19px;
   box-sizing: border-box;
+  margin-bottom: 10px;
 `
 
 interface EvolutionProps {
@@ -265,18 +275,15 @@ const EvolutionsEl = styled.div<EvolutionProps>`
     justify-content: center;
     width: 100%;
     text-align: center;
-    // border: 1px solid red;
     height: fit-content;
   }
 
   .nameStarContent{
-    // border: 1px solid blue;
     position: relative;
   }
 `
 
 const PokemonInfo = styled.div`
-  // border: 1px solid green;
   height: 20%;
   width: 100%;
 
@@ -448,6 +455,20 @@ const StatsContainer = styled.div`
   }
 `
 
+const HabitatContainer = styled.div`
+  border: 1px solid yellow;
+  height: 18%;
+  padding: 0.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  transition: 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.15);
+
+  &:hover{
+    height: 30%;
+  }
+`
+
 interface PropsModal {
   open: boolean;
   handleClose: () => void;
@@ -572,7 +593,6 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                       {pokemonAbility?.map(ab => (
                         <Typography variant='h4' key={ab.id}>
                           {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
-                          
                           <hr className='divisor'/>
                         </Typography>
                       ))}
@@ -616,9 +636,9 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                       </EvolutionsEl>
                     ))}
                 </EvolutionContainer>
-                <div style={{height: '20%', border: '1px solid yellow'}}>
+                <HabitatContainer >
                   habitat: {pokemonSpecie?.habitat?.name}
-                </div>
+                </HabitatContainer>
               </RightModalContainer>
             </>
           )}
