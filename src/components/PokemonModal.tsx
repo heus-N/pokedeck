@@ -205,6 +205,7 @@ const AbilitiesContainer = styled.div<abilitiesProps>`
 
   .ability{
     border-top: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 5px 0;
   }
   
   .abilities{
@@ -350,7 +351,7 @@ const PokemonInfo = styled.div`
       scale: 1.1;
       filter: drop-shadow(0 0 3px rgba(252, 177, 3, 0.9));
     }
-  }
+  };
 
   .evolution_rating{
     height: 100%;
@@ -525,6 +526,7 @@ const HabitatContainer = styled.div<abilitiesProps>`
 
   .flavorText{
     border-top: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 5px 0;
   }
 `
 
@@ -604,7 +606,14 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                         <TypeContainer $type={t.type.name} key={t.type.name}>{t.type.name}</TypeContainer>
                       ))}
                     </div>
-                    <Typography>weight: <span className='stat'>{`${kgToLb(data?.weight ? (data?.weight) / 10 : 0)} lbs`}</span></Typography>
+                    <div style={{textAlign: 'right'}}>
+                      <Typography>weight:<span className='stat'>{`${kgToLb(data?.weight ? (data?.weight) / 10 : 0)} lbs`}</span></Typography>
+                      {pokemonSpecie?.habitat?.name && 
+                        <Typography>
+                          {`habitat: ${pokemonSpecie?.habitat?.name}`}
+                        </Typography>
+                      }
+                    </div>
                   </div>
                 </PokemonInfo>
                 <ImageContainer $type={primaryType}>
@@ -661,9 +670,9 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   <div className='abilities'>
                     {!loadingPokemonAbility && 
                       pokemonAbility?.map((ab, index) => (
-                      <Typography className='ability' variant='h4' key={`${ab.id}` + `${ab.name}` + `${index}`}>
-                        {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
-                      </Typography>
+                        <Typography className='ability' variant='h4' key={`${ab.id}` + `${ab.name}` + `${index}`}>
+                          {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
+                        </Typography>
                     ))}
                   </div>
                 </AbilitiesContainer>
@@ -747,13 +756,9 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   $isEvolutionHover={evolutionHover}
                   $isHabitatHover={habitatHover}
                 >
-                  {pokemonSpecie?.habitat?.name && 
-                    <div className='habitat'>
-                      <Typography variant='h4'>
-                        {`habitat: ${pokemonSpecie?.habitat?.name}`}
-                      </Typography>
-                    </div>
-                  }
+                  <Typography variant='h4'>
+                    Flavor Entries:
+                  </Typography>
                   {pokemonSpecie?.flavor_text_entries?.length && 
                     <div className='flavorTextContainer'>
                       {pokemonSpecie?.flavor_text_entries
