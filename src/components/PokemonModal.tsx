@@ -153,6 +153,8 @@ const ModalContainer = styled.div`
   padding: 0.5rem 1rem;
   display: flex;
   flex-direction: column;
+  // margin-left: 8px;
+
 
   @media(min-width: 960px){
     flex-direction: row;
@@ -162,27 +164,42 @@ const ModalContainer = styled.div`
 const LeftModalContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  padding: 20px 10px;
+  // justify-content: space-between;
+
+  @media(min-width: 600px){
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
   @media(min-width: 960px){
     width: 50%;
+    height: 100%;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 `
 
 const RightModalContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 10px;
-  overflow: hidden;
+  padding: 10px 0;
+  // overflow: hidden;
   display: flex; 
   flex-direction: column;
   justify-content: space-between;
 
   @media(min-width: 960px){
     width: 50%;
+    padding: 10px;
   }
 `
 
@@ -198,10 +215,15 @@ const AbilitiesContainer = styled.div<abilitiesProps>`
   border-radius: 12px;
   padding: 0.5rem;
   margin: 0 5px;
+  margin-bottom: 10px;
   transition: all 0.3s ease;
   background-color: rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
   overflow-y: hidden;
+
+  @media(min-width: 960px){
+    margin-bottom: 0px;
+  }
 
   .ability{
     border-top: 1px solid rgba(255, 255, 255, 0.5);
@@ -223,10 +245,11 @@ const AbilitiesContainer = styled.div<abilitiesProps>`
   &:hover{
     transition: all 0.3s ease;
     overflow-y: auto;
+    margin-bottom: 0;
   }
 `
 const EvolutionContainer = styled.div`
-  height: 65%;
+  height: 55%;
   position: relative;
   width: 100%;
   margin-top: 10px;
@@ -267,6 +290,10 @@ const EvolutionContainer = styled.div`
     gap: 20px;
     height: 100%;
   }
+
+  @media(min-width: 600px){
+    height: 65%;
+  }
 `;
 
 interface EvolutionProps {
@@ -291,18 +318,34 @@ const EvolutionsEl = styled.div<EvolutionProps>`
   z-index: 10;
   overflow: visible;
 
+  @media(min-width: 600px){
+    min-height: 80px;
+    min-width: 80px;
+  }
+
   &:hover{
     scale: 1.01
   }
   
   .img_container{
-    min-height: 80px;
-    min-width: 80px;
+    min-height: 40px;
+    min-width: 40px;
     position: relative;
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 7px;
+
     &:not(:first-child) {
       margin-left: 10px;
+    }
+
+    @media(min-width: 600px){
+      min-height: 60px;
+      min-width: 60px;
+    }
+
+    @media(min-width: 960px){
+      min-height: 80px;
+      min-width: 80px;
     }
 
     img{
@@ -314,7 +357,11 @@ const EvolutionsEl = styled.div<EvolutionProps>`
   }
 
   .evolStar{
-    width: 15px;
+    width: 10px;
+    
+    @media(min-width: 600px){
+      width: 15px;
+    }
   }
 
   .nameStarContainer{
@@ -325,10 +372,33 @@ const EvolutionsEl = styled.div<EvolutionProps>`
     width: 100%;
     text-align: center;
     height: fit-content;
+
+    @media(min-width: 600px){
+      width: 100%;
+    }
+  }
+
+  .starContent{
+    position: relative;
+
+    @media(min-width: 600px){
+      position: absolute;
+      width: auto;
+      right: 0;
+      top: 0;
+    }
   }
 
   .nameStarContent{
     position: relative;
+  }
+
+  .evolTxtContainer{
+    display: none;
+
+    @media(min-width: 600px){
+      display: block;
+    }
   }
 `
 
@@ -354,6 +424,7 @@ const PokemonInfo = styled.div`
   };
 
   .evolution_rating{
+    position: relative;
     height: 100%;
     display: flex;
     align-items: center;
@@ -500,6 +571,7 @@ const StatsContainer = styled.div`
 
   .stats1, .stats2{
     width: 50%;
+    white-space: nowrap;
   }
 `
 
@@ -512,7 +584,15 @@ const HabitatContainer = styled.div<abilitiesProps>`
   background-color: rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  margin: 0 5px;
+  margin: 10px 5px;
+
+  @media (min-width: 600px){
+    margin: 10px 5px;
+  }
+
+  @media (min-width: 960px){
+    margin: 0 5px;
+  }
 
   &:hover{
     transition: all 0.3s ease;
@@ -591,7 +671,23 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                     <Typography variant='h2'>
                         {pokemon.name} 
                     </Typography>
-                    <Tooltip title={evolutionLevel > 0 ? "evolution level" : "Este pokemon não possui cadeia evolutiva."}>
+                    <Tooltip 
+                      slotProps={{
+                        popper:{
+                          modifiers: [
+                            {
+                              name: 'disablePointerEvents',
+                              enabled: true,
+                              phase: 'afterWrite',
+                              fn: ({ state }) => {
+                                if (state.elements.popper) {
+                                  state.elements.popper.style.pointerEvents = 'none';
+                                }
+                              },
+                            },
+                          ]},
+                        }} 
+                        title={evolutionLevel > 0 ? "evolution level" : "Este pokemon não possui cadeia evolutiva."}>
                       <span className='evolution_rating'>
                         {evolutionLevel > 0 
                           ? Array.from({ length: evolutionLevel }, (_, i) => <img key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)
@@ -732,17 +828,19 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                                 <Typography>
                                   {ev.name}
                                 </Typography>
-                                <div style={{position: 'absolute', right: '0', top: '0'}}>
+                                <div className='starContent'>
                                   {Array.from({ length: getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
                                 </div>
                               </div>
-                              <Typography>
-                                {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
-                              </Typography>
-                              <Typography>
-                                {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && 'evolves to:'}
-                              </Typography>
-                                {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && <ArrowDown />}
+                              <div className='evolTxtContainer'>
+                                <Typography>
+                                  {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
+                                </Typography>
+                                <Typography>
+                                  {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && 'evolves to:'}
+                                </Typography>
+                                  {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && <ArrowDown />}
+                              </div>
                             </div>
                           </EvolutionsEl>
                         ))}

@@ -159,7 +159,12 @@ const NameContainer = styled.div`
   justify-content: center;
 
   .pokemonName{
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5))
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+    font-size: 2rem;
+
+    @media(min-width: 600px){
+      font-size: 1.5rem;
+    };
   }
 `
 
@@ -259,9 +264,15 @@ const HpContainer = styled.span`
   color: #F7F7F7;
   gap: 5px;
   white-space: nowrap;
+  
 
   .hp{
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+    font-size: 1.5rem;
+
+    @media(min-width: 600px){
+      font-size: 1rem;
+    };
   };
 
   .favoriteIcon:hover{
@@ -356,7 +367,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                 </PokemonBgContainer>
                 <PokemonInfoContainer>
                   <NameContainer>
-                    <Typography variant="h3" color="text.secondary" className="pokemonName" flexGrow="nowrap">
+                    <Typography color="text.secondary" className="pokemonName" flexGrow="nowrap">
                       {data?.name}
                     </Typography>
                   </NameContainer>
@@ -371,7 +382,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#ffffff', opacity: '0.5', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'}}/>
                     <HpContainer>
                       <Tooltip title="hp">
-                        <Typography className="hp" variant="h4">
+                        <Typography className="hp">
                           <FavoriteIcon className="favoriteIcon" sx={{fontSize: '16px', marginBottom: '-2px'}}/> {hpStat?.base_stat}
                         </Typography>
                       </Tooltip>
