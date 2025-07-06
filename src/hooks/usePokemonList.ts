@@ -86,10 +86,12 @@ export interface PokemonSpecieResponse {
   habitat: { name: string } | null;
 }
 
-export function usePokemonSpecie(id: string | undefined) {
-  const shouldFetch = !!id && isNaN(Number(id));
+export function usePokemonSpecie(species: any | undefined) {
+  const rawId = species?.url?.split('/pokemon-species')[1]
+  const cleanId = rawId?.replace('/', '')
+  const shouldFetch = !!cleanId;
 
-  const { data, error, isLoading } = useSWR<PokemonSpecieResponse>(shouldFetch ? `/pokemon-species/${id}` : null, axiosFetcher);
+  const { data, error, isLoading } = useSWR<PokemonSpecieResponse>(shouldFetch ? `/pokemon-species/${cleanId}` : null, axiosFetcher);
 
   return {
     data,

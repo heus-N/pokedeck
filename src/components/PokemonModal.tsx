@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { kgToLb } from '../../public/utils/helpers/unitConverter';
 import { getEvolutions } from '../../public/utils/helpers/getEvolutions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import { getMinLevelToEvolve } from '../../public/utils/helpers/getLevelToEvolve';
 import ArrowDown from './ArrowDown';
@@ -114,7 +114,8 @@ const ClipPathLine1 = styled.span`
   position: absolute;
   width: 100%;
   height: 100%;
-  
+  pointer-events: none;
+
   // border: 16px solid;
   // border-image: linear-gradient(135deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
   transition: all 0.3s ease;
@@ -185,17 +186,31 @@ const RightModalContainer = styled.div`
   }
 `
 
-const AbilitiesContainer = styled.div`
+interface abilitiesProps{
+  $isAbilitieHover?: boolean;
+  $isEvolutionHover?: boolean;
+  $isHabitatHover?: boolean;
+}
+
+const AbilitiesContainer = styled.div<abilitiesProps>`
+  height: ${({$isAbilitieHover}) => $isAbilitieHover ? '100%' : '17%'};
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   padding: 0.5rem;
-  height: 18%;
   margin: 0 5px;
-  // max-height: calc(5% - 30px);
+  transition: all 0.3s ease;
   background-color: rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
   overflow-y: hidden;
+
+  .ability{
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  
+  .abilities{
+    opacity: ${({$isHabitatHover}) => $isHabitatHover ? 0 : 1};
+    transition: all 0.3s ease;
+  }
 
   .divisor{
     margin: 5px 0;
@@ -206,7 +221,6 @@ const AbilitiesContainer = styled.div`
 
   &:hover{
     transition: all 0.3s ease;
-    height: 100%;
     overflow-y: auto;
   }
 `
@@ -488,19 +502,29 @@ const StatsContainer = styled.div`
   }
 `
 
-const HabitatContainer = styled.div`
-  border: 1px solid yellow;
-  height: 18%;
-  margin: 0px 5px;
-  margin-top: 5px;
-  padding: 0.5rem;
+const HabitatContainer = styled.div<abilitiesProps>`
+  height: ${({$isHabitatHover}) => $isHabitatHover ? '100%' : '17%'};
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
+  padding: 0.5rem;
   transition: all 0.3s ease;
   background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  margin: 0 5px;
 
   &:hover{
-    height: 100%;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+  }
+
+  .flavorTextContainer{
+    opacity: ${({$isAbilitieHover}) => $isAbilitieHover ? 0 : 1};
+    transition: all 0.3s ease;
+  }
+
+  .flavorText{
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
   }
 `
 
@@ -514,9 +538,10 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
 
   const url = pokemon?.url
   const pokemonId = url?.split("pokemon/")[1] ?? '';
-  const { data, isLoading } = usePokemonById(pokemonId);
+  const cleanPokemonId = pokemonId.replace('/', '')
+  const { data, isLoading } = usePokemonById(cleanPokemonId);
 
-  const { data: pokemonSpecie } = usePokemonSpecie(pokemonId);
+  const { data: pokemonSpecie } = usePokemonSpecie(data?.species);
   const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
   const evolutionChainId = evolutionChainUrl?.split('evolution-chain/')[1];
@@ -527,8 +552,9 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const { data: evolutionPokemons, isLoading: evolutionisLoading } = useMultiplePokemonByIds(evolutionIds);
   const { data: pokemonAbility, isLoading: loadingPokemonAbility} = usePokemonAbility(abilityIds)
 
-  console.log('pokemonAbility', pokemonAbility)
-  console.log('evolutionPokemons', evolutionPokemons)
+  const [ abilitiesHover, setAbilitiesHover ] = useState(false)
+  const [ evolutionHover, setEvolutionHover ] = useState(false)
+  const [ habitatHover, setHabitatHover ] = useState(false)
 
   return (
     <Dialog
@@ -620,17 +646,27 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                 </StatsContainer>
               </LeftModalContainer>
               <RightModalContainer>
-                  <AbilitiesContainer>
-                    <Typography variant='h4' sx={{padding: '5px 0'}}>
+                <AbilitiesContainer 
+                  onMouseEnter={() => setAbilitiesHover(true)} 
+                  onMouseLeave={() => setAbilitiesHover(false)}
+                  $isAbilitieHover={abilitiesHover}
+                  $isEvolutionHover={evolutionHover}
+                  $isHabitatHover={habitatHover}
+                  >
+                  <div>
+                    <Typography variant='h4'>
                       Abilities:
                     </Typography>
-                        {pokemonAbility?.map(ab => (
-                          <Typography variant='h4' key={ab.id}>
-                            {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
-                            <hr className='divisor'/>
-                          </Typography>
-                        ))}
-                  </AbilitiesContainer>
+                  </div>
+                  <div className='abilities'>
+                    {!loadingPokemonAbility && 
+                      pokemonAbility?.map((ab, index) => (
+                      <Typography className='ability' variant='h4' key={`${ab.id}` + `${ab.name}` + `${index}`}>
+                        {ab.name}: {ab?.effect_entries?.length && ab?.effect_entries.find((ef : any) => ef.language.name === 'en')?.effect}
+                      </Typography>
+                    ))}
+                  </div>
+                </AbilitiesContainer>
                 <EvolutionContainer>
                   <div className='mainContainer'>
                     <Typography variant='h3' className='chainTitle'>
@@ -704,8 +740,40 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                       </div>
                   </div>
                 </EvolutionContainer>
-                <HabitatContainer >
-                  habitat: {pokemonSpecie?.habitat?.name}
+                <HabitatContainer 
+                  onMouseEnter={() => setHabitatHover(true)} 
+                  onMouseLeave={() => setHabitatHover(false)}
+                  $isAbilitieHover={abilitiesHover}
+                  $isEvolutionHover={evolutionHover}
+                  $isHabitatHover={habitatHover}
+                >
+                  {pokemonSpecie?.habitat?.name && 
+                    <div className='habitat'>
+                      <Typography variant='h4'>
+                        {`habitat: ${pokemonSpecie?.habitat?.name}`}
+                      </Typography>
+                    </div>
+                  }
+                  {pokemonSpecie?.flavor_text_entries?.length && 
+                    <div className='flavorTextContainer'>
+                      {pokemonSpecie?.flavor_text_entries
+                        .filter(entry => entry.language.name === 'en')
+                        .reduce((uniqueEntries, currentEntry) => {
+                          const isDuplicate = uniqueEntries.some(
+                            e => e.flavor_text === currentEntry.flavor_text
+                          );
+                          if (!isDuplicate) uniqueEntries.push(currentEntry);
+                          return uniqueEntries;
+                        }, [] as typeof pokemonSpecie.flavor_text_entries)
+                        .map((ft, ftIndex) => (
+                          <Typography variant='h4' key={ft.flavor_text + ftIndex} className='flavorText'>
+                            {ftIndex + 1 + ' - '}
+                            {ft.flavor_text.replace(/\n|\f/g, ' ')}
+                          </Typography>
+                        ))
+                      }
+                    </div>
+                  }
                 </HabitatContainer>
               </RightModalContainer>
             </>

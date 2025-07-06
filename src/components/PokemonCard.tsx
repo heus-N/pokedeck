@@ -313,7 +313,7 @@ interface Props {
 export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection, index, page }: Props) {
   const pokemonId = url.split("pokemon/")[1];
   const { data, isLoading } = usePokemonById(pokemonId);
-  const { data: pokemonSpecie } = usePokemonSpecie(pokemonId);
+  const { data: pokemonSpecie } = usePokemonSpecie(data?.species);
   const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
   const evolutionChainId = evolutionChainUrl?.split('/').filter(Boolean).pop();
   const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
@@ -324,6 +324,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
 
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
 
+  
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
       <Card

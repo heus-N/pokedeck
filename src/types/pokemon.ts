@@ -37,6 +37,8 @@ export interface Abilities {
   name: string;
   url: string;
 }
+
+
 export interface Pokemon {
   abilities?: Abilities[];
   url?: string;
@@ -49,4 +51,8 @@ export interface Pokemon {
   types?: PokemonType[];
   stats?: PokemonStats[];
   weight?: number;
+  species?: {
+    name: string;
+    url: string;
+  }
 }
