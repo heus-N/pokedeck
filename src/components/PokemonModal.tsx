@@ -6,11 +6,12 @@ import styled from 'styled-components';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { kgToLb } from '../../public/utils/helpers/unitConverter';
 import { getEvolutions } from '../../public/utils/helpers/getEvolutions';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import { getMinLevelToEvolve } from '../../public/utils/helpers/getLevelToEvolve';
 import ArrowDown from './ArrowDown';
 import { getAbilitiesIds } from '../../public/utils/helpers/getAbilities';
+import { gsap } from 'gsap';
 
 interface DialogProps{
   $type: string
@@ -531,7 +532,7 @@ const ImageContainer = styled.div<ImageProps>`
   }
   
   .background{
-    bottom: 0;
+    bottom: -10px;
     position: absolute;
     left: 50%;
     width: 200%;
@@ -543,16 +544,9 @@ const ImageContainer = styled.div<ImageProps>`
   
   @media (min-width: 600px){
     .background{
-      width: 100%;
+      width: 110%;
     }
   }
-
-  // @media (min-width: 960px){
-  //   .background{
-  //     width: 100%;
-  //   }
-  // }
-  
 `
 
 const StatsContainer = styled.div`
@@ -638,6 +632,35 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const [ evolutionHover, setEvolutionHover ] = useState(false)
   const [ habitatHover, setHabitatHover ] = useState(false)
 
+  const bgRef = useRef<HTMLImageElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const rect = container.getBoundingClientRect();
+    const relX = e.clientX - rect.left;
+    const relY = e.clientY - rect.top;
+
+    const percentX = (relX / rect.width - 0.5) * 2;
+    const percentY = (relY / rect.height - 0.5) * 2;
+
+    const moveX = percentX * 2;
+    const moveY = percentY * 2; 
+    const rotateX = -percentY * 3;
+    const rotateY = percentX * 3;
+
+    gsap.to(bgRef.current, {
+      x: moveX,
+      y: moveY,
+      rotationX: rotateX,
+      rotationY: rotateY,
+      transformPerspective: 800,
+      transformOrigin: "center",
+      ease: "power2.out",
+      duration: 0.3,
+    });
+  };
+
+
   return (
     <Dialog
       open={open}
@@ -649,6 +672,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
           padding: 0
         }
       }}
+      onMouseMove={handleMouseMove}
     >
       <StyledDialogContent $type={primaryType} id="alert-dialog-slide-description">
         <ClipPathLine1 />
@@ -714,7 +738,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                 </PokemonInfo>
                 <ImageContainer $type={primaryType}>
                   <div className='container'>
-                    <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
+                    <img ref={bgRef} className="background" src={`/utils/backgrounds/${primaryType}.png/`}/>
                     {data?.sprites?.front_default 
                       ? <img className="pokemon" src={data?.sprites?.front_default} alt={`image_${pokemon.name}`} width="100%" />
                       : <IconButton
