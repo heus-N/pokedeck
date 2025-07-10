@@ -221,7 +221,6 @@ const AbilitiesContainer = styled.div<abilitiesProps>`
   background-color: rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
   overflow-y: hidden;
-
   @media(min-width: 960px){
     margin-bottom: 0px;
   }
@@ -318,11 +317,6 @@ const EvolutionsEl = styled.div<EvolutionProps>`
   transition: scale 0.5s ease;
   z-index: 10;
   overflow: visible;
-
-  @media(min-width: 600px){
-    min-height: 80px;
-    min-width: 80px;
-  }
 
   &:hover{
     scale: 1.01

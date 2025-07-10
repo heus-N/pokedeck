@@ -10,6 +10,7 @@ import { Fade } from '@mui/material';
 import PokeballAnimation from '@/components/PokeballAnimation';
 import PokeballSvg from '../../public/utils/pokeballSvg';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
+import FilterTable from '@/components/FilterTable';
 
 const StyledContainer = styled.section`
   margin: 0;
@@ -18,8 +19,7 @@ const StyledContainer = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  // padding: 10px 20px;
-  flex-direction: column;
+  transition: all 0.3s ease;
 `
 
 const StyledCardContainer = styled(Box)`
@@ -30,6 +30,8 @@ const StyledCardContainer = styled(Box)`
   align-items: flex-start;
   justify-content: center;
   overflow: hidden;
+  transition: all 0.3s ease;
+
 `
 
 interface StyledCardGridProps {
@@ -105,6 +107,7 @@ export default function Home() {
 
   return (
     <StyledContainer>
+      <FilterTable />
       {shouldDisplay &&
         <div
          style={{
