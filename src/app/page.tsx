@@ -11,6 +11,7 @@ import PokeballAnimation from '@/components/PokeballAnimation';
 import PokeballSvg from '../../public/utils/pokeballSvg';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
+import { motion } from 'framer-motion';
 
 const StyledContainer = styled.section`
   margin: 0;
@@ -21,8 +22,11 @@ const StyledContainer = styled.section`
   align-items: center;
   transition: all 0.3s ease;
 `
+interface StyledCardContainerProps{
+  $openFilter?: boolean
+}
 
-const StyledCardContainer = styled(Box)`
+const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   width: 100%;
   height: 100%;
   max-height: 100%;
@@ -32,6 +36,8 @@ const StyledCardContainer = styled(Box)`
   overflow: hidden;
   transition: all 0.3s ease;
 
+  opacity: ${({$openFilter}) => $openFilter ? 0.75 : 1};
+  scale: ${({$openFilter}) => $openFilter ? 0.99 : 1}
 `
 
 interface StyledCardGridProps {
@@ -89,6 +95,7 @@ export default function Home() {
   const [ flipDirection, setFlipDirection ] = useState<'forward' | 'backward'>('forward');
   const [ shouldDisplay, setShouldDisplay ] = useState(false)
   const isModalOpen = !!pokemonQuery;
+  const [ openFilter, setOpenFilter ] = useState(false)
   
   useEffect(() => {
     if (pokemonList) {
@@ -104,10 +111,9 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-
   return (
     <StyledContainer>
-      <FilterTable />
+      <FilterTable onMouseEnter={() => setOpenFilter(true)} onMouseLeave={() => setOpenFilter(false)}/>
       {shouldDisplay &&
         <div
          style={{
@@ -122,7 +128,7 @@ export default function Home() {
         </div>
       }
       <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />
-        <StyledCardContainer>
+        <StyledCardContainer $openFilter={openFilter}>
           <Grid 
             container 
             spacing={{ xs: 2, md: 3 }} 
