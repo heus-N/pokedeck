@@ -26,6 +26,24 @@ interface StyledCardContainerProps{
   $openFilter?: boolean
 }
 
+const ClipPathButton = styled.span`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 150px;
+
+  border: 1px solid red;
+
+  clip-path: polygon(
+    50% 0,
+    100% calc(0% - 10px),
+    100% calc(50% - 70px),
+
+  )
+`
+
 const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   width: 100%;
   height: 100%;
@@ -113,7 +131,9 @@ export default function Home() {
 
   return (
     <StyledContainer>
-      <FilterTable onMouseEnter={() => setOpenFilter(true)} onMouseLeave={() => setOpenFilter(false)}/>
+      <FilterTable onMouseEnter={() => setOpenFilter(true)} onMouseLeave={() => setOpenFilter(false)}>
+        <ClipPathButton />
+      </FilterTable>
       {shouldDisplay &&
         <div
          style={{

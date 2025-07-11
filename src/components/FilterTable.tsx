@@ -5,7 +5,7 @@ const StyledFilter = styled.nav`
     border: 1px solid red;
     border-radius: 0 20px 20px 0;
     height: 100%;
-    width: 20px;
+    width: 30px;
     left: 0;
     top: 0;
     transition: width 0.3s ease;
@@ -19,12 +19,13 @@ const StyledFilter = styled.nav`
 interface FilterTableProps {
     onMouseEnter?: () => void
     onMouseLeave?: () => void
+    children: React.ReactNode; 
 }
 
-export default function FilterTable({onMouseEnter, onMouseLeave}: FilterTableProps){
+export default function FilterTable({onMouseEnter, onMouseLeave, children}: FilterTableProps){
     return(
         <StyledFilter onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-            
+            {children}
         </StyledFilter>
     )
 } 
