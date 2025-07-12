@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 const StyledFilter = styled.nav`
     position: absolute;
-    border-right: 2px solid rgba(255, 255, 255, 0.5);
+    border-right: 2px solid #7f7f7f;
     border-radius: 0 20px 20px 0;
     height: 100%;
     width: 30px;
@@ -13,6 +13,7 @@ const StyledFilter = styled.nav`
     background-color: rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(3px);            
     -webkit-backdrop-filter: blur(3px);
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.5);
 
     &:hover{
         width: 400px;
