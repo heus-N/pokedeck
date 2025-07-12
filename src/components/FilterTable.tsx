@@ -11,6 +11,8 @@ const StyledFilter = styled.nav`
     transition: width 0.75s ease;
     z-index: 10;
     background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(3px);            
+    -webkit-backdrop-filter: blur(3px);
 
     &:hover{
         width: 400px;

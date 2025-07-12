@@ -34,7 +34,8 @@ const ClipPathButton = styled.span`
   height: 170px;
   transition: all 1s ease;
 
-  border: 27px solid red;
+  border: 27px solid;
+  border-image: linear-gradient(180deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
 
   clip-path: polygon(
     50% 0%,
@@ -47,9 +48,7 @@ const ClipPathButton = styled.span`
     50% calc(50% + 15px),
     calc(50% - 5px) 50%,
     50% calc(50% - 15px)
-
-
-  )
+  );
 `
 
 const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
@@ -139,9 +138,10 @@ export default function Home() {
 
   return (
     <StyledContainer>
-      <FilterTable onMouseEnter={() => setOpenFilter(true)} onMouseLeave={() => setOpenFilter(false)}>
+      {shouldDisplay &&
+        <FilterTable onMouseEnter={() => setOpenFilter(true)} onMouseLeave={() => setOpenFilter(false)}>
         <ClipPathButton />
-      </FilterTable>
+      </FilterTable>}
       {shouldDisplay &&
         <div
          style={{
