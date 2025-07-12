@@ -28,18 +28,26 @@ interface StyledCardContainerProps{
 
 const ClipPathButton = styled.span`
   position: absolute;
-  right: 0;
+  right: -27px;
   top: 50%;
   transform: translateY(-50%);
-  width: 30px;
-  height: 150px;
+  height: 170px;
+  transition: all 1s ease;
 
-  border: 1px solid red;
+  border: 27px solid red;
 
   clip-path: polygon(
-    50% 0,
-    100% calc(0% - 10px),
-    100% calc(50% - 70px),
+    50% 0%,
+    calc(100% - 15px) calc(0% + 35px),
+    calc(100% - 15px) calc(50% - 15px),
+    calc(100% - 10px) 50%,
+    calc(100% - 15px) calc(50% + 15px),
+    calc(100% - 15px) calc(100% - 35px),
+    50% 100%,
+    50% calc(50% + 15px),
+    calc(50% - 5px) 50%,
+    50% calc(50% - 15px)
+
 
   )
 `

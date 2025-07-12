@@ -2,14 +2,15 @@ import styled from "styled-components"
 
 const StyledFilter = styled.nav`
     position: absolute;
-    border: 1px solid red;
+    border-right: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 0 20px 20px 0;
     height: 100%;
     width: 30px;
     left: 0;
     top: 0;
-    transition: width 0.3s ease;
+    transition: width 0.75s ease;
     z-index: 10;
+    background-color: rgba(0, 0, 0, 0.25);
 
     &:hover{
         width: 400px;
