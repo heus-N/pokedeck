@@ -3,6 +3,8 @@ import useSWR from 'swr';
 import { axiosFetcher } from '@/services/swrFetch';
 import { Pokemon, PokemonAbilities } from '@/types/pokemon';
 import api from '@/services/api';
+import { getEvolutions } from '../../public/utils/helpers/getEvolutions';
+import { getAbilitiesIds } from '../../public/utils/helpers/getAbilities';
 
 interface PokemonListResponse {
   count: number;
@@ -11,7 +13,6 @@ interface PokemonListResponse {
 
 export function usePokemonList(offset : number) {
   const { data, error, isLoading } = useSWR<PokemonListResponse>(`/pokemon/?offset=${offset}&limit=20`, axiosFetcher);
-
 
   return {
     pokemonList: data?.results || [],
@@ -24,10 +25,15 @@ export function usePokemonList(offset : number) {
 export function usePokemonById(id : string) {
   const { data, error, isLoading } = useSWR<Pokemon>(`/pokemon/${id}`, axiosFetcher);
 
+  const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
+  const abilityIds = getAbilitiesIds(data?.abilities)
+
   return {
     findPokemonById: data,
     isLoadingPokemon: isLoading,
     isError: error,
+    primaryType,
+    abilityIds
   };
 }
 
@@ -136,10 +142,14 @@ export function usePokemonSpecie(species: any | undefined) {
 
   const { data, error, isLoading } = useSWR<PokemonSpecieResponse>(shouldFetch ? `/pokemon-species/${cleanId}` : null, axiosFetcher);
 
+  const evolutionChainUrl = data?.evolution_chain?.url;
+  const evolutionChainId = evolutionChainUrl?.split('evolution-chain/')[1];
+
   return {
     pokemonSpecie: data,
     isLoading,
     isError: error,
+    evolutionChainId
   };
 }
 
@@ -165,10 +175,13 @@ export interface PokemonEvolutionChainResponse {
 export function usePokemonEvolutionChain(id: string) {
   const { data, error, isLoading } = useSWR<PokemonEvolutionChainResponse>(`/evolution-chain/${id}`, axiosFetcher);
 
+  const evolutionIds = getEvolutions(data?.chain)
+  
   return {
     pokemonEvolutionChain: data,
     isLoading,
     isError: error,
+    evolutionIds
   };
 }
 

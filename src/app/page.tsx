@@ -128,7 +128,8 @@ export default function Home() {
       }))
     : pokemonList;
 
-  // console.log('filteredPokemonList', filteredPokemonList)
+  // console.log('pokemonList', pokemonList)
+  console.log('pokemonTypeFilteredList', pokemonTypeFilteredList)
 
   useEffect(() => {
     if (pokemonList) {

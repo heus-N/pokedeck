@@ -609,16 +609,11 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const url = pokemon?.url
   const pokemonId = url?.split("pokemon/")[1] ?? '';
   const cleanPokemonId = pokemonId.replace('/', '')
-  const { findPokemonById, isLoadingPokemon } = usePokemonById(cleanPokemonId);
+  const { findPokemonById, isLoadingPokemon, primaryType, abilityIds } = usePokemonById(cleanPokemonId);
 
-  const { pokemonSpecie } = usePokemonSpecie(findPokemonById?.species);
-  const primaryType = findPokemonById?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
-  const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
-  const evolutionChainId = evolutionChainUrl?.split('evolution-chain/')[1];
-  const { pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
+  const { pokemonSpecie, evolutionChainId } = usePokemonSpecie(findPokemonById?.species);
+  const { pokemonEvolutionChain, evolutionIds } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, findPokemonById?.name ?? '') || 0;
-  const evolutionIds = getEvolutions(pokemonEvolutionChain?.chain)
-  const abilityIds = getAbilitiesIds(findPokemonById?.abilities)
   const { evolutionPokemons, evolutionisLoading } = useMultiplePokemonByIds(evolutionIds);
   const { pokemonAbility, loadingPokemonAbility} = usePokemonAbility(abilityIds)
 

@@ -323,19 +323,16 @@ interface Props {
 
 export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection, index, page }: Props) {
   const pokemonId = url.split("pokemon/")[1];
-  const { data, isLoading } = usePokemonById(pokemonId);
-  const { data: pokemonSpecie } = usePokemonSpecie(data?.species);
-  const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
-  const evolutionChainId = evolutionChainUrl?.split('/').filter(Boolean).pop();
-  const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
+  const { findPokemonById, isLoadingPokemon } = usePokemonById(pokemonId);
+  const { evolutionChainId } = usePokemonSpecie(findPokemonById?.species);
+  const { pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const rotation = flipped ? (flipDirection === 'forward' ? 180 : -180) : 0
 
-  const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
-  const hpStat = data?.stats?.find(stat => stat.stat.name === 'hp');
+  const primaryType = findPokemonById?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
+  const hpStat = findPokemonById?.stats?.find(stat => stat.stat.name === 'hp');
 
-  const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
+  const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, findPokemonById?.name ?? '') || 0;
 
-  
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
       <Card
@@ -344,7 +341,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
       >
         {!flipped &&
           <FrontFace $type={primaryType} className="card">
-            {!isLoading && (
+            {!isLoadingPokemon && (
               <>
                 <Tooltip title="evolution level">
                   <EvolutionLevelContainer>
@@ -352,14 +349,14 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                   </EvolutionLevelContainer>
                 </Tooltip>
                 <PokemonBgContainer>
-                  <TypeContainer key={data?.id}>
+                  <TypeContainer key={findPokemonById?.id}>
                     <Tooltip title={primaryType}>
                       <img src={`/utils/types/${primaryType}.png`} alt="pokemon_type" />
                     </Tooltip>
                   </TypeContainer>
                     <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
-                    {data?.sprites?.front_default 
-                      ? <img className="pokemon" src={data?.sprites?.front_default} alt={`image_${pokemon.name}`} />
+                    {findPokemonById?.sprites?.front_default 
+                      ? <img className="pokemon" src={findPokemonById?.sprites?.front_default} alt={`image_${pokemon.name}`} />
                       : <Tooltip title="imagem não disponível">
                           <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
                         </Tooltip> 
@@ -368,12 +365,12 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                 <PokemonInfoContainer>
                   <NameContainer>
                     <Typography color="text.secondary" className="pokemonName" flexGrow="nowrap">
-                      {data?.name}
+                      {findPokemonById?.name}
                     </Typography>
                   </NameContainer>
                   <FooterContainer >
                     <BorderContainer style={{display: 'flex', alignItems: 'center'}}>
-                      {data?.types?.map(t => (
+                      {findPokemonById?.types?.map(t => (
                         <Tooltip title={t.type?.name} key={t.type?.name}>
                           <img src={`/utils/types/${t.type?.name}.png`} alt="pokemon_type" />
                         </Tooltip>
