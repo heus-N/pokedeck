@@ -12,11 +12,12 @@ interface PokemonListResponse {
 export function usePokemonList(offset : number) {
   const { data, error, isLoading } = useSWR<PokemonListResponse>(`/pokemon/?offset=${offset}&limit=20`, axiosFetcher);
 
+
   return {
-    data: data?.results || [],
-    isLoading,
-    isError: error,
-    count: data?.count,
+    pokemonList: data?.results || [],
+    pokemonListLoading: isLoading,
+    pokemonListError: error,
+    pokemonListCount: data?.count,
   };
 }
 
@@ -68,9 +69,9 @@ export function usePokemonType() {
   }) ?? [];
 
   return {
-    data,
-    types: mappedTypes, // [{ name: 'fire', id: 10 }, ...]
-    isLoading,
+    pokemonTypeList: data,
+    types: mappedTypes, 
+    isTypeLoading: isLoading,
     isError: error,
     count: data?.count,
   };
@@ -101,7 +102,7 @@ export function usePokemonTypeById(id: number | null) {
   );
 
   return {
-    data,
+    pokemonTypeFilteredList: data,
     isLoading,
     isError: error,
   };

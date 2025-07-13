@@ -108,20 +108,18 @@ export default function Home() {
 
   const offset = (currentPage - 1) * 20;
 
-  const { data: pokemonList, isLoading, isError, count } = usePokemonList(offset);
-  const { data: pokemonTypeList, isLoading: isTypeLoading, types } = usePokemonType();
+  const { pokemonList, pokemonListLoading, pokemonListCount } = usePokemonList(offset);
+  const { types } = usePokemonType();
   const selectedPokemon = pokemonList?.find(p => p.name === pokemonQuery) || null;
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
-  const lastPage = count && Math.floor(count / 20) + 1
+  const lastPage = pokemonListCount && Math.floor(pokemonListCount / 20) + 1
   const [ flipped, setFlipped ] = useState(false);
   const [ flipDirection, setFlipDirection ] = useState<'forward' | 'backward'>('forward');
   const [ shouldDisplay, setShouldDisplay ] = useState(false)
   const isModalOpen = !!pokemonQuery;
   const [ openFilter, setOpenFilter ] = useState(false)
-  const [selectedType, setSelectedType] = useState<{ name: string; id: number } | null>(null);
-  const { data: pokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
-  const[ filteredList, setFilteredList ] = useState()
-  // console.log('pokemonTypeFilteredList', pokemonTypeFilteredList?.pokemon)
+  const [ selectedType, setSelectedType ] = useState<{ name: string; id: number } | null>(null);
+  const { pokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
   
   const filteredPokemonList = selectedType?.id 
     ? pokemonTypeFilteredList?.pokemon?.map(p => ({
@@ -130,7 +128,7 @@ export default function Home() {
       }))
     : pokemonList;
 
-  console.log('filteredPokemonList', filteredPokemonList)
+  // console.log('filteredPokemonList', filteredPokemonList)
 
   useEffect(() => {
     if (pokemonList) {
@@ -214,7 +212,7 @@ export default function Home() {
           </Grid>
         </StyledCardContainer>
       {shouldDisplay && 
-        <Fade in={!isLoading}>
+        <Fade in={!pokemonListLoading}>
           <StyledFooter>
             <Pagination
               sx={{
