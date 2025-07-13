@@ -43,7 +43,58 @@ const theme = createTheme({
           pointerEvents: 'none',
         },
       },
-    }
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          color: '#fff',
+        },
+        popupIndicator: {
+          color: '#fff',
+        },
+        clearIndicator: {
+          color: '#fff',
+        },
+        paper: {
+          backgroundColor: '#1e1e1e',
+          color: '#fff',
+        },
+        listbox: {
+          backgroundColor: '#1e1e1e',
+          color: '#fff',
+        },
+        option: {
+          '&[aria-selected="true"]': {
+            backgroundColor: '#333',
+          },
+          '&:hover': {
+            backgroundColor: '#444',
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+          '& .MuiOutlinedInput-root': {
+             color: '#ffffff',
+            '& fieldset': {
+              borderColor: '#ccc',
+            },
+            '&:hover fieldset': {
+              borderColor: '#999',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#1976d2',
+            },
+          },
+        },
+      },
+    },
   },
 });
 

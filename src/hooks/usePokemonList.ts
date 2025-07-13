@@ -52,19 +52,61 @@ export function useMultiplePokemonByIds(ids: string[]) {
 
 interface PokemonTypeResponse {
   count: number;
+  next: string;
   results: { name: string; url: string }[];
 }
 
 export function usePokemonType() {
   const { data, error, isLoading } = useSWR<PokemonTypeResponse>(`/type`, axiosFetcher);
 
+  const mappedTypes = data?.results?.map((t) => {
+    const id = parseInt(t.url.split('/').filter(Boolean).pop() || '0');
+    return {
+      name: t.name,
+      id,
+    };
+  }) ?? [];
+
   return {
-    data: data?.results || [],
+    data,
+    types: mappedTypes, // [{ name: 'fire', id: 10 }, ...]
     isLoading,
     isError: error,
     count: data?.count,
   };
 }
+
+
+interface PokemonEntry {
+  pokemon: {
+    name: string;
+    url: string;
+  };
+  slot: number;
+}
+
+interface PokemonTypeByIdResponse {
+  id: number;
+  name: string;
+  pokemon: PokemonEntry[];
+}
+
+
+export function usePokemonTypeById(id: number | null) {
+  const shouldFetch = id !== null;
+
+  const { data, error, isLoading } = useSWR<PokemonTypeByIdResponse>(
+    shouldFetch ? `/type/${id}` : null,
+    axiosFetcher
+  );
+
+  return {
+    data,
+    isLoading,
+    isError: error,
+  };
+}
+
 
 
 interface EvolutionChain {

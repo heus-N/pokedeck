@@ -2,8 +2,8 @@
 
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
-import { usePokemonList } from '@/hooks/usePokemonList';
-import { Box, Grid, Pagination } from '@mui/material';
+import { usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
+import { Box, Grid, Pagination, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
@@ -12,20 +12,10 @@ import PokeballSvg from '../../public/utils/pokeballSvg';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
 import { motion } from 'framer-motion';
+import AutoCompleteInput from '@/components/AutoCompleteInput';
 
-const jewelColors = [
-  '#ee102eff', // Rubi
-  '#50C878', // Esmeralda
-  '#9966CC', // Ametista
-  '#0F52BA', // Safira
-  '#FFC87C'  // Topázio
-];
 
-interface StyledFilterProps {
-  $shadowColor: string;
-}
-
-const StyledContainer = styled.section<StyledFilterProps>`
+const StyledContainer = styled.section`
   margin: 0;
   height: 100%;
   width: 100%;
@@ -40,7 +30,6 @@ const StyledContainer = styled.section<StyledFilterProps>`
     position: absolute;
     width: 100%;
     height: 100%;
-    // filter: drop-shadow(0px 3px 6px ${({ $shadowColor }) => $shadowColor});
     filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.5));
     top: 0;
   }
@@ -50,7 +39,6 @@ const StyledContainer = styled.section<StyledFilterProps>`
     position: absolute;
     width: 100%;
     height: 100%;
-    // filter: drop-shadow(0px 3px 6px ${({ $shadowColor }) => $shadowColor});
     filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.5));
     top: 0;
   }
@@ -58,66 +46,6 @@ const StyledContainer = styled.section<StyledFilterProps>`
 interface StyledCardContainerProps{
   $openFilter?: boolean
 }
-
-const ClipPathButton1 = styled.span`
-  position: absolute;
-  right: -27px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 170px;
-  transition: all 1s ease;
-
-  border: 27px solid;
-  border-image: linear-gradient(180deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
-
-  clip-path: polygon(
-    50% 0%,
-    calc(100% - 15px) calc(0% + 35px),
-    calc(100% - 15px) calc(50% - 15px),
-    calc(100% - 10px) 50%,
-    calc(100% - 15px) calc(50% + 15px),
-    calc(100% - 15px) calc(100% - 35px),
-    50% 100%,
-    50% calc(50% + 15px),
-    calc(50% - 5px) 50%,
-    50% calc(50% - 15px)
-  );
-`
-
-const ClipPathButton2 = styled(ClipPathButton1)`
-  border-image: linear-gradient(180deg, #b8860b , #ffd700  , #fff8dc , #ffd700  , #b8860b ) 1;
-
-  clip-path: polygon(
-    calc(50% + 3px) calc(0% + 15px),
-    calc(100% - 18px) calc(0% + 35px),
-    calc(100% - 18px) calc(50% - 15px),
-    calc(100% - 13px) 50%,
-    calc(100% - 18px) calc(50% + 15px),
-    calc(100% - 18px) calc(100% - 35px),
-    calc(50% + 3px) calc(100% - 15px),
-    calc(50% + 3px) calc(50% + 15px),
-    calc(50% - 2px) 50%,
-    calc(50% + 3px) calc(50% - 15px)
-  );
-`
-
-const Jewel = styled.span<StyledFilterProps>`
-  position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 100%;
-  width: 12px;
-  height: 20px;
-  z-index: 2;
-  background: radial-gradient(
-    white,
-    ${({ $shadowColor }) => $shadowColor} 70%,
-    black 200%
-  );
-   
-  right: -12px;
-  top: 50%;
-  transform: translateY(-50%);
-`
 
 const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   width: 100%;
@@ -181,6 +109,7 @@ export default function Home() {
   const offset = (currentPage - 1) * 20;
 
   const { data: pokemonList, isLoading, isError, count } = usePokemonList(offset);
+  const { data: pokemonTypeList, isLoading: isTypeLoading, types } = usePokemonType();
   const selectedPokemon = pokemonList?.find(p => p.name === pokemonQuery) || null;
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
   const lastPage = count && Math.floor(count / 20) + 1
@@ -189,12 +118,20 @@ export default function Home() {
   const [ shouldDisplay, setShouldDisplay ] = useState(false)
   const isModalOpen = !!pokemonQuery;
   const [ openFilter, setOpenFilter ] = useState(false)
+  const [selectedType, setSelectedType] = useState<{ name: string; id: number } | null>(null);
+  const { data: pokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
+  const[ filteredList, setFilteredList ] = useState()
+  // console.log('pokemonTypeFilteredList', pokemonTypeFilteredList?.pokemon)
   
-const jewelColor = openFilter 
-  ? jewelColors[Math.floor(Math.random() * jewelColors.length)] 
-  : 'rgba(128, 128, 128, 0.5)';
+  const filteredPokemonList = selectedType?.id 
+    ? pokemonTypeFilteredList?.pokemon?.map(p => ({
+        name: p.pokemon.name,
+        url: p.pokemon.url,
+      }))
+    : pokemonList;
 
-  
+  console.log('filteredPokemonList', filteredPokemonList)
+
   useEffect(() => {
     if (pokemonList) {
       const timer = setTimeout(() => {
@@ -210,17 +147,21 @@ const jewelColor = openFilter
   }, []);
 
   return (
-    <StyledContainer $shadowColor={jewelColor}>
+    <StyledContainer >
       {shouldDisplay &&
-        <FilterTable onMouseEnter={() => setOpenFilter(true)} onMouseLeave={() => setOpenFilter(false)}>
-          <div className='buttonContainer' >
-            <ClipPathButton1/>
-            <div className='shadowContainer'>
-              {/* <Jewel $shadowColor={jewelColor}/> */}
-              <ClipPathButton2 />
-            </div>
-          </div>
-      </FilterTable>}
+        <FilterTable>
+          <Typography py={2} variant="h2" color="#fff">Buscar:</Typography>
+          <AutoCompleteInput
+            label="Tipo"
+            options={types}
+            onChange={(newValue) => setSelectedType(newValue)}
+            value={selectedType}
+          />
+          <AutoCompleteInput
+            label="Nivel de evolução"
+            options={[]}
+          />
+        </FilterTable>}
       {shouldDisplay &&
         <div
          style={{
@@ -251,7 +192,7 @@ const jewelColor = openFilter
             }}
           >
           <PokeballAnimation />
-          {shouldDisplay && pokemonList?.map((pokemon, index) => (
+          {shouldDisplay && filteredPokemonList?.map((pokemon, index) => (
             <StyledCardGrid 
               $shouldDisplay={shouldDisplay}
               key={pokemon?.name}
