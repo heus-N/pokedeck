@@ -4,7 +4,7 @@ import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
 import { usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
 import { Box, Grid, Pagination, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
 import PokeballAnimation from '@/components/PokeballAnimation';
@@ -13,6 +13,7 @@ import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
 import { motion } from 'framer-motion';
 import AutoCompleteInput from '@/components/AutoCompleteInput';
+import { useSearchParams } from 'next/navigation';
 
 
 const StyledContainer = styled.section`
@@ -103,14 +104,17 @@ export default function Home() {
     handlePageChange,
     handleOpenModal,
     handleCloseModal,
+    handleFilterChange,
     pokemonQuery
   } = usePokemonNavigation();
 
   const offset = (currentPage - 1) * 20;
 
+  const searchParams = useSearchParams();
+  const typeFromUrl = searchParams.get('type');
+  const hasOpenedModal = useRef(false);
   const { pokemonList, pokemonListLoading, pokemonListCount } = usePokemonList(offset);
   const { types } = usePokemonType();
-  const selectedPokemon = pokemonList?.find(p => p.name === pokemonQuery) || null;
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
   const lastPage = pokemonListCount && Math.floor(pokemonListCount / 20) + 1
   const [ flipped, setFlipped ] = useState(false);
@@ -120,7 +124,7 @@ export default function Home() {
   const [ openFilter, setOpenFilter ] = useState(false)
   const [ selectedType, setSelectedType ] = useState<{ name: string; id: number } | null>(null);
   const { pokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
-  
+
   const filteredPokemonList = selectedType?.id 
     ? pokemonTypeFilteredList?.pokemon?.map(p => ({
         name: p.pokemon.name,
@@ -128,8 +132,29 @@ export default function Home() {
       }))
     : pokemonList;
 
-  // console.log('pokemonList', pokemonList)
-  console.log('pokemonTypeFilteredList', pokemonTypeFilteredList)
+  const selectedPokemon = filteredPokemonList?.find(p => p.name === pokemonQuery) || null;
+
+  useEffect(() => {
+    if (hasOpenedModal.current) return;
+    if (!pokemonQuery || !filteredPokemonList?.length) return;
+
+    const match = filteredPokemonList.find((p) => p.name === pokemonQuery);
+    if (match) {
+      handleOpenModal(match);
+      hasOpenedModal.current = true;
+    }
+  }, [pokemonQuery, filteredPokemonList]);
+
+
+ useEffect(() => {
+    if (!typeFromUrl || types.length === 0) return;
+
+    const match = types.find(t => t.name === typeFromUrl);
+    if (match && selectedType?.name !== match.name) {
+      setSelectedType(match);
+    }
+  }, [typeFromUrl, types, selectedType]);
+
 
   useEffect(() => {
     if (pokemonList) {
@@ -153,7 +178,7 @@ export default function Home() {
           <AutoCompleteInput
             label="Tipo"
             options={types}
-            onChange={(newValue) => setSelectedType(newValue)}
+            onChange={(newValue) => {setSelectedType(newValue); handleFilterChange(newValue?.name ?? null)}}
             value={selectedType}
           />
           <AutoCompleteInput

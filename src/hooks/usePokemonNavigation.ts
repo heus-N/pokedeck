@@ -17,11 +17,29 @@ export function usePokemonNavigation() {
   }
 
   function handleOpenModal(pokemon: Pokemon) {
-    router.push(`?page=${currentPage}&pokemon=${pokemon.name}`, { scroll: false });
+    const params = new URLSearchParams(window.location.search); // preserva todos os params
+    params.set('pokemon', pokemon.name);
+
+    router.push(`?${params.toString()}`, { scroll: false });
   }
 
   function handleCloseModal() {
-    router.push(`?page=${currentPage}`, { scroll: false });
+    const params = new URLSearchParams(window.location.search);
+    params.delete('pokemon');
+
+    router.push(`?${params.toString()}`, { scroll: false });
+  }
+
+  function handleFilterChange(type: string | null) {
+    const searchParams = new URLSearchParams();
+
+    searchParams.set('page', String(currentPage));
+
+    if (type) {
+      searchParams.set('type', type);
+    }
+
+    router.push(`?${searchParams.toString()}`, { scroll: false });
   }
 
   return {
@@ -29,6 +47,7 @@ export function usePokemonNavigation() {
     handlePageChange,
     handleOpenModal,
     handleCloseModal,
+    handleFilterChange,
     pokemonQuery // Precisamos disso para buscar o Pokémon da URL depois
   };
 }
