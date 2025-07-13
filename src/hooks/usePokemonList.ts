@@ -25,8 +25,8 @@ export function usePokemonById(id : string) {
   const { data, error, isLoading } = useSWR<Pokemon>(`/pokemon/${id}`, axiosFetcher);
 
   return {
-    data: data,
-    isLoading,
+    findPokemonById: data,
+    isLoadingPokemon: isLoading,
     isError: error,
   };
 }
@@ -45,8 +45,8 @@ export function useMultiplePokemonByIds(ids: string[]) {
   );
 
   return {
-    data,
-    isLoading,
+    evolutionPokemons: data,
+    evolutionisLoading: isLoading,
     isError: error,
   };
 }
@@ -137,7 +137,7 @@ export function usePokemonSpecie(species: any | undefined) {
   const { data, error, isLoading } = useSWR<PokemonSpecieResponse>(shouldFetch ? `/pokemon-species/${cleanId}` : null, axiosFetcher);
 
   return {
-    data,
+    pokemonSpecie: data,
     isLoading,
     isError: error,
   };
@@ -166,7 +166,7 @@ export function usePokemonEvolutionChain(id: string) {
   const { data, error, isLoading } = useSWR<PokemonEvolutionChainResponse>(`/evolution-chain/${id}`, axiosFetcher);
 
   return {
-    data,
+    pokemonEvolutionChain: data,
     isLoading,
     isError: error,
   };
@@ -186,8 +186,8 @@ export function usePokemonAbility(ids: string[]) {
   );
 
   return {
-    data,
-    isLoading,
+    pokemonAbility: data,
+    loadingPokemonAbility: isLoading,
     isError: error,
   };
 }

@@ -609,18 +609,18 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const url = pokemon?.url
   const pokemonId = url?.split("pokemon/")[1] ?? '';
   const cleanPokemonId = pokemonId.replace('/', '')
-  const { data, isLoading } = usePokemonById(cleanPokemonId);
+  const { findPokemonById, isLoadingPokemon } = usePokemonById(cleanPokemonId);
 
-  const { data: pokemonSpecie } = usePokemonSpecie(data?.species);
-  const primaryType = data?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
+  const { pokemonSpecie } = usePokemonSpecie(findPokemonById?.species);
+  const primaryType = findPokemonById?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const evolutionChainUrl = pokemonSpecie?.evolution_chain?.url;
   const evolutionChainId = evolutionChainUrl?.split('evolution-chain/')[1];
-  const { data: pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
-  const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, data?.name ?? '') || 0;
+  const { pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
+  const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, findPokemonById?.name ?? '') || 0;
   const evolutionIds = getEvolutions(pokemonEvolutionChain?.chain)
-  const abilityIds = getAbilitiesIds(data?.abilities)
-  const { data: evolutionPokemons, isLoading: evolutionisLoading } = useMultiplePokemonByIds(evolutionIds);
-  const { data: pokemonAbility, isLoading: loadingPokemonAbility} = usePokemonAbility(abilityIds)
+  const abilityIds = getAbilitiesIds(findPokemonById?.abilities)
+  const { evolutionPokemons, evolutionisLoading } = useMultiplePokemonByIds(evolutionIds);
+  const { pokemonAbility, loadingPokemonAbility} = usePokemonAbility(abilityIds)
 
   const [ abilitiesHover, setAbilitiesHover ] = useState(false)
   const [ evolutionHover, setEvolutionHover ] = useState(false)
@@ -677,7 +677,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
             <Typography variant='h2'>
               Nenhum Pokémon selecionado.
             </Typography>
-          ) : isLoading ? (
+          ) : isLoadingPokemon ? (
             <Typography variant='h2'>
               Carregando...
             </Typography>
@@ -716,12 +716,12 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     <div style={{display: 'flex'}}>
-                      {data?.types?.map(t => (
+                      {findPokemonById?.types?.map(t => (
                         <TypeContainer $type={t.type.name} key={t.type.name}>{t.type.name}</TypeContainer>
                       ))}
                     </div>
                     <div style={{textAlign: 'right'}}>
-                      <Typography>weight:<span className='stat'>{`${kgToLb(data?.weight ? (data?.weight) / 10 : 0)} lbs`}</span></Typography>
+                      <Typography>weight:<span className='stat'>{`${kgToLb(findPokemonById?.weight ? (findPokemonById?.weight) / 10 : 0)} lbs`}</span></Typography>
                       {pokemonSpecie?.habitat?.name && 
                         <Typography>
                           {`habitat: ${pokemonSpecie?.habitat?.name}`}
@@ -733,8 +733,8 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                 <ImageContainer $type={primaryType}>
                   <div className='container'>
                     <img ref={bgRef} className="background" src={`/utils/backgrounds/${primaryType}.png/`}/>
-                    {data?.sprites?.front_default 
-                      ? <img className="pokemon" src={data?.sprites?.front_default} alt={`image_${pokemon.name}`} width="100%" />
+                    {findPokemonById?.sprites?.front_default 
+                      ? <img className="pokemon" src={findPokemonById?.sprites?.front_default} alt={`image_${pokemon.name}`} width="100%" />
                       : <IconButton
                           component="a"
                           href={`https://www.google.com/search?tbm=isch&q=pokemon+${pokemon.name}`}
@@ -756,15 +756,15 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                 </ImageContainer>
                 <StatsContainer>
                   <div className='stats1'>
-                    <Typography>hp: <span className='stat'>{data?.stats?.find(s => s.stat.name === 'hp')?.base_stat}</span></Typography>
-                    <Typography>attack: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'attack')?.base_stat} </Typography>
-                    <Typography>defense: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'defense')?.base_stat} </Typography>
+                    <Typography>hp: <span className='stat'>{findPokemonById?.stats?.find(s => s.stat.name === 'hp')?.base_stat}</span></Typography>
+                    <Typography>attack: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'attack')?.base_stat} </Typography>
+                    <Typography>defense: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'defense')?.base_stat} </Typography>
                   </div>
                   <hr/>
                   <div className='stats2'>
-                    <Typography>special-attack: <span className='stat'> {data?.stats?.find(s => s.stat.name === 'special-attack')?.base_stat} </span> </Typography>
-                    <Typography>special-defense: <span className='stat'> {data?.stats?.find(s => s.stat.name === 'special-defense')?.base_stat} </span> </Typography>
-                    <Typography>speed: <span className='stat'></span> {data?.stats?.find(s => s.stat.name === 'speed')?.base_stat} </Typography>
+                    <Typography>special-attack: <span className='stat'> {findPokemonById?.stats?.find(s => s.stat.name === 'special-attack')?.base_stat} </span> </Typography>
+                    <Typography>special-defense: <span className='stat'> {findPokemonById?.stats?.find(s => s.stat.name === 'special-defense')?.base_stat} </span> </Typography>
+                    <Typography>speed: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'speed')?.base_stat} </Typography>
                   </div>
                 </StatsContainer>
               </LeftModalContainer>
