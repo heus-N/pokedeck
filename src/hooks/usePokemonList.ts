@@ -109,11 +109,10 @@ export function usePokemonTypeById(id: number | null) {
 
   return {
     pokemonTypeFilteredList: data,
-    isLoading,
+    isLoadingPokemonTypeFilteredList: isLoading,
     isError: error,
   };
 }
-
 
 
 interface EvolutionChain {

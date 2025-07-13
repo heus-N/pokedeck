@@ -4,7 +4,7 @@ import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
 import { usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
 import { Box, Grid, Pagination, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
 import PokeballAnimation from '@/components/PokeballAnimation';
@@ -108,7 +108,8 @@ export default function Home() {
     pokemonQuery
   } = usePokemonNavigation();
 
-  const offset = (currentPage - 1) * 20;
+  const ITEMS_PER_PAGE = 20;
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   const searchParams = useSearchParams();
   const typeFromUrl = searchParams.get('type');
@@ -116,14 +117,18 @@ export default function Home() {
   const { pokemonList, pokemonListLoading, pokemonListCount } = usePokemonList(offset);
   const { types } = usePokemonType();
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
-  const lastPage = pokemonListCount && Math.floor(pokemonListCount / 20) + 1
   const [ flipped, setFlipped ] = useState(false);
   const [ flipDirection, setFlipDirection ] = useState<'forward' | 'backward'>('forward');
   const [ shouldDisplay, setShouldDisplay ] = useState(false)
   const isModalOpen = !!pokemonQuery;
   const [ openFilter, setOpenFilter ] = useState(false)
-  const [ selectedType, setSelectedType ] = useState<{ name: string; id: number } | null>(null);
-  const { pokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
+  const selectedType = React.useMemo(() => {
+    if (!typeFromUrl || types.length === 0) return null;
+    return types.find(t => t.name === typeFromUrl) ?? null;
+  }, [typeFromUrl, types]);
+  
+  const { pokemonTypeFilteredList, isLoadingPokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
+
 
   const filteredPokemonList = selectedType?.id 
     ? pokemonTypeFilteredList?.pokemon?.map(p => ({
@@ -131,6 +136,17 @@ export default function Home() {
         url: p.pokemon.url,
       }))
     : pokemonList;
+
+  const paginatedList = React.useMemo(() => {
+    if(selectedType?.id && filteredPokemonList && !isLoadingPokemonTypeFilteredList){
+      return filteredPokemonList.slice(offset, offset + ITEMS_PER_PAGE);
+    }
+    return filteredPokemonList
+  }, [filteredPokemonList, offset, selectedType])
+
+  const lastPage = selectedType?.id 
+    ? Math.ceil((filteredPokemonList?.length ?? 0) / ITEMS_PER_PAGE)
+    : pokemonListCount && Math.ceil(pokemonListCount / ITEMS_PER_PAGE);
 
   const selectedPokemon = filteredPokemonList?.find(p => p.name === pokemonQuery) || null;
 
@@ -146,14 +162,14 @@ export default function Home() {
   }, [pokemonQuery, filteredPokemonList]);
 
 
- useEffect(() => {
-    if (!typeFromUrl || types.length === 0) return;
+//  useEffect(() => {
+//     if (!typeFromUrl || types.length === 0) return;
 
-    const match = types.find(t => t.name === typeFromUrl);
-    if (match && selectedType?.name !== match.name) {
-      setSelectedType(match);
-    }
-  }, [typeFromUrl, types, selectedType]);
+//     const match = types.find(t => t.name === typeFromUrl);
+//     if (match && selectedType?.name !== match.name) {
+//       setSelectedType(match);
+//     }
+//   }, [typeFromUrl, types, selectedType]);
 
 
   useEffect(() => {
@@ -170,6 +186,8 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+  console.log('selectedType', selectedType)
+
   return (
     <StyledContainer >
       {shouldDisplay &&
@@ -178,13 +196,16 @@ export default function Home() {
           <AutoCompleteInput
             label="Tipo"
             options={types}
-            onChange={(newValue) => {setSelectedType(newValue); handleFilterChange(newValue?.name ?? null)}}
+            onChange={(newValue) => {
+              handlePageChange(1); // reseta a página
+              handleFilterChange(newValue?.name ?? null); // atualiza a URL
+            }}
             value={selectedType}
           />
-          <AutoCompleteInput
+          {/* <AutoCompleteInput
             label="Nivel de evolução"
             options={[]}
-          />
+          /> */}
         </FilterTable>}
       {shouldDisplay &&
         <div
@@ -216,7 +237,7 @@ export default function Home() {
             }}
           >
           <PokeballAnimation />
-          {shouldDisplay && filteredPokemonList?.map((pokemon, index) => (
+          {shouldDisplay && paginatedList?.map((pokemon, index) => (
             <StyledCardGrid 
               $shouldDisplay={shouldDisplay}
               key={pokemon?.name}
