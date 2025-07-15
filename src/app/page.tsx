@@ -3,7 +3,7 @@
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
 import { usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
-import { Box, Grid, Pagination, Typography } from '@mui/material';
+import { Box, Grid, Pagination, Typography, OutlinedInput, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
@@ -11,7 +11,6 @@ import PokeballAnimation from '@/components/PokeballAnimation';
 import PokeballSvg from '../../public/utils/pokeballSvg';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
-import { motion } from 'framer-motion';
 import AutoCompleteInput from '@/components/AutoCompleteInput';
 import { useSearchParams } from 'next/navigation';
 
@@ -186,22 +185,23 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  console.log('selectedType', selectedType)
 
   return (
     <StyledContainer >
       {shouldDisplay &&
         <FilterTable>
           <Typography py={2} variant="h2" color="#fff">Buscar:</Typography>
+          <TextField sx={{marginBottom: '1rem'}} id="outlined-basic" label="Nome" variant="outlined" fullWidth/>
           <AutoCompleteInput
             label="Tipo"
-            options={types}
+            options={types.filter(type => type.name !== 'stellar' && type.name !== 'unknown')}
             onChange={(newValue) => {
               handlePageChange(1); // reseta a página
               handleFilterChange(newValue?.name ?? null); // atualiza a URL
             }}
             value={selectedType}
           />
+
           {/* <AutoCompleteInput
             label="Nivel de evolução"
             options={[]}
