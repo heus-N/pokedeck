@@ -22,6 +22,17 @@ export function usePokemonList(offset : number) {
   };
 }
 
+export function usePokemonFilterByName() {
+  const { data, error, isLoading } = useSWR<PokemonListResponse>(`/pokemon?limit=100000&offset=0`, axiosFetcher);
+
+  return {
+    pokemonListByName: data?.results || [],
+    pokemonListByNameLoading: isLoading,
+    pokemonListByNameError: error,
+    pokemonListByNameCount: data?.count,
+  };
+}
+
 export function usePokemonById(id : string) {
   const { data, error, isLoading } = useSWR<Pokemon>(`/pokemon/${id}`, axiosFetcher);
 

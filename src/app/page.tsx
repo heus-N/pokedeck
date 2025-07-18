@@ -2,7 +2,7 @@
 
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
-import { usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
+import { usePokemonFilterByName, usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
 import { Box, Grid, Pagination, Typography, OutlinedInput, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -130,9 +130,10 @@ export default function Home() {
     if (!typeFromUrl || types.length === 0) return null;
     return types.find(t => t.name === typeFromUrl) ?? null;
   }, [typeFromUrl, types]);
-  
-  const { pokemonTypeFilteredList, isLoadingPokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
 
+  const { pokemonTypeFilteredList, isLoadingPokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
+  const { pokemonListByName, pokemonListByNameLoading } = usePokemonFilterByName();
+  const [ pokemonSearch, setPokemonSearch ] = useState('')
 
   const filteredPokemonList = selectedType?.id 
     ? pokemonTypeFilteredList?.pokemon?.map(p => ({
@@ -143,10 +144,19 @@ export default function Home() {
 
   const paginatedList = React.useMemo(() => {
     if(selectedType?.id && filteredPokemonList && !isLoadingPokemonTypeFilteredList){
+      if(pokemonSearch?.length){
+        return filteredPokemonList.filter((pokemon) => pokemon.name.toLowerCase().includes(pokemonSearch.toLowerCase()));
+      }
       return filteredPokemonList.slice(offset, offset + ITEMS_PER_PAGE);
     }
+    if(pokemonSearch?.length && pokemonListByName?.length && !pokemonListByNameLoading){
+      const filtered = pokemonListByName.filter((pokemon) => pokemon.name.toLowerCase().includes(pokemonSearch.toLowerCase()))
+      if(filtered.length <= 20){
+        return filtered
+      }
+    }
     return filteredPokemonList
-  }, [filteredPokemonList, offset, selectedType])
+  }, [filteredPokemonList, offset, selectedType, pokemonSearch])
 
   const lastPage = selectedType?.id 
     ? Math.ceil((filteredPokemonList?.length ?? 0) / ITEMS_PER_PAGE)
@@ -165,17 +175,6 @@ export default function Home() {
     }
   }, [pokemonQuery, filteredPokemonList]);
 
-
-//  useEffect(() => {
-//     if (!typeFromUrl || types.length === 0) return;
-
-//     const match = types.find(t => t.name === typeFromUrl);
-//     if (match && selectedType?.name !== match.name) {
-//       setSelectedType(match);
-//     }
-//   }, [typeFromUrl, types, selectedType]);
-
-
   useEffect(() => {
     if (pokemonList) {
       const timer = setTimeout(() => {
@@ -189,13 +188,13 @@ export default function Home() {
     const timer = setTimeout(() => setShouldDisplay(true), 4000);
     return () => clearTimeout(timer);
   }, []);
-
+  
   return (
     <StyledContainer >
       {shouldDisplay &&
         <FilterTable>
           <Typography py={2} variant="h2" color="#fff">Buscar:</Typography>
-          <TextField sx={{marginBottom: '1rem'}} id="outlined-basic" label="Nome" variant="outlined" fullWidth/>
+          <TextField value={pokemonSearch} onChange={(e) => setPokemonSearch(e.target.value)} sx={{marginBottom: '1rem'}} id="outlined-basic" label="Nome" variant="outlined" fullWidth/>
           <AutoCompleteInput
             label="Tipo"
             options={types.filter((type: OptionType) => type.name !== 'stellar' && type.name !== 'unknown')}
