@@ -13,6 +13,7 @@ import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
 import AutoCompleteInput from '@/components/AutoCompleteInput';
 import { useSearchParams } from 'next/navigation';
+import { PokemonType } from '@/types/pokemon';
 
 
 const StyledContainer = styled.section`
@@ -96,6 +97,10 @@ const StyledFooter = styled(Box)`
   }
 `;
 
+interface OptionType {
+  name: string;
+  id: number;
+}
 
 export default function Home() {
   const {
@@ -185,7 +190,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-
+console.log('selectedType', selectedType)
   return (
     <StyledContainer >
       {shouldDisplay &&
@@ -194,7 +199,7 @@ export default function Home() {
           <TextField sx={{marginBottom: '1rem'}} id="outlined-basic" label="Nome" variant="outlined" fullWidth/>
           <AutoCompleteInput
             label="Tipo"
-            options={types.filter(type => type.name !== 'stellar' && type.name !== 'unknown')}
+            options={types.filter((type: OptionType) => type.name !== 'stellar' && type.name !== 'unknown')}
             onChange={(newValue) => {
               handlePageChange(1); // reseta a página
               handleFilterChange(newValue?.name ?? null); // atualiza a URL

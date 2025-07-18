@@ -2,7 +2,7 @@ import styled from "styled-components"
 import TextField from '@mui/material/TextField';
 import { Autocomplete, Typography } from "@mui/material";
 import AutoCompleteInput from "./AutoCompleteInput";
-
+import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 
 const jewelColors = [
   '#ee102eff', // Rubi
@@ -40,6 +40,7 @@ const StyledFilter = styled.nav`
         width: 400px;
         max-width: 80vw;
     }
+
 `
 
 const ClipPathButton1 = styled.span`
@@ -98,6 +99,7 @@ interface FilterTableProps {
 export default function FilterTable({children}: FilterTableProps){
     return(
         <StyledFilter>
+            <CatchingPokemonIcon fontSize="medium" className="pokeballButton" />
             <div className='buttonContainer' >
                 <ClipPathButton1/>
                 <div className='shadowContainer'>

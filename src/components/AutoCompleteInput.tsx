@@ -32,22 +32,26 @@ export default function AutoCompleteInput({
       renderInput={(params) => (
         <TextField {...params} label={label} placeholder={placeholder} />
       )}
-      renderOption={(props, option) => (
-        <Box
-          component="li"
-          {...props}
-          sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: 1 }}
-        >
-          <Box sx={{flexGrow: 1, textTransform: 'capitalize'}}>{option.name}</Box>
-          <img
-            src={`/utils/types/${option.name.toLowerCase()}.png`}
-            alt={option.name}
-            width={24}
-            height={24}
-            style={{ objectFit: 'contain' }}
-          />
-        </Box>
-      )}
+      renderOption={(props, option) => {
+        const { key, ...rest } = props;
+        return(
+          <Box
+            key={key}
+            component="li"
+            {...rest}
+            sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: 1 }}
+          >
+            <Box sx={{flexGrow: 1, textTransform: 'capitalize'}}>{option.name}</Box>
+            <img
+              src={`/utils/types/${option.name.toLowerCase()}.png`}
+              alt={option.name}
+              width={24}
+              height={24}
+              style={{ objectFit: 'contain' }}
+            />
+          </Box>
+        )
+      }}
     />
   );
 }
