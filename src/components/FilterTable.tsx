@@ -1,8 +1,9 @@
 import styled from "styled-components"
 import TextField from '@mui/material/TextField';
-import { Autocomplete, Typography } from "@mui/material";
+import { Autocomplete, Collapse, Typography } from "@mui/material";
 import AutoCompleteInput from "./AutoCompleteInput";
 import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
+import { useState } from "react";
 
 const jewelColors = [
   '#ee102eff', // Rubi
@@ -39,8 +40,7 @@ const StyledFilter = styled.nav`
     &:hover{
         width: 400px;
         max-width: 80vw;
-    }
-
+    };
 `
 
 const ClipPathButton1 = styled.span`
@@ -69,7 +69,7 @@ const ClipPathButton1 = styled.span`
 `
 
 const ClipPathButton2 = styled(ClipPathButton1)`
-  border-image: linear-gradient(180deg, #b8860b , #ffd700  , #fff8dc , #ffd700  , #b8860b ) 1;
+  border-image: linear-gradient(180deg, #2b29a765 , #00ccff41  , #ffffffff , #00ccff41  , #2b29a765 ) 1;
 
   clip-path: polygon(
     calc(50% + 3px) calc(0% + 15px),
@@ -97,9 +97,11 @@ interface FilterTableProps {
 }
 
 export default function FilterTable({children}: FilterTableProps){
+
+  const [open, setOpen] = useState(false)
+
     return(
-        <StyledFilter>
-            <CatchingPokemonIcon fontSize="medium" className="pokeballButton" />
+        <StyledFilter onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
             <div className='buttonContainer' >
                 <ClipPathButton1/>
                 <div className='shadowContainer'>
@@ -107,7 +109,9 @@ export default function FilterTable({children}: FilterTableProps){
                 </div>
             </div>
             <FiltersContainer>
+              <Collapse in={open} timeout="auto" unmountOnExit>
                 {children}
+              </Collapse>
             </FiltersContainer>
         </StyledFilter>
     )

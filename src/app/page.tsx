@@ -190,7 +190,6 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-console.log('selectedType', selectedType)
   return (
     <StyledContainer >
       {shouldDisplay &&
