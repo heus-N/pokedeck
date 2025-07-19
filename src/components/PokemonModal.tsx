@@ -3,14 +3,10 @@ import { useMultiplePokemonByIds, usePokemonAbility, usePokemonById, usePokemonE
 import { Pokemon } from '@/types/pokemon';
 import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/material';
 import styled from 'styled-components';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { kgToLb } from '../../public/utils/helpers/unitConverter';
-import { getEvolutions } from '../../public/utils/helpers/getEvolutions';
-import { useEffect, useRef, useState } from 'react';
-import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
+import { useRef, useState } from 'react';
 import { getMinLevelToEvolve } from '../../public/utils/helpers/getLevelToEvolve';
 import ArrowDown from './ArrowDown';
-import { getAbilitiesIds } from '../../public/utils/helpers/getAbilities';
 import { gsap } from 'gsap';
 
 interface DialogProps{

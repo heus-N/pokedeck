@@ -7,7 +7,6 @@ import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie } from "@/ho
 import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useEffect } from "react";
 import getEvolutionLevel from "../../public/utils/helpers/usePokemonEvolLevel";
 
 const fadeInFromRight = keyframes`

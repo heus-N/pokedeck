@@ -57,8 +57,13 @@ const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   overflow: hidden;
   transition: all 0.3s ease;
 
-  .pageNotFound{
+  .pokemonNotFound{
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
     height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -66,6 +71,7 @@ const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
 
     img{
       width: 200px;
+      filter: drop-shadow(0px 0px 100px rgba(76, 175, 80, 1));
 
       @media (min-width: 600px){
         padding: 1rem 2rem;
@@ -77,9 +83,6 @@ const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
       };
     }
   }
-
-  opacity: ${({$openFilter}) => $openFilter ? 0.75 : 1};
-  scale: ${({$openFilter}) => $openFilter ? 0.99 : 1}
 `
 
 interface StyledCardGridProps {
@@ -144,8 +147,8 @@ export default function Home() {
   const [ flipped, setFlipped ] = useState(false);
   const [ flipDirection, setFlipDirection ] = useState<'forward' | 'backward'>('forward');
   const [ shouldDisplay, setShouldDisplay ] = useState(false)
+  const [ mounted, setMounted ] = useState(false);
   const isModalOpen = !!pokemonQuery;
-  const [ openFilter, setOpenFilter ] = useState(false)
   const selectedType = React.useMemo(() => {
     if (!typeFromUrl || types.length === 0) return null;
     return types.find(t => t.name === typeFromUrl) ?? null;
@@ -243,10 +246,15 @@ export default function Home() {
   }, [pokemonList]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShouldDisplay(true), 4000);
+    setMounted(true);
+    const timer = setTimeout(() => {
+      setShouldDisplay(true)
+    }, 4500);
     return () => clearTimeout(timer);
   }, []);
-  
+
+  if (!mounted) return null;
+
   return (
     <StyledContainer >
       {shouldDisplay &&
@@ -291,7 +299,7 @@ export default function Home() {
         </div>
       }
       <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />
-        <StyledCardContainer $openFilter={openFilter}>
+        <StyledCardContainer>
           <Grid 
             container 
             spacing={{ xs: 2, md: 3 }} 
@@ -327,13 +335,13 @@ export default function Home() {
                   />
               </StyledCardGrid>
             )) :
-            !pokemonListLoading &&
-            <Fade in={!pokemonListLoading}>
-              <div className='pageNotFound'>
-                <Typography color='#fff' variant='h1'>Pokemon não encontrado!</Typography>
-                <img src="/utils/backgrounds/pokemonNotFound.png/" alt='Página não encontrada'/>
-              </div>
-            </Fade>}
+            (shouldDisplay &&
+              <Fade in={mounted}>
+                <div className='pokemonNotFound'>
+                  <Typography color='#fff' variant='h1'>Pokemon não encontrado!</Typography>
+                  <img src="/utils/backgrounds/pokemonNotFound.png/" alt='Página não encontrada'/>
+                </div>
+              </Fade>)}
           </Grid>
         </StyledCardContainer>
       {shouldDisplay && 

@@ -1,5 +1,5 @@
 interface PokeballProps {
-    shouldDisplay: boolean
+    shouldDisplay?: boolean
 }
 
 export default function PokeballSvg({shouldDisplay} : PokeballProps){
