@@ -3,7 +3,7 @@
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
 import { usePokemonFilterByName, usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
-import { Box, Grid, Pagination, Typography, OutlinedInput, TextField } from '@mui/material';
+import { Box, Grid, Pagination, Typography, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
@@ -13,7 +13,6 @@ import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
 import AutoCompleteInput from '@/components/AutoCompleteInput';
 import { useSearchParams } from 'next/navigation';
-import { PokemonType } from '@/types/pokemon';
 
 
 const StyledContainer = styled.section`
@@ -57,6 +56,27 @@ const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   justify-content: center;
   overflow: hidden;
   transition: all 0.3s ease;
+
+  .pageNotFound{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    img{
+      width: 200px;
+
+      @media (min-width: 600px){
+        padding: 1rem 2rem;
+        width: 300px;
+      };
+
+      @media (min-width: 960px){
+        width: 400px;
+      };
+    }
+  }
 
   opacity: ${({$openFilter}) => $openFilter ? 0.75 : 1};
   scale: ${({$openFilter}) => $openFilter ? 0.99 : 1}
@@ -232,7 +252,16 @@ export default function Home() {
       {shouldDisplay &&
         <FilterTable>
           <Typography py={2} variant="h2" color="#fff">Buscar:</Typography>
-          <TextField value={pokemonSearch} onChange={(e) => setPokemonSearch(e.target.value)} sx={{marginBottom: '1rem'}} id="outlined-basic" label="Nome" variant="outlined" fullWidth/>
+          <TextField 
+            value={pokemonSearch} 
+            onChange={(e) => setPokemonSearch(e.target.value)} 
+            sx={{marginBottom: '1rem'}} 
+            id="outlined-basic" 
+            label="Nome" 
+            variant="outlined" 
+            fullWidth
+            autoComplete='off'
+            />
           <AutoCompleteInput
             label="Tipo"
             options={types.filter((type: OptionType) => type.name !== 'stellar' && type.name !== 'unknown')}
@@ -278,25 +307,33 @@ export default function Home() {
             }}
           >
           <PokeballAnimation />
-          {shouldDisplay && paginatedList?.map((pokemon, index) => (
-            <StyledCardGrid 
-              $shouldDisplay={shouldDisplay}
-              key={pokemon?.name}
-              className="poke-card"
-              $isHovered={hoveredIndex === null || hoveredIndex === index}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}>
-                <PokemonCard
-                  page={currentPage}
-                  index={index}
-                  flipped={flipped}
-                  url={pokemon?.url}
-                  pokemon={pokemon}
-                  onClick={() => handleOpenModal(pokemon)}
-                  flipDirection={flipDirection}
-                />
-            </StyledCardGrid>
-          ))}
+          {shouldDisplay && paginatedList?.length 
+            ? paginatedList?.map((pokemon, index) => (
+              <StyledCardGrid 
+                $shouldDisplay={shouldDisplay}
+                key={pokemon?.name}
+                className="poke-card"
+                $isHovered={hoveredIndex === null || hoveredIndex === index}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}>
+                  <PokemonCard
+                    page={currentPage}
+                    index={index}
+                    flipped={flipped}
+                    url={pokemon?.url}
+                    pokemon={pokemon}
+                    onClick={() => handleOpenModal(pokemon)}
+                    flipDirection={flipDirection}
+                  />
+              </StyledCardGrid>
+            )) :
+            !pokemonListLoading &&
+            <Fade in={!pokemonListLoading}>
+              <div className='pageNotFound'>
+                <Typography color='#fff' variant='h1'>Pokemon não encontrado!</Typography>
+                <img src="/utils/backgrounds/pokemonNotFound.png/" alt='Página não encontrada'/>
+              </div>
+            </Fade>}
           </Grid>
         </StyledCardContainer>
       {shouldDisplay && 
