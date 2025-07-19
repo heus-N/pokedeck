@@ -142,27 +142,65 @@ export default function Home() {
       }))
     : pokemonList;
 
+  const hasTypeFilter = !!selectedType?.id;
+  const hasNameFilter = !!pokemonSearch?.length;
+
+  const filteredListForPagination = React.useMemo(() => {
+    if (!hasTypeFilter && !hasNameFilter) {
+      return pokemonList;
+    }
+
+    let baseList = hasTypeFilter ? filteredPokemonList : pokemonListByName;
+
+    if (hasNameFilter && pokemonListByName?.length && !pokemonListByNameLoading) {
+      const nameFiltered = pokemonListByName.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(pokemonSearch.toLowerCase())
+      );
+
+      if (hasTypeFilter) {
+        const nameSet = new Set(nameFiltered.map(p => p.name));
+        return filteredPokemonList?.filter(p => nameSet.has(p.name));
+      }
+
+      return nameFiltered;
+    }
+
+    return baseList;
+  }, [
+    pokemonList,
+    filteredPokemonList,
+    pokemonListByName,
+    pokemonListByNameLoading,
+    selectedType,
+    pokemonSearch
+  ]);
+
   const paginatedList = React.useMemo(() => {
-    if(selectedType?.id && filteredPokemonList && !isLoadingPokemonTypeFilteredList){
-      if(pokemonSearch?.length){
-        return filteredPokemonList.filter((pokemon) => pokemon.name.toLowerCase().includes(pokemonSearch.toLowerCase()));
-      }
-      return filteredPokemonList.slice(offset, offset + ITEMS_PER_PAGE);
+    // Filtro por nome com poucos resultados
+    if (filteredListForPagination !== undefined && hasNameFilter && filteredListForPagination?.length <= 20) {
+      return filteredListForPagination;
     }
-    if(pokemonSearch?.length && pokemonListByName?.length && !pokemonListByNameLoading){
-      const filtered = pokemonListByName.filter((pokemon) => pokemon.name.toLowerCase().includes(pokemonSearch.toLowerCase()))
-      if(filtered.length <= 20){
-        return filtered
-      }
+
+    if (!hasNameFilter && !hasTypeFilter) {
+      return filteredListForPagination;
     }
-    return filteredPokemonList
-  }, [filteredPokemonList, offset, selectedType, pokemonSearch])
 
-  const lastPage = selectedType?.id 
-    ? Math.ceil((filteredPokemonList?.length ?? 0) / ITEMS_PER_PAGE)
-    : pokemonListCount && Math.ceil(pokemonListCount / ITEMS_PER_PAGE);
+    return filteredListForPagination?.slice(offset, offset + ITEMS_PER_PAGE);
+  }, [filteredListForPagination, offset, hasNameFilter, hasTypeFilter]);
 
-  const selectedPokemon = filteredPokemonList?.find(p => p.name === pokemonQuery) || null;
+  const lastPage = React.useMemo(() => {
+    if (filteredListForPagination !== undefined && hasNameFilter && filteredListForPagination?.length <= 20) {
+      return 1;
+    }
+
+    if (hasTypeFilter || hasNameFilter) {
+      return Math.ceil((filteredListForPagination?.length ?? 0) / ITEMS_PER_PAGE);
+    }
+
+    return pokemonListCount ? Math.ceil(pokemonListCount / ITEMS_PER_PAGE) : 1;
+  }, [filteredListForPagination, hasNameFilter, hasTypeFilter, pokemonListCount]);
+
+  const selectedPokemon = paginatedList?.find(p => p.name === pokemonQuery) || null
 
   useEffect(() => {
     if (hasOpenedModal.current) return;
