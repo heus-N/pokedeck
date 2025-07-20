@@ -3,6 +3,7 @@
 import { Typography } from "@mui/material";
 import AutoCompleteInput, { OptionType } from "./AutoCompleteInput";
 import { useTranslation } from "react-i18next";
+import Tip from "./Tip";
 
 const options = [
   { id: 1, name: 'Português', locale: 'pt' },
@@ -11,7 +12,7 @@ const options = [
 
 export default function SelectLanguage() {
     const { i18n } = useTranslation();
-
+    const { t } = useTranslation('common');
     const currentLocale = i18n.language || 'pt';
     const currentOption = options.find(opt => opt.locale === currentLocale) ?? options[0];
 
@@ -24,14 +25,19 @@ export default function SelectLanguage() {
 
     return (
         <>
-            <Typography py={2} variant="h2" color="#fff">Idioma:</Typography>
-            <AutoCompleteInput
-                iconPath="flags"
-                label="Idioma"
-                options={options}
-                value={currentOption}
-                onChange={handleChange}
-            />
+            <div>
+                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                    <Typography py={2} variant="h2" color="#fff">{t('filter.language')}</Typography>
+                    <Tip />
+                </div>
+                <AutoCompleteInput
+                    iconPath="flags"
+                    label={t('filter.language')}
+                    options={options}
+                    value={currentOption}
+                    onChange={handleChange}
+                />
+            </div>
         </>
     );
 }

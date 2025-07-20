@@ -266,13 +266,13 @@ export default function Home() {
       {shouldDisplay &&
         <FilterTable>
           <SelectLanguage />
-          <Typography py={2} variant="h2" color="#fff">Buscar:</Typography>
+          <Typography py={2} variant="h2" color="#fff">{t('filter.search')}</Typography>
           <TextField 
             value={pokemonSearch} 
             onChange={(e) => setPokemonSearch(e.target.value)}
             sx={{marginBottom: '1rem'}} 
             id="outlined-basic" 
-            label={t('name')}
+            label={t('filter.name')}
             variant="outlined" 
             fullWidth
             autoComplete='off'
@@ -280,7 +280,7 @@ export default function Home() {
           />
           <AutoCompleteInput
             iconPath="types"
-            label="Tipo"
+            label={t('filter.type')}
             options={types.filter((type: OptionType) => type.name !== 'stellar' && type.name !== 'unknown')}
             onChange={(newValue) => {
               handlePageChange(1); // reseta a página

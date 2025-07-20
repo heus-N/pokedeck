@@ -1,5 +1,9 @@
 {
   "filter":{
-    "language": "Idioma"
+    "language": "Idioma",
+    "tip": "Nem todos os conteúdos são traduzidos, pois alguns vêm diretamente da API.",
+    "search": "Buscar",
+    "name": "Nome",
+    "type": "Tipo"
   }
 }

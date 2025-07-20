@@ -1,3 +1,9 @@
 {
-  
+  "filter":{
+    "language": "Language",
+    "tip": "Not all content is translated, as some comes directly from the API.",
+    "search": "Search",
+    "name": "Name",
+    "type": "Type"
+  }
 }

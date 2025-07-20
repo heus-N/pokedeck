@@ -89,7 +89,6 @@ const ClipPathButton2 = styled(ClipPathButton1)`
 `
 
 const FiltersContainer = styled.div`
-  border: 1px solid blue;
   z-index: 100;
   padding: 1rem;
   width: 90%;
