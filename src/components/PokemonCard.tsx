@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import getEvolutionLevel from "../../public/utils/helpers/usePokemonEvolLevel";
+import { useTranslation } from "react-i18next";
 
 const fadeInFromRight = keyframes`
   from {
@@ -321,6 +322,7 @@ interface Props {
 
 
 export default function PokemonCard({ pokemon, onClick, className, url, flipped, flipDirection, index, page }: Props) {
+  const { t } = useTranslation('common');
   const pokemonId = url.split("pokemon/")[1];
   const { findPokemonById, isLoadingPokemon } = usePokemonById(pokemonId);
   const { evolutionChainId } = usePokemonSpecie(findPokemonById?.species);
@@ -342,7 +344,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
           <FrontFace $type={primaryType} className="card">
             {!isLoadingPokemon && (
               <>
-                <Tooltip title="evolution level">
+                <Tooltip title={t('pokemonCard.evolutionLevel')}>
                   <EvolutionLevelContainer>
                     <img src={`/utils/evolution_level/evolution_level_${evolutionLevel}.png`} alt="evolution level"/>
                   </EvolutionLevelContainer>
@@ -356,7 +358,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
                     {findPokemonById?.sprites?.front_default 
                       ? <img className="pokemon" src={findPokemonById?.sprites?.front_default} alt={`image_${pokemon.name}`} />
-                      : <Tooltip title="imagem não disponível">
+                      : <Tooltip title={t('pokemonCard.imageNotFound')}>
                           <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
                         </Tooltip> 
                     }
@@ -377,7 +379,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                     </BorderContainer>
                     <hr style={{width: '100%', border: 'none', height: '1px', backgroundColor: '#ffffff', opacity: '0.5', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'}}/>
                     <HpContainer>
-                      <Tooltip title="hp">
+                      <Tooltip title={t('pokemonCard.hp')}>
                         <Typography className="hp">
                           <FavoriteIcon className="favoriteIcon" sx={{fontSize: '16px', marginBottom: '-2px'}}/> {hpStat?.base_stat}
                         </Typography>

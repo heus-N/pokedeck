@@ -1,9 +1,32 @@
 {
-  "filter":{
+  "filter": {
     "language": "Idioma",
     "tip": "Nem todos os conteúdos são traduzidos, pois alguns vêm diretamente da API.",
     "search": "Buscar",
     "name": "Nome",
     "type": "Tipo"
+  },
+  "pokemonCard": {
+    "evolutionLevel": "Nível de evolução",
+    "hp": "Pontos de vida",
+    "imageNotFound": "Imagem não disponível"
+  },
+  "pokemonModal": {
+    "pokemonNotSelected": "Nenhum Pokémon selecionado.",
+    "loading": "Carregando...",
+    "evolutionLevel": "Nível de evolução",
+    "evolutionLevelNotFound": "Este pokemon não possui cadeia de evolução.",
+    "weight": "Peso",
+    "habitat": "Habitat",
+    "pokemonNotAvailable": "Oops! Parece que esse pokemon não está disponível, mas se você clicar aqui, será redirecionado para uma página web onde poderá vê-lo!",
+    "hp": "Pontos de vida",
+    "attack": "Ataque",
+    "defense": "Defesa",
+    "specialAttack": "Ataque especial",
+    "specialDefense": "Defesa especial",
+    "speed": "Velocidade",
+    "abilities": "Habilidades",
+    "evolutionChain": "Cadeia Evolutiva",
+    "variants": "Variantes"
   }
 }

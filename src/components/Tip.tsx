@@ -2,8 +2,11 @@ import InfoIcon from '@mui/icons-material/Info';
 import { Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-export default function Tip(){
-    const { t } = useTranslation('common');
+interface TipProps {
+    message: string
+}
+
+export default function Tip({message}: TipProps){
     return(
         <>
             <div style={{ width: '24px', height: '24px'}}>
@@ -23,7 +26,7 @@ export default function Tip(){
                             },
                           ]},
                         }}  
-                    title={t('filter.tip')}>
+                    title={message}>
                     <InfoIcon sx={{color:'#fff'}}/>
                 </Tooltip>
             </div>

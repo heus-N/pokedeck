@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import { getMinLevelToEvolve } from '../../public/utils/helpers/getLevelToEvolve';
 import ArrowDown from './ArrowDown';
 import { gsap } from 'gsap';
+import { useTranslation } from 'react-i18next';
 
 interface DialogProps{
   $type: string
@@ -601,7 +602,7 @@ interface PropsModal {
 }
 
 export default function PokemonModal({ open, handleClose, pokemon }: PropsModal) {
-
+  const { t } = useTranslation('common');
   const url = pokemon?.url
   const pokemonId = url?.split("pokemon/")[1] ?? '';
   const cleanPokemonId = pokemonId.replace('/', '')
@@ -666,11 +667,11 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
         <ModalContainer>
           {(!pokemon || !pokemonId) ? (
             <Typography variant='h2'>
-              Nenhum Pokémon selecionado.
+              {t('pokemonModal.pokemonNotSelected')}
             </Typography>
           ) : isLoadingPokemon ? (
             <Typography variant='h2'>
-              Carregando...
+              {t('pokemonModal.loading')}
             </Typography>
           ) : (
             <>
@@ -696,7 +697,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                             },
                           ]},
                         }} 
-                        title={evolutionLevel > 0 ? "evolution level" : "Este pokemon não possui cadeia evolutiva."}>
+                      title={evolutionLevel > 0 ? t('pokemonModal.evolutionLevel') : t('pokemonModal.evolutionLevelNotFound')}>
                       <span className='evolution_rating'>
                         {evolutionLevel > 0 
                           ? Array.from({ length: evolutionLevel }, (_, i) => <img key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)
@@ -712,10 +713,10 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                       ))}
                     </div>
                     <div style={{textAlign: 'right'}}>
-                      <Typography>weight:<span className='stat'>{`${kgToLb(findPokemonById?.weight ? (findPokemonById?.weight) / 10 : 0)} lbs`}</span></Typography>
+                      <Typography>{t('pokemonModal.weight')}:<span className='stat'>{`${kgToLb(findPokemonById?.weight ? (findPokemonById?.weight) / 10 : 0)} lbs`}</span></Typography>
                       {pokemonSpecie?.habitat?.name && 
                         <Typography>
-                          {`habitat: ${pokemonSpecie?.habitat?.name}`}
+                          {`${t('pokemonModal.habitat')}: ${pokemonSpecie?.habitat?.name}`}
                         </Typography>
                       }
                     </div>
@@ -738,7 +739,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                             '&:hover': {
                               backgroundColor: 'transparent',
                             }}}>
-                          <Tooltip title="Oops! Parece que esse pokemon não está disponível, mas se você clicar aqui, será redirecionado para uma página web onde poderá vê-lo!">
+                          <Tooltip title={t('pokemonModal.pokemonNotAvailable')}>
                             <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
                           </Tooltip>
                         </IconButton>
@@ -747,15 +748,15 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                 </ImageContainer>
                 <StatsContainer>
                   <div className='stats1'>
-                    <Typography>hp: <span className='stat'>{findPokemonById?.stats?.find(s => s.stat.name === 'hp')?.base_stat}</span></Typography>
-                    <Typography>attack: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'attack')?.base_stat} </Typography>
-                    <Typography>defense: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'defense')?.base_stat} </Typography>
+                    <Typography>{t('pokemonModal.hp')}: <span className='stat'>{findPokemonById?.stats?.find(s => s.stat.name === 'hp')?.base_stat}</span></Typography>
+                    <Typography>{t('pokemonModal.attack')}: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'attack')?.base_stat} </Typography>
+                    <Typography>{t('pokemonModal.defense')}: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'defense')?.base_stat} </Typography>
                   </div>
                   <hr/>
                   <div className='stats2'>
-                    <Typography>special-attack: <span className='stat'> {findPokemonById?.stats?.find(s => s.stat.name === 'special-attack')?.base_stat} </span> </Typography>
-                    <Typography>special-defense: <span className='stat'> {findPokemonById?.stats?.find(s => s.stat.name === 'special-defense')?.base_stat} </span> </Typography>
-                    <Typography>speed: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'speed')?.base_stat} </Typography>
+                    <Typography>{t('pokemonModal.specialAttack')}: <span className='stat'> {findPokemonById?.stats?.find(s => s.stat.name === 'special-attack')?.base_stat} </span> </Typography>
+                    <Typography>{t('pokemonModal.specialDefense')}: <span className='stat'> {findPokemonById?.stats?.find(s => s.stat.name === 'special-defense')?.base_stat} </span> </Typography>
+                    <Typography>{t('pokemonModal.speed')}: <span className='stat'></span> {findPokemonById?.stats?.find(s => s.stat.name === 'speed')?.base_stat} </Typography>
                   </div>
                 </StatsContainer>
               </LeftModalContainer>
@@ -769,7 +770,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   >
                   <div>
                     <Typography variant='h4'>
-                      Abilities:
+                      {t('pokemonModal.abilities')}:
                     </Typography>
                   </div>
                   <div className='abilities'>
@@ -784,7 +785,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                 <EvolutionContainer>
                   <div className='mainContainer'>
                     <Typography variant='h3' className='chainTitle'>
-                      Evolution Chain
+                      {t('pokemonModal.evolutionChain')} / {t('pokemonModal.variants')}
                     </Typography>
                     <div className="evolContainer">
                       {!evolutionisLoading &&

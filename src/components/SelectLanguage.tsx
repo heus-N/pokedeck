@@ -27,8 +27,14 @@ export default function SelectLanguage() {
         <>
             <div>
                 <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                    <Typography py={2} variant="h2" color="#fff">{t('filter.language')}</Typography>
-                    <Tip />
+                    <Typography 
+                        py={2} 
+                        variant="h2" 
+                        color="#fff">{t('filter.language')}
+                    </Typography>
+                    <Tip 
+                        message={t('filter.tip')}
+                    />
                 </div>
                 <AutoCompleteInput
                     iconPath="flags"
