@@ -1,33 +1,34 @@
 // src/app/layout.tsx
-import "../styles/globals.css"; // ajuste o caminho se necessário
+import "./../styles/globals.css";
 import type { Metadata } from "next";
 import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "../theme/theme"; // ajuste o caminho se necessário
+import theme from "./../theme/theme";
 import React from "react";
-import { Pixelify_Sans } from 'next/font/google';
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Pokedeck",
   description: "A pack of Pokemon cards",
 };
 
-const pixelify = Pixelify_Sans({
-  subsets: ['latin'],
-  weight: '400',
-});
-
 export default function RootLayout({
   children,
+  params,
 }: {
-  children: React.ReactNode; 
+  children: React.ReactNode;
+  params: { locale: string };
 }) {
   return (
-    <html lang="pt-BR">
-    <link rel="icon" type="image/svg+xml" href="/utils/pokeball.svg" />
+    <html lang={params.locale} dir='ltr'>
+      <head>
+        <link rel="icon" type="image/svg+xml" href="/utils/pokeball.svg" />
+      </head>
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

@@ -1,14 +1,16 @@
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 
-interface OptionType {
+export interface OptionType {
   name: string;
   id: number;
+  locale?: string;
 }
 
 interface AutoCompleteInputProps {
   options: OptionType[];
   label: string;
   placeholder?: string;
+  iconPath?: string;
   value?: OptionType | null;
   onChange?: (value: OptionType | null) => void;
 }
@@ -17,6 +19,7 @@ export default function AutoCompleteInput({
   options,
   label,
   placeholder = '',
+  iconPath,
   value,
   onChange,
 }: AutoCompleteInputProps) {
@@ -42,13 +45,13 @@ export default function AutoCompleteInput({
             sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: 1 }}
           >
             <Box sx={{flexGrow: 1, textTransform: 'capitalize'}}>{option.name}</Box>
-            <img
-              src={`/utils/types/${option.name.toLowerCase()}.png`}
+            {iconPath && <img
+              src={`/utils/${iconPath}/${option.name.toLowerCase()}.png`}
               alt={option.name}
               width={24}
               height={24}
               style={{ objectFit: 'contain' }}
-            />
+            />}
           </Box>
         )
       }}

@@ -8,13 +8,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
 import PokeballAnimation from '@/components/PokeballAnimation';
-import PokeballSvg from '../../public/utils/pokeballSvg';
+import PokeballSvg from './../../public/utils/pokeballSvg'
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
 import AutoCompleteInput from '@/components/AutoCompleteInput';
 import { useSearchParams } from 'next/navigation';
 import ApiError from './ApiError';
-
+import { useTranslation } from 'next-i18next';
+import SelectLanguage from '@/components/SelectLanguage';
 
 const StyledContainer = styled.section`
   margin: 0;
@@ -135,7 +136,7 @@ export default function Home() {
     handleFilterChange,
     pokemonQuery
   } = usePokemonNavigation();
-
+  const { t } = useTranslation('common');
   const ITEMS_PER_PAGE = 20;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -264,18 +265,21 @@ export default function Home() {
     <StyledContainer >
       {shouldDisplay &&
         <FilterTable>
+          <SelectLanguage />
           <Typography py={2} variant="h2" color="#fff">Buscar:</Typography>
           <TextField 
             value={pokemonSearch} 
             onChange={(e) => setPokemonSearch(e.target.value)}
             sx={{marginBottom: '1rem'}} 
             id="outlined-basic" 
-            label="Nome" 
+            label={t('name')}
             variant="outlined" 
             fullWidth
             autoComplete='off'
-            />
+            slotProps={{ htmlInput: { maxLength: 25 } }}
+          />
           <AutoCompleteInput
+            iconPath="types"
             label="Tipo"
             options={types.filter((type: OptionType) => type.name !== 'stellar' && type.name !== 'unknown')}
             onChange={(newValue) => {

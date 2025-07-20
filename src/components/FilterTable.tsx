@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import TextField from '@mui/material/TextField';
-import { Autocomplete, Collapse, Typography } from "@mui/material";
+import { Autocomplete, Collapse, MenuItem, Select, Typography } from "@mui/material";
 import AutoCompleteInput from "./AutoCompleteInput";
 import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 import { useState } from "react";
@@ -19,28 +19,31 @@ interface StyledFilterProps {
 
 
 const StyledFilter = styled.nav`
-    position: absolute;
-    border-right: 2px solid #7f7f7f;
-    border-radius: 0 20px 20px 0;
-    height: 100%;
-    width: 30px;
-    // width: 400px;
-    left: 0;
-    top: 0;
-    transition: width 0.75s ease;
-    z-index: 10;
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(3px);            
-    -webkit-backdrop-filter: blur(3px);
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  padding: 1rem;
+  position: absolute;
+  border-right: 2px solid #7f7f7f;
+  border-radius: 0 20px 20px 0;
+  height: 100%;
+  width: 30px;
+  // width: 400px;
+  left: 0;
+  top: 0;
+  transition: width 0.75s ease;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(3px);            
+  -webkit-backdrop-filter: blur(3px);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    &:hover{
-        width: 400px;
-        max-width: 80vw;
-    };
+  &:hover{
+    width: 400px;
+    max-width: 80vw;
+    padding: 1rem;
+  };
 `
 
 const ClipPathButton1 = styled.span`
@@ -86,10 +89,11 @@ const ClipPathButton2 = styled(ClipPathButton1)`
 `
 
 const FiltersContainer = styled.div`
-    z-index: 100;
-    padding: 1rem;
-    width: 80%;
-    height: 80%;
+  border: 1px solid blue;
+  z-index: 100;
+  padding: 1rem;
+  width: 90%;
+  height: 90%;
 `
 
 interface FilterTableProps {
@@ -102,17 +106,17 @@ export default function FilterTable({children}: FilterTableProps){
 
     return(
         <StyledFilter onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-            <div className='buttonContainer' >
-                <ClipPathButton1/>
-                <div className='shadowContainer'>
-                    <ClipPathButton2 />
-                </div>
-            </div>
-            <FiltersContainer>
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                {children}
-              </Collapse>
-            </FiltersContainer>
+          <div className='buttonContainer' >
+              <ClipPathButton1/>
+              <div className='shadowContainer'>
+                  <ClipPathButton2 />
+              </div>
+          </div>
+          <FiltersContainer>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              {children}
+            </Collapse>
+          </FiltersContainer>
         </StyledFilter>
     )
 } 

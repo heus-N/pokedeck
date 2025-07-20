@@ -1,10 +1,9 @@
 'use client';
 
 import { Fade, Typography } from '@mui/material';
-import Image from 'next/image';
 import Link from 'next/link';
 import styled from 'styled-components';
-import PokeballSvg from '../../public/utils/pokeballSvg';
+import PokeballSvg from './../../public/utils/pokeballSvg';
 import { useEffect, useState } from 'react';
 
 const PageNotFound = styled.div`
