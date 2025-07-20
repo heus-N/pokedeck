@@ -1,10 +1,11 @@
 import getEvolutionLevel from '../../public/utils/helpers/usePokemonEvolLevel';
-import { useMultiplePokemonByIds, usePokemonAbility, usePokemonById, usePokemonEvolutionChain, usePokemonList, usePokemonSpecie } from '@/hooks/usePokemonList';
+import { useMultiplePokemonByIds, usePokemonAbility, usePokemonById, usePokemonEvolutionChain, usePokemonSpecie } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
+import ScaleIcon from '@mui/icons-material/Scale';
 import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/material';
 import styled from 'styled-components';
 import { kgToLb } from '../../public/utils/helpers/unitConverter';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { getMinLevelToEvolve } from '../../public/utils/helpers/getLevelToEvolve';
 import ArrowDown from './ArrowDown';
 import { gsap } from 'gsap';
@@ -618,6 +619,8 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
   const [ evolutionHover, setEvolutionHover ] = useState(false)
   const [ habitatHover, setHabitatHover ] = useState(false)
 
+  const [ unit, setUnit ] = useState<'kg' | 'lb'>('kg');
+
   const bgRef = useRef<HTMLImageElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -646,6 +649,21 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
     });
   };
 
+  const handleChangeUnit = () => {
+    setUnit(prev => (prev === 'kg' ? 'lb' : 'kg'));
+  };
+
+  const displayedWeight = useMemo(() => {
+    const weight = findPokemonById?.weight;
+
+    if (weight === undefined) return '—';
+
+    const weightInKg = weight / 10;
+    const value = unit === 'kg' ? weightInKg : kgToLb(weightInKg);
+    const suffix = unit === 'kg' ? 'kg' : 'lb';
+
+    return `${value} ${suffix}`;
+  }, [findPokemonById?.weight, unit]);
 
   return (
     <Dialog
@@ -713,7 +731,17 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                       ))}
                     </div>
                     <div style={{textAlign: 'right'}}>
-                      <Typography>{t('pokemonModal.weight')}:<span className='stat'>{`${kgToLb(findPokemonById?.weight ? (findPokemonById?.weight) / 10 : 0)} lbs`}</span></Typography>
+                      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                        {/* <Typography>{t('pokemonModal.weight')}:<span className='stat'>{`${kgToLb(findPokemonById?.weight ? (findPokemonById?.weight) / 10 : 0)} lbs`}</span></Typography> */}
+                        <Typography>{t('pokemonModal.weight')}:<span className='stat'>{displayedWeight}</span></Typography>
+                        <Tooltip
+                          title={t('pokemonModal.scale')}>
+                          <ScaleIcon 
+                            sx={{cursor: 'pointer'}}
+                            onClick={handleChangeUnit}
+                            />
+                        </Tooltip>
+                      </div>
                       {pokemonSpecie?.habitat?.name && 
                         <Typography>
                           {`${t('pokemonModal.habitat')}: ${pokemonSpecie?.habitat?.name}`}

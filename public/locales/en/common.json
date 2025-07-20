@@ -17,6 +17,7 @@
     "evolutionLevel": "Evolution level",
     "evolutionLevelNotFound": "This Pokemon has no evolution chain.",
     "weight": "Weight",
+    "scale": "Click to change the unit of measurement",
     "habitat": "Habitat",
     "pokemonNotAvailable": "Oops! It looks like this Pokemon isn't available, but if you click here, you'll be redirected to a webpage where you can see it!",
     "hp": "Hitpoints",

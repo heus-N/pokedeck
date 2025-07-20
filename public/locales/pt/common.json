@@ -17,6 +17,7 @@
     "evolutionLevel": "Nível de evolução",
     "evolutionLevelNotFound": "Este pokemon não possui cadeia de evolução.",
     "weight": "Peso",
+    "scale": "Clique para mudar a unidade de medida",
     "habitat": "Habitat",
     "pokemonNotAvailable": "Oops! Parece que esse pokemon não está disponível, mas se você clicar aqui, será redirecionado para uma página web onde poderá vê-lo!",
     "hp": "Pontos de vida",
