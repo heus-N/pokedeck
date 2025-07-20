@@ -13,6 +13,7 @@ import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
 import AutoCompleteInput from '@/components/AutoCompleteInput';
 import { useSearchParams } from 'next/navigation';
+import ApiError from './ApiError';
 
 
 const StyledContainer = styled.section`
@@ -141,7 +142,7 @@ export default function Home() {
   const searchParams = useSearchParams();
   const typeFromUrl = searchParams.get('type');
   const hasOpenedModal = useRef(false);
-  const { pokemonList, pokemonListLoading, pokemonListCount } = usePokemonList(offset);
+  const { pokemonList, pokemonListLoading, pokemonListCount, pokemonListError } = usePokemonList(offset);
   const { types } = usePokemonType();
   const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
   const [ flipped, setFlipped ] = useState(false);
@@ -255,6 +256,10 @@ export default function Home() {
 
   if (!mounted) return null;
 
+  if(pokemonListError){
+    return shouldDisplay && <ApiError />
+  }
+
   return (
     <StyledContainer >
       {shouldDisplay &&
@@ -262,7 +267,7 @@ export default function Home() {
           <Typography py={2} variant="h2" color="#fff">Buscar:</Typography>
           <TextField 
             value={pokemonSearch} 
-            onChange={(e) => setPokemonSearch(e.target.value)} 
+            onChange={(e) => setPokemonSearch(e.target.value)}
             sx={{marginBottom: '1rem'}} 
             id="outlined-basic" 
             label="Nome" 
