@@ -16,6 +16,7 @@ import { useSearchParams } from 'next/navigation';
 import ApiError from './ApiError';
 import { useTranslation } from 'next-i18next';
 import SelectLanguage from '@/components/SelectLanguage';
+import SocialMedias from '@/components/SocialMedias';
 
 const StyledContainer = styled.section`
   margin: 0;
@@ -288,11 +289,7 @@ export default function Home() {
             }}
             value={selectedType}
           />
-
-          {/* <AutoCompleteInput
-            label="Nivel de evolução"
-            options={[]}
-          /> */}
+          <SocialMedias />
         </FilterTable>}
       {shouldDisplay &&
         <div
@@ -347,8 +344,8 @@ export default function Home() {
             (shouldDisplay &&
               <Fade in={mounted}>
                 <div className='pokemonNotFound'>
-                  <Typography color='#fff' variant='h1'>Pokemon não encontrado!</Typography>
-                  <img src="/utils/backgrounds/pokemonNotFound.png/" alt='Página não encontrada'/>
+                  <Typography color='#fff' variant='h1'>{t('page.pokemonNotFound')}</Typography>
+                  <img src="/utils/backgrounds/pokemonNotFound.png/" alt='pokemon not found'/>
                 </div>
               </Fade>)}
           </Grid>
@@ -359,7 +356,7 @@ export default function Home() {
             <Pagination
               sx={{
                 '& .MuiPaginationItem-root': {
-                  color: '#111',
+                  color: '#fff',
                 },
               }}
               count={lastPage}

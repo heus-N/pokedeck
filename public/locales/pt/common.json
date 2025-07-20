@@ -1,4 +1,7 @@
 {
+  "page":{
+    "pokemonNotFound": "Pokemon não encontrado!"
+  },
   "filter": {
     "language": "Idioma",
     "tip": "Nem todos os conteúdos são traduzidos, pois alguns vêm diretamente da API.",
@@ -28,6 +31,7 @@
     "speed": "Velocidade",
     "abilities": "Habilidades",
     "evolutionChain": "Cadeia Evolutiva",
-    "variants": "Variantes"
+    "variants": "Variantes",
+    "flavorEntries": "Descrições"
   }
 }
