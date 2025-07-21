@@ -7,7 +7,8 @@
     "tip": "Nem todos os conteúdos são traduzidos, pois alguns vêm diretamente da API.",
     "search": "Buscar",
     "name": "Nome",
-    "type": "Tipo"
+    "type": "Tipo",
+    "createBy": "Criado por"
   },
   "pokemonCard": {
     "evolutionLevel": "Nível de evolução",

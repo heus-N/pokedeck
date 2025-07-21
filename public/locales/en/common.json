@@ -7,7 +7,8 @@
     "tip": "Not all content is translated, as some comes directly from the API.",
     "search": "Search",
     "name": "Name",
-    "type": "Type"
+    "type": "Type",
+    "createBy": "Created by"
   },
   "pokemonCard": {
     "evolutionLevel": "Evolution level",
@@ -26,8 +27,8 @@
     "hp": "Hitpoints",
     "attack": "Attack",
     "defense": "Defense",
-    "special-attack": "Special attack",
-    "special-defense": "Special defense",
+    "specialAttack": "Special attack",
+    "specialDefense": "Special defense",
     "speed": "Speed",
     "abilities": "Abilities",
     "evolutionChain": "Evolution Chain",

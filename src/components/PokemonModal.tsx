@@ -10,6 +10,7 @@ import { getMinLevelToEvolve } from '../../public/utils/helpers/getLevelToEvolve
 import ArrowDown from './ArrowDown';
 import { gsap } from 'gsap';
 import { useTranslation } from 'react-i18next';
+import isLastEvolution from '../../public/utils/helpers/isLastEvolution';
 
 interface DialogProps{
   $type: string
@@ -665,6 +666,8 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
     return `${value} ${suffix}`;
   }, [findPokemonById?.weight, unit]);
 
+  console.log(evolutionPokemons)
+
   return (
     <Dialog
       open={open}
@@ -871,14 +874,22 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                                 </div>
                               </div>
                               <div className='evolTxtContainer'>
+                              {!isLastEvolution(pokemonEvolutionChain?.chain, ev.name) ? (
+                                <>
+                                  <Typography>
+                                    {`${t('pokemonModal.levelToEvolve')}: ` + getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)}
+                                  </Typography>
+                                  <Typography>
+                                    {`${t('pokemonModal.evolvesTo')}: `}
+                                  </Typography>
+                                  <ArrowDown />
+                                </>
+                              ) : (
                                 <Typography>
-                                  {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? `${t('pokemonModal.levelToEvolve')}: ` + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : `${t('pokemonModal.maxEvolution')}`}
+                                  {t('pokemonModal.maxEvolution')}
                                 </Typography>
-                                <Typography>
-                                  {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && `${t('pokemonModal.evolvesTo')}: `}
-                                </Typography>
-                                  {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && <ArrowDown />}
-                              </div>
+                              )}
+                            </div>
                             </div>
                           </EvolutionsEl>
                         ))}

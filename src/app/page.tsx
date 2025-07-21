@@ -161,7 +161,7 @@ export default function Home() {
   const { pokemonListByName, pokemonListByNameLoading } = usePokemonFilterByName();
   const [ pokemonSearch, setPokemonSearch ] = useState('')
 
-  const filteredPokemonList = selectedType?.id 
+  const filteredPokemonList = selectedType?.id
     ? pokemonTypeFilteredList?.pokemon?.map(p => ({
         name: p.pokemon.name,
         url: p.pokemon.url,
@@ -341,7 +341,7 @@ export default function Home() {
                   />
               </StyledCardGrid>
             )) :
-            (shouldDisplay &&
+            (shouldDisplay && !pokemonListLoading && !isLoadingPokemonTypeFilteredList &&
               <Fade in={mounted}>
                 <div className='pokemonNotFound'>
                   <Typography color='#fff' variant='h1'>{t('page.pokemonNotFound')}</Typography>
