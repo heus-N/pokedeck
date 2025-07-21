@@ -32,6 +32,9 @@
     "abilities": "Abilities",
     "evolutionChain": "Evolution Chain",
     "variants": "Variants",
+    "levelToEvolve": "Level to evolve",
+    "maxEvolution": "Max evolution",
+    "evolvesTo": "Evolves to",
     "flavorEntries": "Descriptions"
   }
 }

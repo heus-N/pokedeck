@@ -872,10 +872,10 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                               </div>
                               <div className='evolTxtContainer'>
                                 <Typography>
-                                  {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? 'level to evolve: ' + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : "max evolution"}
+                                  {(getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length) ? `${t('pokemonModal.levelToEvolve')}: ` + (getMinLevelToEvolve(pokemonEvolutionChain?.chain, ev.name)) : `${t('pokemonModal.maxEvolution')}`}
                                 </Typography>
                                 <Typography>
-                                  {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && 'evolves to:'}
+                                  {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && `${t('pokemonModal.evolvesTo')}: `}
                                 </Typography>
                                   {getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) < evolutionPokemons?.length && <ArrowDown />}
                               </div>
@@ -893,7 +893,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                   $isHabitatHover={habitatHover}
                 >
                   <Typography variant='h4'>
-                    Flavor Entries:
+                    {t('pokemonModal.flavorEntries')}:
                   </Typography>
                   {pokemonSpecie?.flavor_text_entries?.length && 
                     <div className='flavorTextContainer'>

@@ -32,6 +32,9 @@
     "abilities": "Habilidades",
     "evolutionChain": "Cadeia Evolutiva",
     "variants": "Variantes",
+    "levelToEvolve": "Nível para evoluir",
+    "maxEvolution": "Evolução máxima",
+    "evolvesTo": "Evolui para",
     "flavorEntries": "Descrições"
   }
 }
