@@ -5,6 +5,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import PokeballSvg from './../../public/utils/pokeballSvg';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PageNotFound = styled.div`
     height: 100%;
@@ -55,6 +56,7 @@ const StyledButton = styled.button`
 `
 
 export default function NotFound() {
+    const { t } = useTranslation('common');
     const [shouldDisplay, setShouldDisplay] = useState(false);
     const [ mounted, setMounted ] = useState(false);
 
@@ -75,12 +77,12 @@ export default function NotFound() {
             {shouldDisplay && 
                 <Fade in={shouldDisplay}>
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-                        <Typography color='#fff' variant='h1'>Página não encontrada!</Typography>
+                        <Typography color='#fff' variant='h1'>{t('page.pageNotFound')}</Typography>
                         <img src="/utils/backgrounds/pageNotFound.png" alt='Página não encontrada' />
                         <Link href="/">
                             <StyledButton>
                                 <Typography color='#fff'>
-                                    Voltar para a Home
+                                    {t('page.backToHome')}
                                 </Typography>
                             </StyledButton>
                         </Link>

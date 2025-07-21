@@ -16,13 +16,14 @@ export default function SelectLanguage() {
     const currentLocale = i18n.language || 'pt';
     const currentOption = options.find(opt => opt.locale === currentLocale) ?? options[0];
 
- const handleChange = (selected: OptionType | null) => {
+    const handleChange = (selected: OptionType | null) => {
     if (!selected) return;
     if (selected.locale === currentLocale) return;
 
     i18n.changeLanguage(selected.locale);
-  };
+    };
 
+    console.log("currentOption", currentOption)
     return (
         <>
             <div>

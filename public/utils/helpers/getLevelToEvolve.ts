@@ -2,7 +2,6 @@ export function getMinLevelToEvolve(chain: any, currentName: string): number | n
     if (!chain) return null;
 
     for (const evo of chain.evolves_to) {
-      // Se este Pokémon é quem evolui para o 'evo'
       if (chain.species.name === currentName) {
         return evo.evolution_details?.[0]?.min_level ?? 0;
       }

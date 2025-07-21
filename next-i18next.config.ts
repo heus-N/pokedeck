@@ -5,7 +5,7 @@ const nextI18NextConfig: UserConfig = {
     defaultLocale: 'pt',
     locales: ['pt', 'en'],
   },
-  localePath: './public/locales}',
+  localePath: './public/locales',
 };
 
 export default nextI18NextConfig;
