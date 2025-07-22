@@ -666,7 +666,6 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
     return `${value} ${suffix}`;
   }, [findPokemonById?.weight, unit]);
 
-  console.log(evolutionPokemons)
 
   return (
     <Dialog

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import PokeballSvg from './../../public/utils/pokeballSvg';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import i18n from "../../i18n";
 
 const PageNotFound = styled.div`
     height: 100%;
@@ -69,26 +70,28 @@ export default function NotFound() {
     if (!mounted) return null;
 
     return (
-        <PageNotFound>
-            <div className='backgroundContainer'>
-                <PokeballSvg />
-            </div>
+        <I18nextProvider i18n={i18n}>
+            <PageNotFound>
+                <div className='backgroundContainer'>
+                    <PokeballSvg />
+                </div>
 
-            {shouldDisplay && 
-                <Fade in={shouldDisplay}>
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-                        <Typography color='#fff' variant='h1'>{t('page.pageNotFound')}</Typography>
-                        <img src="/utils/backgrounds/pageNotFound.png" alt='Página não encontrada' />
-                        <Link href="/">
-                            <StyledButton>
-                                <Typography color='#fff'>
-                                    {t('page.backToHome')}
-                                </Typography>
-                            </StyledButton>
-                        </Link>
-                    </div>
-                </Fade>
-            }
-        </PageNotFound>
+                {shouldDisplay && 
+                    <Fade in={shouldDisplay}>
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+                            <Typography color='#fff' variant='h1'>{t('page.pageNotFound')}</Typography>
+                            <img src="/utils/backgrounds/pageNotFound.png" alt='Página não encontrada' />
+                            <Link href="/?page=1">
+                                <StyledButton>
+                                    <Typography color='#fff'>
+                                        {t('page.backToHome')}
+                                    </Typography>
+                                </StyledButton>
+                            </Link>
+                        </div>
+                    </Fade>
+                }
+            </PageNotFound>
+        </I18nextProvider>
     );
 }

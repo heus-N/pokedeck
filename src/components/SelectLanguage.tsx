@@ -17,34 +17,30 @@ export default function SelectLanguage() {
     const currentOption = options.find(opt => opt.locale === currentLocale) ?? options[0];
 
     const handleChange = (selected: OptionType | null) => {
-    if (!selected) return;
-    if (selected.locale === currentLocale) return;
+        if (!selected) return;
+        if (selected.locale === currentLocale) return;
 
-    i18n.changeLanguage(selected.locale);
+        if (selected.locale) {
+            i18n.changeLanguage(selected.locale);
+            localStorage.setItem('i18nextLng', selected.locale);
+        }
     };
 
-    console.log("currentOption", currentOption)
     return (
-        <>
-            <div>
-                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                    <Typography 
-                        py={2} 
-                        variant="h2" 
-                        color="#fff">{t('filter.language')}
-                    </Typography>
-                    <Tip 
-                        message={t('filter.tip')}
-                    />
-                </div>
-                <AutoCompleteInput
-                    iconPath="flags"
-                    label={t('filter.language')}
-                    options={options}
-                    value={currentOption}
-                    onChange={handleChange}
-                />
+        <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Typography py={2} variant="h2" color="#fff">
+                    {t('filter.language')}
+                </Typography>
+                <Tip message={t('filter.tip')} />
             </div>
-        </>
+            <AutoCompleteInput
+                iconPath="flags"
+                label={t('filter.language')}
+                options={options}
+                value={currentOption}
+                onChange={handleChange}
+            />
+        </div>
     );
 }
