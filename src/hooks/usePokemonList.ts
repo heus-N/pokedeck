@@ -6,7 +6,7 @@ import api from '@/services/api';
 import { getEvolutions } from '../../public/utils/helpers/getEvolutions';
 import { getAbilitiesIds } from '../../public/utils/helpers/getAbilities';
 
-interface PokemonListResponse {
+export interface PokemonListResponse {
   count: number;
   results: { name: string; url: string }[];
 }
