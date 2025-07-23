@@ -2,7 +2,8 @@
   "page":{
     "pokemonNotFound": "Pokemon não encontrado!",
     "pageNotFound": "Página não encontrada!",
-    "backToHome": "Voltar para home"
+    "backToHome": "Voltar para home",
+    "loading": "Carregando..."
   },
   "filter": {
     "language": "Idioma",

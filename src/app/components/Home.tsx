@@ -1,17 +1,14 @@
 
 import PokemonCard from '@/components/PokemonCard';
 import PokemonModal from '@/components/PokemonModal';
-import { PokemonListResponse, usePokemonFilterByName, usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
 import { Box, Grid, Pagination, Typography, TextField } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
 import PokeballAnimation from '@/components/PokeballAnimation';
 import PokeballSvg from '../../../public/utils/pokeballSvg'
-import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import FilterTable from '@/components/FilterTable';
 import AutoCompleteInput, { OptionType } from '@/components/AutoCompleteInput';
-import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import SelectLanguage from '@/components/SelectLanguage';
 import SocialMedias from '@/components/SocialMedias';
