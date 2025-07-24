@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Pokemon } from '@/types/pokemon';
+import { useCallback } from 'react';
 
 export function usePokemonNavigation() {
   const router = useRouter();
@@ -11,30 +12,30 @@ export function usePokemonNavigation() {
   const pokemonQuery = searchParams.get('pokemon');
   const currentPage = parseInt(pageParam, 10) || 1;
 
-  function handlePageChange(newPage: number) {
-    const params = new URLSearchParams(window.location.search);
-    params.set('page', String(newPage));
-    router.push(`?${params.toString()}`, { scroll: false });
-  }
-
-  function handleOpenModal(pokemon: Pokemon) {
+  const updateParams = useCallback((updater: (params: URLSearchParams) => void) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('pokemon', pokemon.name);
-    router.push(`?${params.toString()}`, { scroll: false });
-  }
+    updater(params);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
-  function handleCloseModal() {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('pokemon');
-    router.push(`?${params.toString()}`, { scroll: false });
-  }
+  const handlePageChange = useCallback((newPage: number) => {
+    updateParams(params => params.set('page', String(newPage)));
+  }, [updateParams]);
 
-  function handleFilterChange(type: string | null, resetPage = true) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (resetPage) params.set('page', '1');
-    type ? params.set('type', type) : params.delete('type')
-    router.push(`?${params.toString()}`, { scroll: false });
-  }
+  const handleOpenModal = useCallback((pokemon: Pokemon) => {
+    updateParams(params => params.set('pokemon', pokemon.name));
+  }, [updateParams]);
+
+  const handleCloseModal = useCallback(() => {
+    updateParams(params => params.delete('pokemon'));
+  }, [updateParams]);
+
+  const handleFilterChange = useCallback((type: string | null, resetPage = true) => {
+    updateParams(params => {
+      if (resetPage) params.set('page', '1');
+      type ? params.set('type', type) : params.delete('type');
+    });
+  }, [updateParams]);
 
   return {
     currentPage,
