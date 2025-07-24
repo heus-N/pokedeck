@@ -1,15 +1,26 @@
 'use client'
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import ClientHome from './ClientHome';
-import { useTranslation } from 'react-i18next';
+import PokeballSvg from '../../public/utils/pokeballSvg';
 
 export default function Home() {
-  const { t } = useTranslation('common');
+  const [ shouldDisplay, setShouldDisplay ] = useState(false)
+  const [ mounted, setMounted ] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+    const timer = setTimeout(() => {
+      setShouldDisplay(true)
+      }, 4500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <Suspense fallback={<p>{t('page.loading')}</p>}>
-      <ClientHome />
+    <Suspense fallback={            
+      <PokeballSvg shouldDisplay={shouldDisplay}/>
+    }>
+      <ClientHome shouldDisplay={shouldDisplay} mounted={mounted} />
     </Suspense>
   );
 }

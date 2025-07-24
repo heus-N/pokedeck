@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import PokeballSvg from "../../public/utils/pokeballSvg";
 import { useEffect, useState } from "react";
 import { Fade, Typography } from "@mui/material";
 import Link from "next/link";

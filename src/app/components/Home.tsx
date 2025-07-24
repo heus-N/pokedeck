@@ -136,31 +136,25 @@ export default function Home({
   paginatedList,
   currentPage,
   handleOpenModal,
-  lastPage
+  lastPage,
+  shouldDisplay,
+  mounted
 }: any) {
     const { t } = useTranslation('common');
     const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
     const [ flipped, setFlipped ] = useState(false);
     const [ flipDirection, setFlipDirection ] = useState<'forward' | 'backward'>('forward');
-    const [ mounted, setMounted ] = useState(false);
-    const [ shouldDisplay, setShouldDisplay ] = useState(false)
 
     useEffect(() => {
         if (pokemonList) {
-            const timer = setTimeout(() => {
-            setFlipped(false);
-            }, 500);
-            return () => clearTimeout(timer);
+          const timer = setTimeout(() => {
+          setFlipped(false);
+          }, 500);
+          return () => clearTimeout(timer);
         }
     }, [pokemonList]);
 
-    useEffect(() => {
-        setMounted(true);
-        const timer = setTimeout(() => {
-        setShouldDisplay(true)
-        }, 4500);
-        return () => clearTimeout(timer);
-    }, []);
+    
       
     if (!mounted) return null;
 
@@ -207,7 +201,7 @@ export default function Home({
                 zIndex: -1
             }}
             >
-            <PokeballSvg shouldDisplay={shouldDisplay}/>
+            {/* <PokeballSvg shouldDisplay={shouldDisplay}/> */}
             </div>
         }
         <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />

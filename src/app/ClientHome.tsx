@@ -8,7 +8,7 @@ import ApiError from './ApiError';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
 import { useTranslation } from 'react-i18next';
 
-export default function ClientHome() {
+export default function ClientHome({shouldDisplay, mounted}: any) {
   const {
       currentPage,
       handlePageChange,
@@ -118,23 +118,25 @@ export default function ClientHome() {
     
   return (
     <Home
-        pokemonList={pokemonList}
-        pokemonListLoading={pokemonListLoading}
-        pokemonListError={pokemonListError}
-        types={types}
-        selectedType={selectedType}
-        isLoadingPokemonTypeFilteredList={isLoadingPokemonTypeFilteredList}
-        pokemonSearch={pokemonSearch}
-        setPokemonSearch={setPokemonSearch}
-        handlePageChange={handlePageChange}
-        handleFilterChange={handleFilterChange}
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-        selectedPokemon={selectedPokemon}
-        paginatedList={paginatedList}
-        currentPage={currentPage}
-        handleOpenModal={handleOpenModal}
-        lastPage={lastPage}
+      mounted={mounted}
+      shouldDisplay={shouldDisplay}
+      pokemonList={pokemonList}
+      pokemonListLoading={pokemonListLoading}
+      pokemonListError={pokemonListError}
+      types={types}
+      selectedType={selectedType}
+      isLoadingPokemonTypeFilteredList={isLoadingPokemonTypeFilteredList}
+      pokemonSearch={pokemonSearch}
+      setPokemonSearch={setPokemonSearch}
+      handlePageChange={handlePageChange}
+      handleFilterChange={handleFilterChange}
+      isModalOpen={isModalOpen}
+      handleCloseModal={handleCloseModal}
+      selectedPokemon={selectedPokemon}
+      paginatedList={paginatedList}
+      currentPage={currentPage}
+      handleOpenModal={handleOpenModal}
+      lastPage={lastPage}
     />
   );
 }
