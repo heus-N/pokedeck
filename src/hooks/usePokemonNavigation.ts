@@ -12,7 +12,7 @@ export function usePokemonNavigation() {
   const currentPage = parseInt(pageParam, 10) || 1;
 
   function handlePageChange(newPage: number) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(window.location.search);
     params.set('page', String(newPage));
     router.push(`?${params.toString()}`, { scroll: false });
   }
