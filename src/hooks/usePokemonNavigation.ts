@@ -7,47 +7,33 @@ export function usePokemonNavigation() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const pageParam = searchParams.get('page') ?? '1';
-  const pokemonQuery = searchParams.get('pokemon');
-
+  const pageParam = searchParams?.get('page') ?? '1';
+  const pokemonQuery = searchParams?.get('pokemon');
   const currentPage = parseInt(pageParam, 10) || 1;
 
   function handlePageChange(newPage: number) {
-    const params = new URLSearchParams(searchParams.toString());
-
+    const params = new URLSearchParams(searchParams?.toString());
     params.set('page', String(newPage));
-
-    router.push(`?${params.toString()}`, { scroll: false });
+    router.push(`?${params?.toString()}`, { scroll: false });
   }
 
   function handleOpenModal(pokemon: Pokemon) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString());
     params.set('pokemon', pokemon.name);
-
-    router.push(`?${params.toString()}`, { scroll: false });
+    router.push(`?${params?.toString()}`, { scroll: false });
   }
 
   function handleCloseModal() {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString());
     params.delete('pokemon');
-
-    router.push(`?${params.toString()}`, { scroll: false });
+    router.push(`?${params?.toString()}`, { scroll: false });
   }
 
   function handleFilterChange(type: string | null, resetPage = true) {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (resetPage) {
-      params.set('page', '1');
-    }
-
-    if (type) {
-      params.set('type', type);
-    } else {
-      params.delete('type');
-    }
-
-    router.push(`?${params.toString()}`, { scroll: false });
+    const params = new URLSearchParams(searchParams?.toString());
+    if (resetPage) params.set('page', '1');
+    type ? params.set('type', type) : params.delete('type')
+    router.push(`?${params?.toString()}`, { scroll: false });
   }
 
 
@@ -58,6 +44,6 @@ export function usePokemonNavigation() {
     handleOpenModal,
     handleCloseModal,
     handleFilterChange,
-    pokemonQuery // Precisamos disso para buscar o Pokémon da URL depois
+    pokemonQuery
   };
 }

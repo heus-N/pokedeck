@@ -1,32 +1,20 @@
-'use client'
-
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
 import ClientHome from './ClientHome';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 
 export default function Home() {
-  const [ shouldDisplay, setShouldDisplay ] = useState(false)
-  const [ mounted, setMounted ] = useState(false);
   const { t } = useTranslation('common');
-  
-  useEffect(() => {
-    setMounted(true);
-    const timer = setTimeout(() => {
-      setShouldDisplay(true)
-      }, 4500);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <>
       <Suspense fallback={
-        <div style={{position: 'absolute', margin: 'auto', inset: '0', width: '100%', height: '100%'}}>
+        <div style={{position: 'absolute', margin: 'auto', inset: '0', width: '100vw', height: '100vh', overflow: 'hidden'}}>
           <Typography variant='h4' color='#fff'>
             {t('page.loading')}
           </Typography>
         </div>}>
-        <ClientHome shouldDisplay={shouldDisplay} mounted={mounted} />
+        <ClientHome />
       </Suspense>
     </>
   );
