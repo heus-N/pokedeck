@@ -212,7 +212,7 @@ export default function Home({
               >
             </div>
           }
-          <div style={{position: 'absolute'}}>
+          <div style={{position: 'absolute', overflow: 'hidden'}}>
             {shouldDisplay && <PokeballSvg />}
           </div>
           <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />
