@@ -46,7 +46,7 @@ export default function AutoCompleteInput({
           >
             <Box sx={{flexGrow: 1, textTransform: 'capitalize'}}>{option.name}</Box>
             {iconPath && <img
-              src={`/utils/${iconPath}/${option.name.toLowerCase()}.png`}
+              src={option?.locale ? `/utils/${iconPath}/${option.locale.toLowerCase()}.png` : `/utils/${iconPath}/${option.name.toLowerCase()}.png`}
               alt={option.name}
               width={24}
               height={24}
