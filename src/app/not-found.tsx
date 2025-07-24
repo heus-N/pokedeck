@@ -39,7 +39,6 @@ const PageNotFound = styled.div`
 `;
 
 const StyledButton = styled.button`
-    border: 1px solid red;
     margin-top: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 100px;

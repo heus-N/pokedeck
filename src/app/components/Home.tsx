@@ -5,13 +5,13 @@ import { Box, Grid, Pagination, Typography, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
-import PokeballAnimation from '@/components/PokeballAnimation';
 import FilterTable from '@/components/FilterTable';
 import AutoCompleteInput, { OptionType } from '@/components/AutoCompleteInput';
 import { useTranslation } from 'next-i18next';
 import SelectLanguage from '@/components/SelectLanguage';
 import SocialMedias from '@/components/SocialMedias';
 import ApiError from '../ApiError';
+import PokeballSvg from '../../../public/utils/pokeballSvg';
 
 const StyledContainer = styled.section`
   margin: 0;
@@ -22,7 +22,6 @@ const StyledContainer = styled.section`
   align-items: center;
   transition: all 0.3s ease;
   position: relative;
-  padding-left: 30px;
 
   .buttonContainer{
     z-index: 4;
@@ -55,6 +54,8 @@ const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   justify-content: center;
   overflow: hidden;
   transition: all 0.3s ease;
+  padding-left: 30px;
+
 
   .pokemonNotFound{
     position: absolute;
@@ -168,6 +169,7 @@ export default function Home({
     }
 
     return (
+      <>
         <StyledContainer >
           {shouldDisplay &&
             <>
@@ -210,6 +212,9 @@ export default function Home({
               >
             </div>
           }
+          <div style={{position: 'absolute'}}>
+            {shouldDisplay && <PokeballSvg />}
+          </div>
           <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />
             <StyledCardContainer>
               <Grid 
@@ -226,7 +231,6 @@ export default function Home({
                 padding: '4rem 3rem',
                 }}
               >
-            <PokeballAnimation />
             {shouldDisplay && paginatedList?.length 
               ? paginatedList?.map((pokemon: any, index: number) => (
               <StyledCardGrid 
@@ -279,5 +283,6 @@ export default function Home({
             </StyledFooter>
             </Fade>}
         </StyledContainer>
-    );
+    </>
+  );
 }
