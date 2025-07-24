@@ -191,7 +191,7 @@ const LeftModalContainer = styled.div`
 const RightModalContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 10px 0;
+  padding: 10px 5px;
   // overflow: hidden;
   display: flex; 
   flex-direction: column;
@@ -266,19 +266,17 @@ const EvolutionContainer = styled.div`
 
   .mainContainer{
     height: 100%;
-    padding: 5px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     overflow: hidden;
-    
+
     &:hover {
       .chainTitle{
         opacity: 1;
       }
-      overflow-y: auto;
     }
   }
 
@@ -288,6 +286,14 @@ const EvolutionContainer = styled.div`
     flex-direction: column;
     gap: 20px;
     height: 100%;
+    padding: 5px;
+
+    &:hover {
+      .chainTitle{
+        opacity: 1;
+      }
+      overflow-y: auto;
+    }
   }
 
   @media(min-width: 600px){
@@ -322,8 +328,8 @@ const EvolutionsEl = styled.div<EvolutionProps>`
   }
   
   .img_container{
-    min-height: 40px;
-    min-width: 40px;
+    min-height: 80px;
+    min-width: 80px;
     position: relative;
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 7px;
@@ -332,14 +338,9 @@ const EvolutionsEl = styled.div<EvolutionProps>`
       margin-left: 10px;
     }
 
-    @media(min-width: 600px){
+    @media(max-width: 600px){
       min-height: 60px;
       min-width: 60px;
-    }
-
-    @media(min-width: 960px){
-      min-height: 80px;
-      min-width: 80px;
     }
 
     img{
@@ -363,28 +364,31 @@ const EvolutionsEl = styled.div<EvolutionProps>`
     flex-direction: column;
     position: relative;
     justify-content: center;
-    width: 100%;
     text-align: center;
-    height: fit-content;
+    padding-right: 23px;
+    height: 100%;
+    margin-left: 10px;
+    width: 100%;
 
-    @media(min-width: 600px){
+    @media(max-width: 600px){
+      padding-right: 0px;
+    }
+
+    .nameContent{
       width: 100%;
     }
-  }
 
-  .starContent{
-    position: relative;
-
-    @media(min-width: 600px){
+    .starContent{
       position: absolute;
-      width: auto;
-      right: 0;
-      top: 0;
-    }
-  }
+      right: 0px;
+      top: 0px;
+      width: 23px;
 
-  .nameStarContent{
-    position: relative;
+      @media(max-width: 600px){
+        position: relative;
+        width: 100%;
+      }
+    }
   }
 
   .evolTxtContainer{
@@ -392,6 +396,8 @@ const EvolutionsEl = styled.div<EvolutionProps>`
 
     @media(min-width: 600px){
       display: block;
+      height: 100%;
+      width: 100%;
     }
   }
 `
@@ -399,7 +405,6 @@ const EvolutionsEl = styled.div<EvolutionProps>`
 const PokemonInfo = styled.div`
   height: 20%;
   width: 100%;
-
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -496,21 +501,20 @@ const ImageContainer = styled.div<ImageProps>`
   }
 
   .pokemon{
-      position: relative;
-      top: 20px;
-      width: 100%;
+    position: relative;
+    top: 20px;
+    width: 100%;
 
-      @media(min-width: 600px){
-        left: 50px;
-        width: 70%;
-      }
-
-      @media(min-width: 960px){
-        left: 50px;
-        width: 70%;
-      }
-
+    @media(min-width: 600px){
+      left: 50px;
+      width: 70%;
     }
+
+    @media(min-width: 960px){
+      left: 50px;
+      width: 70%;
+    }
+  }
 
   .notFound{
     position: relative;
@@ -698,7 +702,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
             <>
               <LeftModalContainer>
                 <PokemonInfo>
-                  <div style={{display: 'flex', alignItems: 'center', whiteSpace: 'nowrap'}}>
+                  <div style={{display: 'flex', alignItems: 'center', maxWidth: '80%'}}>
                     <Typography variant='h2'>
                         {pokemon.name} 
                     </Typography>
@@ -864,13 +868,13 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                               </div>
                             </Tooltip>
                             <div className='nameStarContainer'>
-                              <div className='nameStarContent'>
+                              <div className='nameContent'>
                                 <Typography>
                                   {ev.name}
                                 </Typography>
-                                <div className='starContent'>
-                                  {Array.from({ length: getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
-                                </div>
+                              </div>
+                              <div className='starContent'>
+                                {Array.from({ length: getEvolutionLevel(pokemonEvolutionChain?.chain, ev.name) }, (_, i) => <img className='evolStar' key={i} alt="evolution star" src={`/utils/evolution_level/evolution_star.png`}/>)}
                               </div>
                               <div className='evolTxtContainer'>
                               {!isLastEvolution(pokemonEvolutionChain?.chain, ev.name) ? (
