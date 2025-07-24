@@ -3,16 +3,16 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from 'gsap';
 
-// let animationAlreadyPlayed = false;
+let animationAlreadyPlayed = false;
 
 export default function PokeballAnimation() {
-  const [hideBall, setHideBall] = useState(false);
+  const [hideBall, setHideBall] = useState(animationAlreadyPlayed);
   const imgRef = useRef(null);
 
   useLayoutEffect(() => {
-    // if (animationAlreadyPlayed) return;
+    if (animationAlreadyPlayed) return;
 
-    // animationAlreadyPlayed = true;
+    animationAlreadyPlayed = true;
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
