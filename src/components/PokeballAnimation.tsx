@@ -12,7 +12,7 @@ export default function PokeballAnimation() {
   useLayoutEffect(() => {
     if (animationAlreadyPlayed) return;
 
-    animationAlreadyPlayed = true; // marca que já rodou
+    animationAlreadyPlayed = true;
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 

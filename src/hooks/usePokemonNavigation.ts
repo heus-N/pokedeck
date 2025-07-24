@@ -13,7 +13,7 @@ export function usePokemonNavigation() {
   const currentPage = parseInt(pageParam, 10) || 1;
 
   function handlePageChange(newPage: number) {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams.toString());
 
     params.set('page', String(newPage));
 
@@ -21,21 +21,21 @@ export function usePokemonNavigation() {
   }
 
   function handleOpenModal(pokemon: Pokemon) {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams.toString());
     params.set('pokemon', pokemon.name);
 
     router.push(`?${params.toString()}`, { scroll: false });
   }
 
   function handleCloseModal() {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams.toString());
     params.delete('pokemon');
 
     router.push(`?${params.toString()}`, { scroll: false });
   }
 
   function handleFilterChange(type: string | null, resetPage = true) {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams.toString());
 
     if (resetPage) {
       params.set('page', '1');
