@@ -528,7 +528,8 @@ const ImageContainer = styled.div<ImageProps>`
     bottom: -10px;
     position: absolute;
     left: 50%;
-    width: 200%;
+    width: 320px;
+    object-fit: contain;
     transform: translate(-50%);
     background-position: center;
     background-repeat: no-repeat;
@@ -537,7 +538,7 @@ const ImageContainer = styled.div<ImageProps>`
   
   @media (min-width: 600px){
     .background{
-      width: 110%;
+      width: 420px;
     }
   }
 `
@@ -734,7 +735,6 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                     </div>
                     <div style={{textAlign: 'right'}}>
                       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                        {/* <Typography>{t('pokemonModal.weight')}:<span className='stat'>{`${kgToLb(findPokemonById?.weight ? (findPokemonById?.weight) / 10 : 0)} lbs`}</span></Typography> */}
                         <Typography>{t('pokemonModal.weight')}:<span className='stat'>{displayedWeight}</span></Typography>
                         <Tooltip
                           title={t('pokemonModal.scale')}>

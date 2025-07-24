@@ -2,9 +2,9 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
 import ClientHome from './ClientHome';
-import PokeballSvg from '../../public/utils/pokeballSvg';
 import PokeballAnimation from '@/components/PokeballAnimation';
 import { useTranslation } from 'react-i18next';
+import { Typography } from '@mui/material';
 
 export default function Home() {
   const [ shouldDisplay, setShouldDisplay ] = useState(false)
@@ -22,7 +22,12 @@ export default function Home() {
   return (
     <>
       <PokeballAnimation />
-      <Suspense fallback={<div style={{position: 'absolute', left: 0, top: 0}}>{t('page.loading')}</div>}>
+      <Suspense fallback={
+        <div style={{position: 'absolute', margin: 'auto', inset: '0'}}>
+          <Typography variant='h4' color='#fff'>
+            {t('page.loading')}
+          </Typography>
+        </div>}>
         <ClientHome shouldDisplay={shouldDisplay} mounted={mounted} />
       </Suspense>
     </>
