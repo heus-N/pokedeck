@@ -41,8 +41,11 @@ const StyledContainer = styled.section`
     top: 0;
   }
 `
+interface StyledCardContainerProps{
+  $openFilter?: boolean
+}
 
-const StyledCardContainer = styled(Box)`
+const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   width: 100%;
   height: 100%;
   max-height: 100%;
@@ -86,12 +89,14 @@ const StyledCardContainer = styled(Box)`
 `
 
 interface StyledCardGridProps {
+  $isHovered: boolean;
   $shouldDisplay: boolean;
 }
 
 const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
   transition: all 0.5s ease;
-  opacity: ${({ $shouldDisplay }) => !$shouldDisplay ? 0 : 1};
+  transform: scale(${({ $isHovered }) => ($isHovered ? 1 : 0.975)});
+  opacity: ${({ $isHovered, $shouldDisplay }) => !$shouldDisplay ? 0 : ($isHovered ? 1 : 0.85)};
 `;
 
 const StyledFooter = styled(Box)`
@@ -235,6 +240,7 @@ export default function Home({
                 $shouldDisplay={shouldDisplay}
                 key={pokemon?.name}
                 className="poke-card"
+                $isHovered={hoveredIndex === null || hoveredIndex === index}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}>
                 <PokemonCard
