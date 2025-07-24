@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <>
       <Suspense fallback={
-        <div style={{position: 'absolute', margin: 'auto', inset: '0'}}>
+        <div style={{position: 'absolute', margin: 'auto', inset: '0', width: '100%', height: '100%'}}>
           <Typography variant='h4' color='#fff'>
             {t('page.loading')}
           </Typography>
