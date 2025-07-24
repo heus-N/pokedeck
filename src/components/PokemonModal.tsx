@@ -881,7 +881,7 @@ export default function PokemonModal({ open, handleClose, pokemon }: PropsModal)
                                   <Typography>
                                     {`${t('pokemonModal.evolvesTo')}: `}
                                   </Typography>
-                                  <ArrowDown />
+                                  <ArrowDown toOpen={false}/>
                                 </>
                               ) : (
                                 <Typography>

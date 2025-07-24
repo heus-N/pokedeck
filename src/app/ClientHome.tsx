@@ -2,11 +2,9 @@
 
 import { useSearchParams } from 'next/navigation';
 import { usePokemonFilterByName, usePokemonList, usePokemonType, usePokemonTypeById } from '@/hooks/usePokemonList';
-import Home from './components/Home'; // novo caminho correto
+import Home from './components/Home';
 import React, { useEffect, useRef, useState } from 'react';
-import ApiError from './ApiError';
 import { usePokemonNavigation } from '@/hooks/usePokemonNavigation';
-import { useTranslation } from 'react-i18next';
 
 export default function ClientHome({shouldDisplay, mounted}: any) {
   const {

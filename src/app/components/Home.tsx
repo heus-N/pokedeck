@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@mui/material';
 import PokeballAnimation from '@/components/PokeballAnimation';
-import PokeballSvg from '../../../public/utils/pokeballSvg'
 import FilterTable from '@/components/FilterTable';
 import AutoCompleteInput, { OptionType } from '@/components/AutoCompleteInput';
 import { useTranslation } from 'next-i18next';
@@ -97,8 +96,8 @@ const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
 
 const StyledFooter = styled(Box)`
   position: absolute;
-  bottom: 20px;
-  left: calc(50% - 7px);
+  bottom: 10%;
+  left: 50%;
   transform: translateX(-50%);
   padding: 8px 16px;
   border-radius: 16px;
@@ -116,6 +115,11 @@ const StyledFooter = styled(Box)`
   @media (max-width: 960px){
     width: 300px;
     height: 50px;
+  }
+
+  @media (min-width: 960px){
+    bottom: 20px;
+    left: calc(50% - 7px);
   }
 `;
 
@@ -164,49 +168,50 @@ export default function Home({
 
     return (
         <StyledContainer >
-        {shouldDisplay &&
-            <FilterTable>
-            <SelectLanguage />
-            <Typography py={2} variant="h2" color="#fff">{t('filter.search')}</Typography>
-            <TextField 
-                value={pokemonSearch} 
-                onChange={(e) => setPokemonSearch(e.target.value)}
-                sx={{marginBottom: '1rem'}} 
-                id="outlined-basic" 
-                label={t('filter.name')}
-                variant="outlined" 
-                fullWidth
-                autoComplete='off'
-                slotProps={{ htmlInput: { maxLength: 25 } }}
-            />
-            <AutoCompleteInput
-                iconPath="types"
-                label={t('filter.type')}
-                options={types.filter((type: OptionType) => type.name !== 'stellar' && type.name !== 'unknown')}
-                onChange={(newValue) => {
-                handlePageChange(1); // reseta a página
-                handleFilterChange(newValue?.name ?? null); // atualiza a URL
-                }}
-                value={selectedType}
-            />
-            <SocialMedias />
-            </FilterTable>}
-        {shouldDisplay &&
+          {shouldDisplay &&
+            <>
+              <FilterTable>
+                <SelectLanguage />
+                <Typography py={2} variant="h2" color="#fff">{t('filter.search')}</Typography>
+                <TextField 
+                    value={pokemonSearch} 
+                    onChange={(e) => setPokemonSearch(e.target.value)}
+                    sx={{marginBottom: '1rem'}} 
+                    id="outlined-basic" 
+                    label={t('filter.name')}
+                    variant="outlined" 
+                    fullWidth
+                    autoComplete='off'
+                    slotProps={{ htmlInput: { maxLength: 25 } }}
+                />
+                <AutoCompleteInput
+                  iconPath="types"
+                  label={t('filter.type')}
+                  options={types.filter((type: OptionType) => type.name !== 'stellar' && type.name !== 'unknown')}
+                  onChange={(newValue) => {
+                  handlePageChange(1); // reseta a página
+                  handleFilterChange(newValue?.name ?? null); // atualiza a URL
+                  }}
+                  value={selectedType}
+                />
+                <SocialMedias />
+              </FilterTable>
+            </> }
+          {shouldDisplay &&
             <div
-            style={{
-                position: 'absolute',
-                overflow: 'hidden',
-                width: '100%',
-                height: '100%',
-                zIndex: -1
-            }}
-            >
-            {/* <PokeballSvg shouldDisplay={shouldDisplay}/> */}
+              style={{
+                  position: 'absolute',
+                  overflow: 'hidden',
+                  width: '100%',
+                  height: '100%',
+                  zIndex: -1
+                }}
+              >
             </div>
-        }
-        <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />
+          }
+          <PokemonModal open={shouldDisplay && isModalOpen} handleClose={handleCloseModal} pokemon={selectedPokemon} />
             <StyledCardContainer>
-            <Grid 
+              <Grid 
                 container 
                 spacing={{ xs: 2, md: 3 }} 
                 columns={{ xs: 4, sm: 8, md: 12 }}
@@ -219,41 +224,41 @@ export default function Home({
                 height: '100%',
                 padding: '4rem 3rem',
                 }}
-            >
+              >
             <PokeballAnimation />
             {shouldDisplay && paginatedList?.length 
-                ? paginatedList?.map((pokemon: any, index: number) => (
-                <StyledCardGrid 
-                    $shouldDisplay={shouldDisplay}
-                    key={pokemon?.name}
-                    className="poke-card"
-                    $isHovered={hoveredIndex === null || hoveredIndex === index}
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(null)}>
-                    <PokemonCard
-                        page={currentPage}
-                        index={index}
-                        flipped={flipped}
-                        url={pokemon?.url}
-                        pokemon={pokemon}
-                        onClick={() => handleOpenModal(pokemon)}
-                        flipDirection={flipDirection}
-                    />
+              ? paginatedList?.map((pokemon: any, index: number) => (
+              <StyledCardGrid 
+                $shouldDisplay={shouldDisplay}
+                key={pokemon?.name}
+                className="poke-card"
+                $isHovered={hoveredIndex === null || hoveredIndex === index}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}>
+                <PokemonCard
+                  page={currentPage}
+                  index={index}
+                  flipped={flipped}
+                  url={pokemon?.url}
+                  pokemon={pokemon}
+                  onClick={() => handleOpenModal(pokemon)}
+                  flipDirection={flipDirection}
+                />
                 </StyledCardGrid>
                 )) :
                 (shouldDisplay && !pokemonListLoading && !isLoadingPokemonTypeFilteredList &&
-                <Fade in={mounted}>
+                  <Fade in={mounted}>
                     <div className='pokemonNotFound'>
                     <Typography color='#fff' variant='h1'>{t('page.pokemonNotFound')}</Typography>
                     <img src="/utils/backgrounds/pokemonNotFound.png/" alt='pokemon not found'/>
                     </div>
-                </Fade>)}
+                  </Fade>)}
             </Grid>
             </StyledCardContainer>
-        {shouldDisplay && 
+          {shouldDisplay && 
             <Fade in={!pokemonListLoading}>
             <StyledFooter>
-                <Pagination
+              <Pagination
                 sx={{
                     '& .MuiPaginationItem-root': {
                     color: '#fff',
@@ -269,7 +274,7 @@ export default function Home({
                     // setFlipped(true);
                     handlePageChange(value);
                 }}
-                />
+              />
             </StyledFooter>
             </Fade>}
         </StyledContainer>

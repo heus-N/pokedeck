@@ -4,6 +4,7 @@ import { Instagram, LinkedIn, Facebook, GitHub } from '@mui/icons-material';
 
 import { useState } from "react";
 import Link from "next/link";
+import ArrowDown from "./ArrowDown";
 
 const jewelColors = [
   '#ee102eff', // Rubi
@@ -14,18 +15,29 @@ const jewelColors = [
 ];
 
 interface StyledFilterProps {
-  $shadowColor: string;
+  $open: boolean
 }
 
-
-const StyledFilter = styled.nav`
+const StyledFilter = styled.nav<StyledFilterProps>`
   padding: 1rem;
+  // position: ${({$open}) => $open ? 'absolute' : 'relative'};
   position: absolute;
   border-right: 2px solid #7f7f7f;
   border-radius: 0 20px 20px 0;
   height: 100%;
-  width: 30px;
-  // width: 400px;
+  width: ${({$open}) => $open ? '400px' : '30px' };
+  max-width: 80vw;
+
+  .openContainer{
+    position: relative;
+    cursor: pointer;
+    left: ${({$open}) => $open ? 0 : '-5px'};
+    height: 25px;
+    width: 20px;
+    transition: transform 0.1s ease;
+    transform: rotate(${({$open}) => $open ? '90deg' : '-90deg'});
+  }
+
   left: 0;
   top: 0;
   transition: width 0.75s ease;
@@ -39,11 +51,10 @@ const StyledFilter = styled.nav`
   align-items: center;
   justify-content: center;
 
-  &:hover{
-    width: 400px;
-    max-width: 80vw;
-    padding: 1rem;
-  };
+  // &:hover{
+  //   width: 400px;
+  //   padding: 1rem;
+  // };
 `
 
 const ClipPathButton1 = styled.span`
@@ -104,31 +115,28 @@ interface FilterTableProps {
 export default function FilterTable({children}: FilterTableProps){
 
   const [open, setOpen] = useState(false)
-  const [closing, setClosing] = useState<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleMouseEnter = () => {
-    if (closing) clearTimeout(closing);
-    setOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    const timeout = setTimeout(() => setOpen(false), 50); // pequeno delay para permitir a saída suave
-    setClosing(timeout);
-  };
-
-    return(
-        <StyledFilter onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          <div className='buttonContainer' >
-              <ClipPathButton1/>
-              <div className='shadowContainer'>
-                  <ClipPathButton2 />
-              </div>
+  return(
+    <StyledFilter 
+      $open={open}
+    >
+      {/* <div className='buttonContainer' >
+          <ClipPathButton1/>
+          <div className='shadowContainer'>
+              <ClipPathButton2 />
           </div>
-          <FiltersContainer>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              {children}
-            </Collapse>
-          </FiltersContainer>
-        </StyledFilter>
-    )
+      </div> */}
+      <FiltersContainer>
+        <div className='openContainer'>
+          <ArrowDown 
+            toOpen
+            onClick={() => setOpen(!open)}
+            />
+        </div>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          {children}
+        </Collapse>
+      </FiltersContainer>
+    </StyledFilter>
+  )
 } 

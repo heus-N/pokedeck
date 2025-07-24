@@ -17,12 +17,22 @@ const MediaContainer = styled.div`
   left: 50%;
   transform: translateX(-50%);
 
+  @media (max-width: 600px){
+    top: 10%;
+    width: 100%;
+  };
+
   .linksContainer{
     transition: box-shadow 0.5s ease;
     border-radius: 12px;
     gap: 1rem;
     display: flex;
     padding: 0.5rem 1rem;
+
+    @media (max-width: 600px){
+      width: 100%;
+      justify-content: space-around;
+    };
 
     &:hover{
       box-shadow: 0px 0px 20px rgba(33, 150, 243, 1);
