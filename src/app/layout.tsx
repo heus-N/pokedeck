@@ -14,13 +14,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
 }) {
   return (
-    <html lang={params.locale} dir='ltr'>
+    <html lang='pt' dir='ltr'>
       <head>
         <link rel="icon" type="image/svg+xml" href="/utils/pokeball.svg" />
       </head>
