@@ -2,7 +2,6 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
 import ClientHome from './ClientHome';
-import PokeballAnimation from '@/components/PokeballAnimation';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 
@@ -21,7 +20,6 @@ export default function Home() {
 
   return (
     <>
-      <PokeballAnimation />
       <Suspense fallback={
         <div style={{position: 'absolute', margin: 'auto', inset: '0'}}>
           <Typography variant='h4' color='#fff'>

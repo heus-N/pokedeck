@@ -5,6 +5,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./../theme/theme";
 import React from "react";
 import Providers from "@/components/Providers";
+import PokeballAnimation from "@/components/PokeballAnimation";
 
 export const metadata: Metadata = {
   title: "Pokedeck",
@@ -24,6 +25,7 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/utils/pokeball.svg" />
       </head>
       <body>
+        <PokeballAnimation />
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Providers>
