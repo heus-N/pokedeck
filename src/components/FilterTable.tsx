@@ -20,7 +20,6 @@ interface StyledFilterProps {
 
 const StyledFilter = styled.nav<StyledFilterProps>`
   padding: 1rem;
-  // position: ${({$open}) => $open ? 'absolute' : 'relative'};
   position: absolute;
   border-right: 2px solid #7f7f7f;
   border-radius: 0 20px 20px 0;

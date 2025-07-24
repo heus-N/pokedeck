@@ -1,3 +1,4 @@
+import path from 'path';
 import type { UserConfig } from 'next-i18next';
 
 const nextI18NextConfig: UserConfig = {
@@ -5,7 +6,7 @@ const nextI18NextConfig: UserConfig = {
     defaultLocale: 'pt',
     locales: ['pt', 'en'],
   },
-  localePath: './public/locales',
+  localePath: path.resolve('./public/locales'),
 };
 
 export default nextI18NextConfig;

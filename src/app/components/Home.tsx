@@ -22,6 +22,7 @@ const StyledContainer = styled.section`
   align-items: center;
   transition: all 0.3s ease;
   position: relative;
+  padding-left: 30px;
 
   .buttonContainer{
     z-index: 4;
@@ -97,7 +98,7 @@ const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
 const StyledFooter = styled(Box)`
   position: absolute;
   bottom: 10%;
-  left: 50%;
+  left: calc(50% + 15px);
   transform: translateX(-50%);
   padding: 8px 16px;
   border-radius: 16px;
