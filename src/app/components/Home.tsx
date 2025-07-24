@@ -145,14 +145,14 @@ export default function Home({
   paginatedList,
   currentPage,
   handleOpenModal,
-  lastPage,
-  shouldDisplay,
-  mounted
+  lastPage
 }: any) {
     const { t } = useTranslation('common');
     const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null);
     const [ flipped, setFlipped ] = useState(false);
     const [ flipDirection, setFlipDirection ] = useState<'forward' | 'backward'>('forward');
+    const [ mounted, setMounted ] = useState(false);
+    const [ shouldDisplay, setShouldDisplay ] = useState(false)
 
     useEffect(() => {
         if (pokemonList) {
@@ -163,7 +163,13 @@ export default function Home({
         }
     }, [pokemonList]);
 
-    
+    useEffect(() => {
+      setMounted(true);
+      const timer = setTimeout(() => {
+        setShouldDisplay(true)
+        }, 4500);
+      return () => clearTimeout(timer);
+    }, []);
       
     if (!mounted) return null;
 

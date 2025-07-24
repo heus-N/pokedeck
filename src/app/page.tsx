@@ -1,14 +1,11 @@
 import React, { Suspense } from 'react';
 import ClientHome from './ClientHome';
-import { Typography } from '@mui/material';
 
 export default function Home() {
 
   return (
-    <>
-      <Suspense fallback={<></>}>
-        <ClientHome />
-      </Suspense>
-    </>
+    <Suspense fallback={<p>Carregando...</p>}>
+      <ClientHome />
+    </Suspense>
   );
 }

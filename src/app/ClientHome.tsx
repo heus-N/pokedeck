@@ -33,16 +33,6 @@ export default function ClientHome() {
   const { pokemonTypeFilteredList, isLoadingPokemonTypeFilteredList } = usePokemonTypeById(selectedType?.id ?? null);
   const { pokemonListByName, pokemonListByNameLoading } = usePokemonFilterByName();
   const [ pokemonSearch, setPokemonSearch ] = useState('')
-  const [ shouldDisplay, setShouldDisplay ] = useState(false)
-  const [ mounted, setMounted ] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-    const timer = setTimeout(() => {
-      setShouldDisplay(true)
-      }, 4500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const filteredPokemonList = selectedType?.id
     ? pokemonTypeFilteredList?.pokemon?.map(p => ({
@@ -122,12 +112,9 @@ export default function ClientHome() {
     }
   }, [pokemonQuery, filteredPokemonList]);
 
-  
     
   return (
     <Home
-      mounted={mounted}
-      shouldDisplay={shouldDisplay}
       pokemonList={pokemonList}
       pokemonListLoading={pokemonListLoading}
       pokemonListError={pokemonListError}
