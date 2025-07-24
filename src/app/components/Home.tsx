@@ -41,11 +41,8 @@ const StyledContainer = styled.section`
     top: 0;
   }
 `
-interface StyledCardContainerProps{
-  $openFilter?: boolean
-}
 
-const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
+const StyledCardContainer = styled(Box)`
   width: 100%;
   height: 100%;
   max-height: 100%;
@@ -56,6 +53,9 @@ const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
   transition: all 0.3s ease;
   padding-left: 30px;
 
+  @media(max-width: 600px){
+    padding-bottom: 8rem;
+  }
 
   .pokemonNotFound{
     position: absolute;
@@ -86,14 +86,12 @@ const StyledCardContainer = styled(Box)<StyledCardContainerProps>`
 `
 
 interface StyledCardGridProps {
-  $isHovered: boolean;
   $shouldDisplay: boolean;
 }
 
 const StyledCardGrid = styled(Grid)<StyledCardGridProps>`
   transition: all 0.5s ease;
-  transform: scale(${({ $isHovered }) => ($isHovered ? 1 : 0.975)});
-  opacity: ${({ $isHovered, $shouldDisplay }) => !$shouldDisplay ? 0 : ($isHovered ? 1 : 0.85)};
+  opacity: ${({ $shouldDisplay }) => !$shouldDisplay ? 0 : 1};
 `;
 
 const StyledFooter = styled(Box)`
@@ -237,7 +235,6 @@ export default function Home({
                 $shouldDisplay={shouldDisplay}
                 key={pokemon?.name}
                 className="poke-card"
-                $isHovered={hoveredIndex === null || hoveredIndex === index}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}>
                 <PokemonCard
@@ -262,25 +259,25 @@ export default function Home({
             </StyledCardContainer>
           {shouldDisplay && 
             <Fade in={!pokemonListLoading}>
-            <StyledFooter>
-              <Pagination
-                sx={{
-                    '& .MuiPaginationItem-root': {
-                    color: '#fff',
-                    },
-                }}
-                count={lastPage}
-                page={currentPage}
-                siblingCount={0}
-                boundaryCount={1} 
-                onChange={(event, value) => {
-                    if (value === currentPage) return;
-                    setFlipDirection(value > currentPage ? 'forward' : 'backward');
-                    // setFlipped(true);
-                    handlePageChange(value);
-                }}
-              />
-            </StyledFooter>
+              <StyledFooter>
+                <Pagination
+                  sx={{
+                      '& .MuiPaginationItem-root': {
+                      color: '#fff',
+                      },
+                  }}
+                  count={lastPage}
+                  page={currentPage}
+                  siblingCount={0}
+                  boundaryCount={1} 
+                  onChange={(event, value) => {
+                      if (value === currentPage) return;
+                      setFlipDirection(value > currentPage ? 'forward' : 'backward');
+                      // setFlipped(true);
+                      handlePageChange(value);
+                  }}
+                />
+              </StyledFooter>
             </Fade>}
         </StyledContainer>
     </>
