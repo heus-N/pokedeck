@@ -15,7 +15,10 @@ export function usePokemonNavigation() {
   const updateParams = useCallback((updater: (params: URLSearchParams) => void) => {
     const params = new URLSearchParams(searchParams.toString());
     updater(params);
-    router.replace(`?${params.toString()}`, { scroll: false });
+    const queryString = params.toString()
+      .replace(/\s+/g, '')
+      .replace(/([^=&]+)=(&|$)/g, '$1$2');
+    router.push(queryString ? `?${queryString}` : '', { scroll: false });
   }, [router, searchParams]);
 
   const handlePageChange = useCallback((newPage: number) => {
@@ -23,7 +26,10 @@ export function usePokemonNavigation() {
   }, [updateParams]);
 
   const handleOpenModal = useCallback((pokemon: Pokemon) => {
-    updateParams(params => params.set('pokemon', pokemon.name));
+    updateParams(params => {
+      params.set('pokemon', pokemon.name);
+      if (!params.has('page')) params.set('page', '1');
+    });
   }, [updateParams]);
 
   const handleCloseModal = useCallback(() => {

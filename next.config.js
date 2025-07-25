@@ -1,16 +1,14 @@
-const nextI18NextConfig = require('./next-i18next.config');
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  ...nextI18NextConfig,
+  serverExternalPackages: ['axios'],
+  output: 'standalone',
+  images: {
+    domains: ['raw.githubusercontent.com'],
+    minimumCacheTTL: 60, // 1 minuto para testes
+  },
   experimental: {
-    clientRouterFilter: true,
-    clientRouterFilterRedirects: true,
     scrollRestoration: true,
-  },
-  compiler: {
-    styledComponents: true,
-  },
+  }
 };
 
 module.exports = nextConfig;
