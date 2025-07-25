@@ -4,7 +4,7 @@ const nextConfig = {
   output: 'standalone',
   images: {
     domains: ['raw.githubusercontent.com'],
-    minimumCacheTTL: 60, // 1 minuto para testes
+    minimumCacheTTL: 604800 , // 1 semana
   },
   experimental: {
     scrollRestoration: true,
