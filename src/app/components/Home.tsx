@@ -184,7 +184,7 @@ export default function Home({
             <>
               <FilterTable>
                 <SelectLanguage />
-                <Typography py={2} variant="h2" color="#fff">{t('filter.search')}</Typography>
+                <Typography py={2} variant="h2" color="#f7f7f7">{t('filter.search')}</Typography>
                 <TextField 
                     value={pokemonSearch} 
                     onChange={(e) => setPokemonSearch(e.target.value)}
@@ -263,7 +263,7 @@ export default function Home({
                 (shouldDisplay && !pokemonListLoading && !isLoadingPokemonTypeFilteredList &&
                   <Fade in={mounted}>
                     <div className='pokemonNotFound'>
-                    <Typography color='#fff' variant='h1'>{t('page.pokemonNotFound')}</Typography>
+                    <Typography color='#f7f7f7' variant='h1'>{t('page.pokemonNotFound')}</Typography>
                     <img src="/utils/backgrounds/pokemonNotFound.png/" alt='pokemon not found'/>
                     </div>
                   </Fade>)}
@@ -275,7 +275,7 @@ export default function Home({
                 <Pagination
                   sx={{
                       '& .MuiPaginationItem-root': {
-                      color: '#fff',
+                        color: '#f7f7f7',
                       },
                   }}
                   count={lastPage}

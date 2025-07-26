@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const MediaContainer = styled.div`
   display: flex;
   flex-direction: column;
-  color: #fff;
+  color: #f7f7f7;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -70,7 +70,7 @@ const MediaContainer = styled.div`
   }
 
   .mediaIcon{
-    color: #fff;
+    color: #f7f7f7;
     font-size: 2rem;
     transition: scale 0.5s ease;
   };

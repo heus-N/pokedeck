@@ -78,11 +78,11 @@ export default function NotFound() {
                 {shouldDisplay && 
                     <Fade in={shouldDisplay}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-                            <Typography color='#fff' variant='h1'>{t('page.pageNotFound')}</Typography>
+                            <Typography color='#f7f7f7' variant='h1'>{t('page.pageNotFound')}</Typography>
                             <img src="/utils/backgrounds/pageNotFound.png" alt='Página não encontrada' />
                             <Link href="/?page=1">
                                 <StyledButton>
-                                    <Typography color='#fff'>
+                                    <Typography color='#f7f7f7'>
                                         {t('page.backToHome')}
                                     </Typography>
                                 </StyledButton>

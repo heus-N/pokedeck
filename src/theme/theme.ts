@@ -18,7 +18,7 @@ const theme = createTheme({
 
     text: {
       primary: '#000000',
-      secondary: '#F7F7F7',
+      secondary: '#f7f7f7',
     }
   },
   typography: {
@@ -47,21 +47,21 @@ const theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         root: {
-          color: '#fff',
+          color: '#f7f7f7',
         },
         popupIndicator: {
-          color: '#fff',
+          color: '#f7f7f7',
         },
         clearIndicator: {
-          color: '#fff',
+          color: '#f7f7f7',
         },
         paper: {
           backgroundColor: '#1e1e1e',
-          color: '#fff',
+          color: '#f7f7f7',
         },
         listbox: {
           backgroundColor: '#1e1e1e',
-          color: '#fff',
+          color: '#f7f7f7',
         },
         option: {
           '&[aria-selected="true"]': {
@@ -81,15 +81,18 @@ const theme = createTheme({
         root: {
           borderRadius: '12px',
           '& .MuiOutlinedInput-root': {
-             color: '#ffffff',
+              color: '#f7f7f7',
             '& fieldset': {
-              borderColor: '#ccc',
+              borderColor: '#f7f7f7',
+              transition: 'all 0.5s ease',
             },
             '&:hover fieldset': {
-              borderColor: '#999',
+              borderColor: 'rgba(33, 150, 243, 1)',
+              boxShadow: '0px 0px 5px rgba(33, 150, 243, 1)'
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#1976d2',
+              borderColor: 'rgba(33, 150, 243, 1)',
+              boxShadow: '0px 0px 5px rgba(33, 150, 243, 1)'
             },
           },
         },

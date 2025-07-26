@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { Collapse } from "@mui/material";
 import { Instagram, LinkedIn, Facebook, GitHub } from '@mui/icons-material';
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ArrowDown from "./ArrowDown";
 
@@ -49,11 +49,6 @@ const StyledFilter = styled.nav<StyledFilterProps>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  // &:hover{
-  //   width: 400px;
-  //   padding: 1rem;
-  // };
 `
 
 const ClipPathButton1 = styled.span`
@@ -111,12 +106,36 @@ interface FilterTableProps {
     children: React.ReactNode;
 }
 
+
 export default function FilterTable({children}: FilterTableProps){
 
   const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null);
+
+   // Fechar ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
 
   return(
     <StyledFilter 
+      ref={containerRef}
       $open={open}
     >
       {/* <div className='buttonContainer' >

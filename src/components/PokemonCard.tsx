@@ -171,7 +171,6 @@ const NameContainer = styled.div`
 const PokemonBgContainer = styled.div`
   width: 100%;
   height: 60%;
-  // background-color: #ffffff;
   // background: linear-gradient(180deg, hsla(197, 71%, 73%, 1) 17%, hsla(0, 0%, 100%, 1) 100%);
   background-color: transparent;
   transition: 0.5s ease;

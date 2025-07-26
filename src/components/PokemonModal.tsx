@@ -116,8 +116,6 @@ const ClipPathLine1 = styled.span`
   height: 100%;
   pointer-events: none;
 
-  // border: 16px solid;
-  // border-image: linear-gradient(135deg, #7f7f7f, #cfcfcf, #ffffff, #cfcfcf, #7f7f7f) 1;
   transition: all 0.3s ease;
   background-color: #fff;
   opacity: 0.5;

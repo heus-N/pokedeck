@@ -27,7 +27,7 @@ export default function Tip({message}: TipProps){
                           ]},
                         }}  
                     title={message}>
-                    <InfoIcon sx={{color:'#fff'}}/>
+                    <InfoIcon sx={{color:'#f7f7f7'}}/>
                 </Tooltip>
             </div>
         </>        

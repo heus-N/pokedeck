@@ -29,7 +29,7 @@ export default function SelectLanguage() {
     return (
         <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Typography py={2} variant="h2" color="#fff">
+                <Typography py={2} variant="h2" color="#f7f7f7">
                     {t('filter.language')}
                 </Typography>
                 <Tip message={t('filter.tip')} />

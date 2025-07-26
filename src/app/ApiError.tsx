@@ -71,11 +71,11 @@ export default function ApiError (){
         <StyledContainer>
             <Fade in={shouldDisplay}>
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-                    <Typography className="text" color='#fff' variant='h1'>Oops! Algo deu errado. Verifique a plataforma para ter certeza de que o servidor está online.</Typography>
+                    <Typography className="text" color='#f7f7f7' variant='h1'>Oops! Algo deu errado. Verifique a plataforma para ter certeza de que o servidor está online.</Typography>
                     <img src="/utils/backgrounds/maintenance.png" alt='Página não encontrada' />
                     <Link target="_blank" href="https://pokeapi.co/">
                         <StyledButton>
-                            <Typography color='#fff'>
+                            <Typography color='#f7f7f7'>
                                 pokeapi.co/
                             </Typography>
                         </StyledButton>
