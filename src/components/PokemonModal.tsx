@@ -2,7 +2,7 @@ import getEvolutionLevel from '../../public/utils/helpers/usePokemonEvolLevel';
 import { useMultiplePokemonByIds, usePokemonAbility, usePokemonById, usePokemonEvolutionChain, usePokemonSpecie } from '@/hooks/usePokemonList';
 import { Pokemon } from '@/types/pokemon';
 import ScaleIcon from '@mui/icons-material/Scale';
-import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@mui/material';
+import { Dialog, DialogContent, IconButton, Skeleton, Tooltip, Typography } from '@mui/material';
 import styled from 'styled-components';
 import { kgToLb } from '../../public/utils/helpers/unitConverter';
 import { useMemo, useRef, useState } from 'react';
@@ -11,6 +11,7 @@ import ArrowDown from './ArrowDown';
 import { gsap } from 'gsap';
 import { useTranslation } from 'react-i18next';
 import isLastEvolution from '../../public/utils/helpers/isLastEvolution';
+import animations from "@/styles/animations";
 
 interface DialogProps{
   $type: string
@@ -244,6 +245,16 @@ const AbilitiesContainer = styled.div<abilitiesProps>`
     overflow-y: auto;
     margin-bottom: 0;
   }
+
+  animation: ${animations.slideInLeft} 0.75s ease forwards;
+  opacity: 0;
+
+  &:nth-child(2) {
+    animation-delay: 0s;
+  }
+  &:nth-child(1) {
+    animation-delay: 0.1s;
+  }
 `
 const EvolutionContainer = styled.div`
   height: 55%;
@@ -320,6 +331,9 @@ const EvolutionsEl = styled.div<EvolutionProps>`
   transition: scale 0.5s ease;
   z-index: 10;
   overflow: visible;
+
+  animation: ${animations.slideInLeft} 0.75s ease forwards;
+  opacity: 0;
 
   &:hover{
     scale: 1.01
@@ -406,6 +420,7 @@ const PokemonInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  animation: ${animations.slideInRight} 0.75s ease forwards;
 
   img{
     margin-left: 3px;
@@ -413,10 +428,22 @@ const PokemonInfo = styled.div`
     height: 1.25rem;
     transition: all 0.5s ease;
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5));
+    opacity: 0;
+    animation: ${animations.slideInRight} 0.75s ease forwards;
 
     &:hover{
       scale: 1.1;
       filter: drop-shadow(0 0 3px rgba(252, 177, 3, 0.9));
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0s;
+    }
+    &:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    &:nth-child(1) {
+      animation-delay: 0.2s;
     }
   };
 
@@ -473,6 +500,17 @@ const TypeContainer = styled.div<TypeContainerProps>`
   &:hover{
     scale: 1.05;
   }
+
+  animation: ${animations.slideInRight} 0.75s ease forwards;
+  opacity: 0;
+
+  &:nth-child(2) {
+    animation-delay: 0s;
+  }
+  &:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
 `
 
 interface ImageProps {
@@ -489,6 +527,16 @@ const ImageContainer = styled.div<ImageProps>`
   position: relative;
   overflow: hidden;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+
+  animation: ${animations.slideInRight} 0.75s ease forwards;
+  opacity: 0;
+
+  &:nth-child(2) {
+    animation-delay: 0s;
+  }
+  &:nth-child(1) {
+    animation-delay: 0.1s;
+  }
 
   .container{
     width: 350px;
@@ -551,6 +599,16 @@ const StatsContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  animation: ${animations.slideInRight} 0.75s ease forwards;
+  opacity: 0;
+
+  &:nth-child(2) {
+    animation-delay: 0s;
+  }
+  &:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
   hr{
     border: none;
     width: 1px;
@@ -575,6 +633,9 @@ const HabitatContainer = styled.div<abilitiesProps>`
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   margin: 10px 5px;
+
+  animation: ${animations.slideInLeft} 0.75s ease forwards;
+  opacity: 0;
 
   @media (min-width: 600px){
     margin: 10px 5px;
