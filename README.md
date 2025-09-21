@@ -17,7 +17,7 @@
 
 - **Framework**: Next.js
 - **Linguagem**: TypeScript
-- **Estilização**: CSS Modules
+- **Estilização**: Styled Components
 - **Animação**: GSAP
 - **API**: [PokeAPI](https://pokeapi.co)
 
