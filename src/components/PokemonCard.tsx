@@ -2,7 +2,7 @@
 
 import styled, { keyframes } from "styled-components";
 import { Pokemon } from "../types/pokemon";
-import { Typography } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import { usePokemonById, usePokemonEvolutionChain, usePokemonSpecie } from "@/hooks/usePokemonList";
 import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
@@ -60,6 +60,7 @@ const Card = styled(motion.div)`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
 `;
 
 const Face = styled.div`
@@ -324,14 +325,18 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
   const { t } = useTranslation('common');
   const pokemonId = url.split("pokemon/")[1];
   const { findPokemonById, isLoadingPokemon } = usePokemonById(pokemonId);
-  const { evolutionChainId } = usePokemonSpecie(findPokemonById?.species);
-  const { pokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
+  const { evolutionChainId, isLoadingPokemonSpecie } = usePokemonSpecie(findPokemonById?.species);
+  const { pokemonEvolutionChain, isLoadingPokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const rotation = flipped ? (flipDirection === 'forward' ? 180 : -180) : 0
 
   const primaryType = findPokemonById?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const hpStat = findPokemonById?.stats?.find(stat => stat.stat.name === 'hp');
 
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, findPokemonById?.name ?? '') || 0;
+
+  const isCardLoading = isLoadingPokemon || isLoadingPokemonSpecie || isLoadingPokemonEvolutionChain;
+
+  console.log(pokemon)
 
   return (
     <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
@@ -341,7 +346,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
       >
         {!flipped &&
           <FrontFace $type={primaryType} className="card">
-            {!isLoadingPokemon && (
+            {!isCardLoading ? (
               <>
                 <Tooltip title={t('pokemonCard.evolutionLevel')}>
                   <EvolutionLevelContainer>
@@ -387,7 +392,12 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                   </FooterContainer>
                 </PokemonInfoContainer>
               </>
-            )}
+            ):
+            <>
+              <Skeleton animation="wave" variant="rectangular" width="100%" height="60%" />
+              <Skeleton animation="wave" variant="text" width="100%" height="8%" />
+              <Skeleton animation="wave" variant="rounded" width="100%" height="8%" />
+            </>}
           </FrontFace>}
         <BackFace />
       </Card>

@@ -157,8 +157,8 @@ export function usePokemonSpecie(species: any | undefined) {
 
   return {
     pokemonSpecie: data,
-    isLoading,
-    isError: error,
+    isLoadingPokemonSpecie: isLoading,
+    pokemonSpecieError: error,
     evolutionChainId
   };
 }
@@ -189,7 +189,7 @@ export function usePokemonEvolutionChain(id: string) {
   
   return {
     pokemonEvolutionChain: data,
-    isLoading,
+    isLoadingPokemonEvolutionChain: isLoading,
     isError: error,
     evolutionIds
   };
