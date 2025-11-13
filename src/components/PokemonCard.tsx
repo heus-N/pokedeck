@@ -9,6 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import getEvolutionLevel from "../../public/utils/helpers/usePokemonEvolLevel";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 const fadeInFromRight = keyframes`
   from {
@@ -328,18 +329,51 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
   const { evolutionChainId, isLoadingPokemonSpecie } = usePokemonSpecie(findPokemonById?.species);
   const { pokemonEvolutionChain, isLoadingPokemonEvolutionChain } = usePokemonEvolutionChain(evolutionChainId ?? '');
   const rotation = flipped ? (flipDirection === 'forward' ? 180 : -180) : 0
-
   const primaryType = findPokemonById?.types?.find(t => t.slot === 1)?.type?.name ?? 'normal';
   const hpStat = findPokemonById?.stats?.find(stat => stat.stat.name === 'hp');
 
   const evolutionLevel = getEvolutionLevel(pokemonEvolutionChain?.chain, findPokemonById?.name ?? '') || 0;
 
-  const isCardLoading = isLoadingPokemon || isLoadingPokemonSpecie || isLoadingPokemonEvolutionChain;
+  const [loadedImage, setLoadedImage] = useState(false)
 
-  console.log(pokemon)
+  const isCardLoading = 
+    isLoadingPokemon || 
+    isLoadingPokemonSpecie || 
+    isLoadingPokemonEvolutionChain ||
+    !loadedImage
+
+  function handleLoadImg() {
+    setLoadedImage(true)
+  }
+
+  useEffect(() => {
+    async function loadImage() {
+      setLoadedImage(false);
+
+      const spriteUrl = findPokemonById?.sprites?.front_default;
+      if (!spriteUrl) {
+        setLoadedImage(true);
+        return;
+      }
+
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const img = new Image();
+          img.src = spriteUrl;
+          img.onload = () => resolve();
+          img.onerror = reject;
+        });
+        setLoadedImage(true);
+      } catch {
+        setLoadedImage(true);
+      }
+    }
+
+    loadImage();
+  }, [findPokemonById?.sprites?.front_default]);
 
   return (
-    <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={index} $page={page}>
+    <CardWrapper className={className} onClick={onClick} $flipped={flipped} $delay={1} $page={page}>
       <Card
         animate={{ rotateY: rotation }}
         transition={{ duration: 0.25 }}
@@ -361,7 +395,7 @@ export default function PokemonCard({ pokemon, onClick, className, url, flipped,
                   </TypeContainer>
                     <img className="background" src={`/utils/backgrounds/${primaryType}.png/`} />
                     {findPokemonById?.sprites?.front_default 
-                      ? <img className="pokemon" src={findPokemonById?.sprites?.front_default} alt={`image_${pokemon.name}`} />
+                      ? <img className="pokemon" src={findPokemonById?.sprites?.front_default} alt={`image_${pokemon.name}`} onLoad={handleLoadImg}/>
                       : <Tooltip title={t('pokemonCard.imageNotFound')}>
                           <img className="notFound" alt={`image_${pokemon.name}`} width="50%" src={'/utils/backgrounds/notFound.png'}/>
                         </Tooltip> 
